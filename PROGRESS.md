@@ -19,3 +19,7 @@
 ## Chromebook fix
 Nico's Chromebook CPU has no AVX2, so Astro's native compiler crashed with "Illegal instruction".
 `npm run dev` now forces the universal WASM compiler (`NAPI_RS_FORCE_WASI=1`). `npm run dev:fast` uses the native one on newer machines. Builds (Cloudflare) stay native.
+
+## Hosting
+Cloudflare Workers project `bruffles-apparelxptp` builds this branch (`npm run build`, serves `dist/` via `wrangler.jsonc`).
+Local dev on the Chromebook is not needed: preview on the .workers.dev link instead.
