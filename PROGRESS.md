@@ -37,3 +37,4 @@ Local dev on the Chromebook is not needed: preview on the .workers.dev link inst
 - Split screen can't widen until **10s after the first mouse movement** (and 20+ movements). Tested: widened at 10.6s.
 - Open (70%) side: heading 1.5× bigger, logo slot in the top corner, brand video plays. Switching sides pauses the other video. Click the video or press Space to play/pause; no icons.
 - Media slots in `src/data/media.ts` (poster, video, logo per brand). Files go in `public/media/`.
+- Scroll cutoff: once the line 2rem above the brand text scrolls under the header, the hero snaps to 50/50 and hover is disabled until you scroll back up. Tested: hover works up to the line, locks just past it.

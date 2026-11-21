@@ -16,6 +16,36 @@ export default function SplitHero() {
   const reduce = useReducedMotion();
   const videos = { bsa: useRef<HTMLVideoElement>(null), ptp: useRef<HTMLVideoElement>(null) };
   const root = useRef<HTMLDivElement>(null);
+  const textBlocks = { bsa: useRef<HTMLDivElement>(null), ptp: useRef<HTMLDivElement>(null) };
+
+  // Scroll cutoff: once the line 2rem above the brand text scrolls under the header,
+  // snap back to 50/50 and stop reacting to hover until the visitor scrolls back up.
+  const [locked, setLocked] = useState(false);
+  useEffect(() => {
+    const check = () => {
+      const header = document.querySelector("header")?.getBoundingClientRect().bottom ?? 0;
+      const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+      // Use the text's bottom edge (anchored, never moves) minus its height at normal size,
+      // so the cutoff line stays put even while an open half's heading is enlarged.
+      const tops = (["bsa", "ptp"] as Side[]).map((k) => {
+        const el = textBlocks[k].current; if (!el) return Infinity;
+        const h2 = el.querySelector("h2") as HTMLElement | null;
+        // Height the text would have at normal size: subtract the heading's current growth.
+        const grow = h2 ? h2.offsetHeight * (1 - Number(h2.dataset.base) / parseFloat(getComputedStyle(h2).fontSize)) : 0;
+        const pad = parseFloat(getComputedStyle(el).paddingTop) || 0; // measure from the text, not the padding
+        return el.getBoundingClientRect().top + grow + pad;
+      });
+      const cutoff = Math.min(...tops) - 2 * rem;
+      const isLocked = cutoff < header;
+      setLocked(isLocked);
+      if (isLocked) setActive(null);
+    };
+    check();
+    // Fonts change the text height; re-measure once they've loaded so the cutoff line is accurate.
+    window.addEventListener("scroll", check, { passive: true });
+    window.addEventListener("resize", check);
+    return () => { window.removeEventListener("scroll", check); window.removeEventListener("resize", check); };
+  }, []);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 767px)");
@@ -77,8 +107,8 @@ export default function SplitHero() {
         style={{ flexBasis: 0 }}
         animate={{ flexGrow: grow(s) }}
         transition={t}
-        onPointerMove={(e) => e.pointerType === "mouse" && armed && !mobile && active !== s && setActive(s)}
-        onPointerLeave={(e) => e.pointerType === "mouse" && armed && !mobile && setActive(null)}
+        onPointerMove={(e) => e.pointerType === "mouse" && armed && !locked && !mobile && active !== s && setActive(s)}
+        onPointerLeave={(e) => e.pointerType === "mouse" && armed && !locked && !mobile && setActive(null)}
         onClick={(e) => {
           if ((e.target as HTMLElement).closest("a")) return;
           if (mobile && !open) return setActive(s);
@@ -108,10 +138,10 @@ export default function SplitHero() {
           )}
         </AnimatePresence>
 
-        <div className={`relative z-10 mt-auto w-full p-6 md:p-10 ${dark ? "md:text-right" : ""}`}>
+        <div ref={textBlocks[s]} className={`relative z-10 mt-auto w-full p-6 md:p-10 ${dark ? "md:text-right" : ""}`}>
           <p className={dark ? "label-ptp text-chalk-soft" : "label-bsa text-ink-soft"}>{label}</p>
-          <motion.h2 className={`${dark ? "h-ptp" : "h-bsa"} mt-2 leading-[1.05]`}
-            initial={false} animate={{ fontSize: `${(dark ? (mobile ? 24 : 30) : (mobile ? 30 : 36)) * (open ? 1.5 : 1)}px` }} transition={t}>{title}</motion.h2>
+          <motion.h2 className={`${dark ? "h-ptp" : "h-bsa"} mt-2 leading-[1.05] whitespace-nowrap`}
+            data-base={dark ? (mobile ? 24 : 30) : (mobile ? 30 : 36)} initial={false} animate={{ fontSize: `${(dark ? (mobile ? 24 : 30) : (mobile ? 30 : 36)) * (open ? 1.5 : 1)}px` }} transition={t}>{title}</motion.h2>
           <motion.a href={href}
             className={`mt-5 inline-block text-[11px] tracking-[0.22em] uppercase border-b pb-1 ${dark ? "border-chalk/50" : "border-ink/50"}`}
             animate={{ opacity: open ? 1 : 0, y: open ? 0 : 6 }}
