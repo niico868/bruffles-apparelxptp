@@ -44,3 +44,9 @@ Local dev on the Chromebook is not needed: preview on the .workers.dev link inst
 - Passport = modern Rasta in a khaki suit: olive drab, earth brown, sun gold, leaf green.
 - Card label + name centred on both brands, both still aligned row for row.
 - New brand buttons: Bruffels "Claim · 1 of 1" (slow gold sweep), Passport boarding-pass "Board" ticket. Short labels on phones.
+
+## Session 5 · Gold + airport
+- Bruffels column: royal purple field, white card panels, royal purple name/price, brushed-gold accents, Montserrat "GONE" stamp. Claim button now just fades to gold.
+- Passport: airport palette (night navy, sky, signage yellow) + ink-stamped line art (globe, stamps, planes, clouds, six country flags) seen through translucent cards.
+- Name hover on both brands: bolder + bigger. Passport names/images open new product pages `/passport/PTP-xx` (with bulk quantity stepper).
+- Bruffels product page: "Favorited X times · Carted X times" beside the description (mock numbers until Phase 1).

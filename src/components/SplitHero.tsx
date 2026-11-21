@@ -103,7 +103,7 @@ export default function SplitHero() {
     const m = heroMedia[s];
     return (
       <motion.section
-        className={`relative flex min-h-0 overflow-hidden ${dark ? "fatigue" : "satin"} text-chalk`}
+        className={`relative flex min-h-0 overflow-hidden ${dark ? "runway" : "satin"} text-chalk`}
         style={{ flexBasis: 0 }}
         animate={{ flexGrow: grow(s) }}
         transition={t}
@@ -139,7 +139,7 @@ export default function SplitHero() {
         </AnimatePresence>
 
         <div ref={textBlocks[s]} className={`relative z-10 mt-auto w-full p-6 md:p-10 ${dark ? "md:text-right" : ""}`}>
-          <p className={dark ? "label-ptp text-sun" : "label-bsa text-gold"}>{label}</p>
+          <p className={dark ? "label-ptp text-signal" : "label-bsa text-gold"}>{label}</p>
           <motion.h2 className={`${dark ? "h-ptp" : "h-bsa"} mt-2 leading-[1.05] whitespace-nowrap`}
             data-base={dark ? (mobile ? 24 : 30) : (mobile ? 30 : 36)} initial={false} animate={{ fontSize: `${(dark ? (mobile ? 24 : 30) : (mobile ? 30 : 36)) * (open ? 1.5 : 1)}px` }} transition={t}>{title}</motion.h2>
           <motion.a href={href}

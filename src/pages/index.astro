@@ -5,6 +5,7 @@ import BruffelsCard from "../components/BruffelsCard.astro";
 import PassportCard from "../components/PassportCard";
 import PlanePath from "../components/PlanePath";
 import DropColumn from "../components/DropColumn.astro";
+import TravelInk from "../components/TravelInk.astro";
 import { brussels, passport } from "../data/products";
 ---
 <Base>
@@ -21,6 +22,7 @@ import { brussels, passport } from "../data/products";
         {brussels.map((p) => <BruffelsCard p={p} />)}
       </DropColumn>
       <DropColumn brand="ptp" title="Passport to Paradise" href="/passport" tag="All departures" id="passport">
+        <TravelInk slot="art" />
         <PlanePath slot="rule" client:visible />
         {passport.map((item) => <PassportCard client:visible item={item} />)}
       </DropColumn>

@@ -14,7 +14,7 @@ export default function Gallery({ sold = false }: { sold?: boolean }) {
           <motion.div key={i} className="absolute inset-0 grid place-items-center"
             initial={{ opacity: 0 }} animate={{ opacity: sold ? 0.45 : 1 }} exit={{ opacity: 0 }}
             transition={{ duration: reduce ? 0 : 0.7, ease: [0.22, 1, 0.36, 1] }}>
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,#f7f3ec,#e4ddcf)] transition-transform duration-[1200ms] ease-[var(--ease-calm)] group-hover:scale-[1.04]" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,#faf8fb,#e9e4ee)] transition-transform duration-[1200ms] ease-[var(--ease-calm)] group-hover:scale-[1.04]" />
             <span className="relative label-bsa text-ink-soft">{SHOTS[i]}</span>
           </motion.div>
         </AnimatePresence>
@@ -33,9 +33,14 @@ export default function Gallery({ sold = false }: { sold?: boolean }) {
 }
 
 export function GoneStamp({ small = false }: { small?: boolean }) {
+  // Bold Montserrat "GONE" in brushed gold, inside a double gold ring, slightly rotated like a real stamp.
   return (
-    <div className={`absolute ${small ? "top-3 right-3 w-16 h-16 text-[9px]" : "top-6 right-6 w-24 h-24 text-[11px]"} rounded-full border border-gold text-gold-deep bg-paper/70 grid place-items-center rotate-[-10deg] tracking-[0.25em] uppercase font-sans`}>
-      Gone
+    <div className={`absolute ${small ? "top-3 right-3 w-[72px] h-[72px]" : "top-6 right-6 w-28 h-28"} rotate-[-10deg] rounded-full p-[2px] gold-metal shadow-sm`}>
+      <div className="w-full h-full rounded-full bg-white/85 grid place-items-center">
+        <div className="w-[86%] h-[86%] rounded-full border border-gold grid place-items-center">
+          <span className={`gold-text ${small ? "text-[15px]" : "text-[22px]"} tracking-[0.12em]`} style={{ fontFamily: "Montserrat, sans-serif", fontWeight: 800 }}>GONE</span>
+        </div>
+      </div>
     </div>
   );
 }

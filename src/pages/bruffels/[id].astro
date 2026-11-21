@@ -25,7 +25,14 @@ const { p } = Astro.props;
       <div class="mt-8"><AddPiece client:load id={p.id} name={p.name} priceUsd={p.priceUsd} sold={p.sold} /></div>
       <div class="mt-3"><SizeDrawer client:idle size={p.size} measurements={p.measurements} /></div>
 
-      <p class="mt-8 text-[15px] leading-relaxed text-ink-soft">{p.description}</p>
+      <div class="mt-8 grid grid-cols-[1fr_auto] gap-6 items-start">
+        <p class="text-[15px] leading-relaxed text-ink-soft">{p.description}</p>
+        <!-- Demand signals: shows how wanted this one-of-one is -->
+        <dl class="text-right space-y-2 border-l border-line pl-5 min-w-[7.5rem]">
+          <div><dt class="label-bsa gold-text font-bold">Favorited</dt><dd class="text-royal tabular-nums"><span class="text-lg font-semibold">{p.favorites}</span> times</dd></div>
+          <div><dt class="label-bsa gold-text font-bold">Carted</dt><dd class="text-royal tabular-nums"><span class="text-lg font-semibold">{p.carts}</span> times</dd></div>
+        </dl>
+      </div>
 
       <!-- Authenticity block -->
       <section class="mt-10 border-t border-line pt-6" aria-labelledby="auth">

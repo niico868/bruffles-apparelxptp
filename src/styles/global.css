@@ -4,6 +4,7 @@
 @import "@fontsource/barlow-semi-condensed/500.css";
 @import "@fontsource/barlow-semi-condensed/600.css";
 @import "@fontsource/dm-mono";
+@import "@fontsource/montserrat/800.css";
 
 /* Tokens: see DESIGN.md. Pages use names, never raw values. */
 @theme {
@@ -23,14 +24,13 @@
   --color-royal-2: #331656;
   --color-royal-3: #40206a;
 
-  /* Passport: modern Rasta in a khaki suit. Army green, olive, earth brown, sun, leaf, clay */
-  --color-army: #343b24;       /* olive drab surface */
-  --color-army-2: #424a2e;     /* raised / cards */
-  --color-army-3: #6f6047;     /* earth-brown image placeholder */
-  --color-khaki: #c8b68e;      /* khaki details */
-  --color-sun: #e2b340;        /* Irie sun yellow-gold */
-  --color-leaf: #4f7d3c;       /* Ital leaf green */
-  --color-clay: #a9482f;       /* clay red, used rarely */
+  /* Passport: international airport. Night-flight navy, jet bridge slate, sky, signage yellow */
+  --color-jet: #0e1f38;        /* deep night-flight navy surface */
+  --color-jet-2: #16304f;      /* raised / cards */
+  --color-jet-3: #2b4565;      /* slate image placeholder */
+  --color-sky: #7fb8e6;        /* sky blue, line art + details */
+  --color-signal: #f2c230;     /* airport signage yellow: labels, stamp, Board button */
+  --color-runway: #e9eef4;     /* cloud white */
 
   --font-sans: "Manrope Variable", system-ui, sans-serif;
   --font-serif: "Fraunces Variable", Georgia, serif;
@@ -63,8 +63,17 @@
 
 /* Bruffels: matte satin royal purple (soft sheen, not shiny) */
 .satin { background-color: var(--color-royal); background-image: radial-gradient(120% 80% at 20% 0%, rgba(255,255,255,.07), transparent 60%), linear-gradient(160deg, #331656 0%, #261040 55%, #1d0b33 100%); }
-/* Passport: olive fatigue canvas with a faint woven texture and a warm sun glow */
-.fatigue { background-color: var(--color-army); background-image: radial-gradient(90% 70% at 85% 0%, rgba(226,179,64,.10), transparent 60%), repeating-linear-gradient(45deg, rgba(255,255,255,.018) 0 2px, transparent 2px 6px), linear-gradient(165deg, #3f472b 0%, #343b24 55%, #2b311d 100%); }
+/* Bruffels royal field: the lighter royal purple behind the Bruffels cards */
+.royal-field { background-color: #3a1a62; background-image: radial-gradient(110% 70% at 15% 0%, rgba(255,255,255,.08), transparent 60%), linear-gradient(165deg, #45207a 0%, #391963 55%, #2e1350 100%); }
+/* Passport: night-flight navy with a soft horizon glow */
+.runway { background-color: var(--color-jet); background-image: radial-gradient(90% 60% at 80% 0%, rgba(127,184,230,.16), transparent 60%), linear-gradient(170deg, #14294a 0%, #0e1f38 60%, #0a172b 100%); }
+/* Brushed, shiny gold: metal fill and metal text */
+.gold-metal { background-image: linear-gradient(100deg, #8a6a2b 0%, #e9cf86 22%, #b98f3f 42%, #f6e3a6 58%, #a47a32 78%, #dcbc6c 100%); background-size: 200% 100%; }
+.gold-text { background-image: linear-gradient(100deg, #9c7731 0%, #e2c374 30%, #b08636 55%, #e8cf8a 75%, #a37b33 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
 /* Bruffels serif headings: Fraunces at a wide, soft, luxe optical setting */
 .h-bsa { font-family: var(--font-serif); font-weight: 500; font-variation-settings: "opsz" 72, "SOFT" 50, "WONK" 0; letter-spacing: -0.01em; }
 .h-ptp { font-family: var(--font-air); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+/* Product name hover (both brands): bolder, darker/brighter and a touch bigger */
+.name-hover { display: inline-block; transition: transform .2s var(--ease-calm), font-weight .2s, color .2s; font-weight: 500; }
+.name-hover:hover { font-weight: 800; transform: scale(1.06); }
+.bg-white .name-hover:hover { color: #14062a; }

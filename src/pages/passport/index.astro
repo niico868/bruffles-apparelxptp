@@ -2,12 +2,14 @@
 import Base from "../../layouts/Base.astro";
 import PassportCard from "../../components/PassportCard";
 import PlanePath from "../../components/PlanePath";
+import TravelInk from "../../components/TravelInk.astro";
 import { passport } from "../../data/products";
 ---
 <Base title="Passport to Paradise · Departures">
-  <section class="fatigue text-chalk min-h-[80svh]">
-    <div class="max-w-[1400px] mx-auto px-4 md:px-8 pt-12 pb-16">
-      <p class="label-ptp text-sun">Gate 02 · Bulk accessories · Ships worldwide</p>
+  <section class="runway text-chalk min-h-[80svh] relative overflow-hidden">
+    <TravelInk />
+    <div class="relative z-10 max-w-[1400px] mx-auto px-4 md:px-8 pt-12 pb-16">
+      <p class="label-ptp text-signal">Gate 02 · Bulk accessories · Ships worldwide</p>
       <h1 class="h-ptp text-3xl md:text-4xl mt-3">Passport to Paradise</h1>
       <p class="mt-4 max-w-lg text-[15px] leading-relaxed text-chalk-soft">Accessories by the pack and by the box. Order in bulk, track every item.</p>
       <div class="mt-8"><PlanePath client:visible /></div>

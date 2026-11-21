@@ -11,9 +11,10 @@ Not based on live UXKIN comparisons; direction follows the brief's references (S
 | ink / ink-soft | #22103a / #5d5170 | text on white: dark royal purple |
 | chalk / chalk-soft | #f4eee2 / #cdc3ad | text on dark surfaces |
 | gold / gold-deep | #c9a55a / #84682c | stamps, piece labels, Claim button |
-| royal / -2 / -3 | #261040 / #331656 / #40206a | **Bruffels**: dark matte satin royal purple (`.satin`): hero half + card bodies |
-| army / -2 / -3 | #343b24 / #424a2e / #6f6047 | **Passport**: olive drab, raised olive, earth brown (`.fatigue` adds woven texture + sun glow) |
-| khaki · sun · leaf · clay | #c8b68e · #e2b340 · #4f7d3c · #a9482f | Passport accents: modern Rasta in a khaki suit. Sun for labels/stamp, leaf for the Board button, clay used rarely |
+| royal / `.royal-field` | #261040 / #45207a→#2e1350 | **Bruffels**: hero half (dark satin) and the Shared Drop column (lighter royal field) |
+| `.gold-metal` / `.gold-text` | brushed gradient #8a6a2b→#f6e3a6 | Bruffels accents: piece labels, Claim button fill, Gone stamp |
+| jet / -2 / -3 | #0e1f38 / #16304f / #2b4565 | **Passport**: night-flight navy surface, translucent cards, slate placeholders (`.runway`) |
+| sky · signal · runway | #7fb8e6 · #f2c230 · #e9eef4 | Passport: ink line art (sky), airport signage yellow (labels, stamp, Board ticket), cloud white |
 
 ## Type
 - Shared chrome + all subheads/body: Manrope.
@@ -32,8 +33,10 @@ Nothing blocks clicks. All motion collapses under `prefers-reduced-motion`.
 
 ## Components
 Card meta (both brands): fixed h-44, label + name + price centred on one axis, then the brand button.
-- Bruffels **Claim** button: gold hairline; gold fill sweeps in from the left over 0.7s; text turns royal. Sold = dashed "Gone".
-- Passport **Board** button: boarding-pass ticket in leaf green, punched side notches, perforated "+1" stub; lifts on hover, squashes on press. Sold out = "Booked".
+- Bruffels card: white meta panel on the royal field; name + price royal purple; gold accents. **Claim** button: brushed-gold edge, gold fades in smoothly (0.3s) on hover. Gone stamp: Montserrat 800 in brushed gold.
+- Passport background: `TravelInk` ink-stamped line art (globe, stamps, planes, clouds, flags of St Vincent, Barbados, T&T, Norway, Sweden, Switzerland), visible through translucent cards.
+- Product names (both brands): hover = bolder + 6% bigger.
+- Passport **Board** button: boarding-pass ticket in signage yellow, punched side notches, perforated "+1" stub; lifts on hover, squashes on press. Sold out = "Booked".
 
 Buttons: Bruffels primary = ink fill → gold on hover. Passport = hairline outline → gold. Min 44px tall.
 Sold Bruffels pieces stay visible: 45% opacity, greyscale, gold "Gone" stamp.
