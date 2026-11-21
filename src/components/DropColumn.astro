@@ -4,11 +4,11 @@
 const { brand, title, href, tag, id } = Astro.props as { brand: "bsa" | "ptp"; title: string; href: string; tag: string; id?: string };
 const dark = brand === "ptp";
 ---
-<div id={id} class:list={["p-4 md:p-8", dark ? "sky-field text-jet relative overflow-hidden" : "royal-field text-chalk"]}>
+<div id={id} class:list={["p-4 md:p-8", dark ? "sky-field text-jet relative overflow-hidden" : "ivory-field text-ink"]}>
   <slot name="art" />
   <header class="relative z-10 h-16 flex items-center justify-between">
     <h2 class:list={[dark ? "h-ptp text-xl" : "h-bsa text-2xl"]}>{title}</h2>
-    <a href={href} class:list={[dark ? "label-ptp text-sm text-jet hover:text-signal-deep" : "label-bsa text-sm gold-text font-bold hover:opacity-80", "transition-colors"]}>{tag}</a>
+    <a href={href} class:list={[dark ? "label-ptp text-sm text-jet hover:text-signal-deep" : "label-bsa text-sm text-gold-deep font-bold hover:opacity-80", "transition-colors"]}>{tag}</a>
     <div class="absolute inset-x-0 bottom-0"><slot name="rule" /></div>
   </header>
   <div class="relative z-10 grid grid-cols-2 gap-4 mt-4"><slot /></div>

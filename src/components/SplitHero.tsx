@@ -18,43 +18,45 @@ export default function SplitHero() {
   const root = useRef<HTMLDivElement>(null);
   const textBlocks = { bsa: useRef<HTMLDivElement>(null), ptp: useRef<HTMLDivElement>(null) };
 
-  // Scroll cutoff: once the line 2rem above the brand text scrolls under the header,
-  // snap back to 50/50 and stop reacting to hover until the visitor scrolls back up.
-  const [locked, setLocked] = useState(false);
+  // Scroll cutoff, judged PER HALF: a half locks (snaps closed, ignores hover/tap) once the line
+  // 2rem above its own label scrolls under the navbar. Measured at the half's normal 50/50 position,
+  // so one half opening or shrinking can never lock the other (the mobile stacked-layout bug).
+  const [locked, setLocked] = useState<Record<Side, boolean>>({ bsa: false, ptp: false });
   // Logo position: rides down with the navbar while scrolling, stopping just above the brand labels.
   const [logoTop, setLogoTop] = useState(40);
   useEffect(() => {
     const check = () => {
       const header = document.querySelector("header")?.getBoundingClientRect().bottom ?? 0;
       const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
-      // Use the text's bottom edge (anchored, never moves) minus its height at normal size,
-      // so the cutoff line stays put even while an open half's heading is enlarged.
-      const tops = (["bsa", "ptp"] as Side[]).map((k) => {
-        const el = textBlocks[k].current; if (!el) return Infinity;
+      const heroR = root.current?.getBoundingClientRect();
+      if (!heroR) return;
+      const stacked = window.innerWidth < 768;
+      const closedLabel = {} as Record<Side, number>;
+      (["bsa", "ptp"] as Side[]).forEach((k) => {
+        const el = textBlocks[k].current; if (!el) { closedLabel[k] = Infinity; return; }
         const h2 = el.querySelector("h2") as HTMLElement | null;
-        // Height the text would have at normal size: subtract the heading's current growth.
+        const label = el.querySelector("p") as HTMLElement | null;
+        // undo the heading's enlargement
         const grow = h2 ? h2.offsetHeight * (1 - Number(h2.dataset.base) / parseFloat(getComputedStyle(h2).fontSize)) : 0;
-        const pad = parseFloat(getComputedStyle(el).paddingTop) || 0; // measure from the text, not the padding
-        return el.getBoundingClientRect().top + grow + pad;
+        // undo the section resize: when stacked, the top half's bottom edge moves as it grows/shrinks
+        const sec = el.parentElement!.getBoundingClientRect();
+        const resize = stacked && k === "bsa" ? sec.height - heroR.height / 2 : 0;
+        closedLabel[k] = (label?.getBoundingClientRect().top ?? Infinity) + grow - resize;
       });
-      const cutoff = Math.min(...tops) - 2 * rem;
-      const heroTop = root.current?.getBoundingClientRect().top ?? 0;
-      const logoH = window.innerWidth < 768 ? 56 : 80;
-      const base = window.innerWidth < 768 ? 24 : 40;
-      const follow = header - heroTop + 24;                       // 24px below the navbar
-      // 16px above where the "1 of 1" / "Gate 02" labels actually are right now (they rise when a heading enlarges)
+      const next = { bsa: closedLabel.bsa - 2 * rem < header, ptp: closedLabel.ptp - 2 * rem < header };
+      setLocked((prev) => (prev.bsa === next.bsa && prev.ptp === next.ptp ? prev : next));
+      setActive((a) => (a && next[a] ? null : a));
+
+      const logoH = stacked ? 56 : 80;
+      const base = stacked ? 24 : 40;
+      const follow = header - heroR.top + 24;                     // 24px below the navbar
       const labelNow = Math.min(...(["bsa", "ptp"] as Side[]).map((k) => textBlocks[k].current?.querySelector("p")?.getBoundingClientRect().top ?? Infinity));
-      const limit = labelNow - heroTop - logoH - 16;
-      setLogoTop(Math.max(base, Math.min(follow, limit)));
-      const isLocked = cutoff < header;
-      setLocked(isLocked);
-      if (isLocked) setActive(null);
+      setLogoTop(Math.max(base, Math.min(follow, labelNow - heroR.top - logoH - 16))); // stop 16px above the labels
     };
     check();
-    // Fonts change the text height; re-measure once they've loaded so the cutoff line is accurate.
     window.addEventListener("scroll", check, { passive: true });
     window.addEventListener("resize", check);
-    const id = setInterval(check, 120); // labels move while a heading animates; keep the logo clear of them
+    const id = setInterval(check, 120); // labels move while a heading animates
     return () => { clearInterval(id); window.removeEventListener("scroll", check); window.removeEventListener("resize", check); };
   }, []);
 
@@ -114,15 +116,15 @@ export default function SplitHero() {
     const m = heroMedia[s];
     return (
       <motion.section
-        className={`relative flex min-h-0 overflow-hidden ${dark ? "runway" : "satin"} text-chalk`}
+        className={`relative flex min-h-0 overflow-hidden ${dark ? "passport-cover" : "satin"} text-chalk`}
         style={{ flexBasis: 0 }}
         animate={{ flexGrow: grow(s) }}
         transition={t}
-        onPointerMove={(e) => e.pointerType === "mouse" && armed && !locked && !mobile && active !== s && setActive(s)}
-        onPointerLeave={(e) => e.pointerType === "mouse" && armed && !locked && !mobile && setActive(null)}
+        onPointerMove={(e) => e.pointerType === "mouse" && armed && !locked[s] && !mobile && active !== s && setActive(s)}
+        onPointerLeave={(e) => e.pointerType === "mouse" && armed && !mobile && setActive(null)}
         onClick={(e) => {
           if ((e.target as HTMLElement).closest("a")) return;
-          if (mobile && !open) return setActive(s);
+          if (mobile && !open) return locked[s] ? undefined : setActive(s);
           if (open) toggle();
         }}
         aria-label={title}
@@ -136,6 +138,7 @@ export default function SplitHero() {
         {!m.poster && !m.video && (
           <div className={`absolute inset-0 bg-[radial-gradient(ellipse_at_50%_40%,rgba(255,255,255,.05),transparent_70%)]`} />
         )}
+        {dark && <div aria-hidden className="absolute inset-x-0 bottom-0 h-[55%] pointer-events-none bg-gradient-to-t from-[#22070d] via-[#22070d]/70 to-transparent" />}
         <motion.div className="absolute inset-0 bg-black pointer-events-none" animate={{ opacity: active && !open ? 0.35 : 0 }} transition={t} />
 
         {/* Logo: only on the open side, pinned to the top corner (left for Bruffels, right for Passport) */}
@@ -150,9 +153,9 @@ export default function SplitHero() {
         </AnimatePresence>
 
         <div ref={textBlocks[s]} className={`relative z-10 mt-auto w-full p-6 md:p-10 ${dark ? "md:text-right" : ""}`}>
-          <p className={dark ? "label-ptp text-signal" : "label-bsa text-gold"}>{label}</p>
+          <p className={dark ? "label-ptp gold-text" : "label-bsa text-gold"}>{label}</p>
           <motion.h2 className={`${dark ? "h-ptp" : "h-bsa"} mt-2 leading-[1.05] whitespace-nowrap`}
-            data-base={dark ? (mobile ? 24 : 30) : (mobile ? 30 : 36)} initial={false} animate={{ fontSize: `${(dark ? (mobile ? 24 : 30) : (mobile ? 30 : 36)) * (open ? 1.5 : 1)}px` }} transition={t}>{title}</motion.h2>
+            data-base={dark ? (mobile ? 24 : 30) : (mobile ? 30 : 36)} initial={false} animate={{ fontSize: `${(dark ? (mobile ? 24 : 30) : (mobile ? 30 : 36)) * (open ? (mobile ? 1.2 : 1.5) : 1)}px` }} transition={t}>{title}</motion.h2>
           <motion.a href={href}
             className={`mt-5 inline-block text-[11px] tracking-[0.22em] uppercase border-b pb-1 border-chalk/50`}
             animate={{ opacity: open ? 1 : 0, y: open ? 0 : 6 }}

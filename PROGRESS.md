@@ -57,3 +57,7 @@ Local dev on the Chromebook is not needed: preview on the .workers.dev link inst
 - Labels, View all / All departures, Claim/Gone text enlarged to product-name size.
 - Hero logos ride down under the navbar while scrolling, stopping 16px above the "1 of 1" / "Gate 02" labels.
 - **Performance:** the live ink filter caused the lag (34.6ms avg / 100ms worst frames). Art is now a pre-rendered image (`public/art/travel-ink.webp`, re-render with `node scripts/render-ink.cjs`). Now 16.6ms avg / 16.8ms worst = smooth 60fps.
+
+## Session 7 · Mobile tap fix + finish palette
+- Fixed: on phones, tapping Passport didn't open it (one shared scroll lock was judged by the Bruffels text). Now each half has its own lock. Tested on emulated iPhone 12 at the top and scrolled.
+- Palette: royal purple removed. Bruffels = aubergine satin hero, navy satin cards, champagne-ivory panel, brushed gold. Passport = Swedish passport cover hero (generated: `scripts/passport-cover.svg` → `public/art/passport-cover.webp`), light electric-blue panel, white cards, signage yellow. Page = porcelain white.

@@ -86,3 +86,22 @@
 .card-light-img { background: radial-gradient(130% 110% at 125% -25%, #ffffff 0%, #e6edf5 65%); }
 /* Passport field: very light electric blue */
 .sky-field { background-color: #dff0ff; background-image: radial-gradient(90% 60% at 85% 0%, rgba(255,255,255,.75), transparent 60%), linear-gradient(170deg, #e6f4ff 0%, #d4ebff 100%); }
+
+/* ---- Finish pass: colour chemistry ----
+   Bruffels: aubergine hero + navy satin cards on champagne ivory, joined by brushed gold.
+   (navy and ivory are near-complements; gold is the warm bridge between them)
+   Passport: burgundy Swedish passport cover + light electric blue field + white cards + signage yellow.
+   (burgundy and the cool blue push each other apart; yellow is blue's complement, so the button pops) */
+:root { --porcelain: #fbfaf7; }
+html, body { background: var(--porcelain); }
+/* Navy satin: deep navy with a soft diagonal sheen band, like light across satin */
+.card-jet { background:
+  linear-gradient(115deg, transparent 30%, rgba(255,255,255,.07) 45%, rgba(255,255,255,.02) 52%, transparent 62%),
+  radial-gradient(140% 100% at -25% -30%, #23426b 0%, #142b48 62%); }
+.card-jet-img { background:
+  linear-gradient(115deg, transparent 35%, rgba(255,255,255,.06) 48%, transparent 60%),
+  radial-gradient(130% 110% at 125% -25%, #33547b 0%, #22395a 65%); }
+/* Champagne ivory field behind the Bruffels cards */
+.ivory-field { background-color: #f4eee3; background-image: radial-gradient(100% 70% at 15% 0%, rgba(255,255,255,.7), transparent 60%), linear-gradient(170deg, #f7f2e9 0%, #efe7d8 100%); }
+/* Swedish passport cover (burgundy leather grain, blind-embossed guilloche, gold three crowns) */
+.passport-cover { background: #4e1520 url("/art/passport-cover.webp") center 18% / cover no-repeat; }
