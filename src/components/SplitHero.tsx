@@ -103,7 +103,7 @@ export default function SplitHero() {
     const m = heroMedia[s];
     return (
       <motion.section
-        className={`relative flex min-h-0 overflow-hidden ${dark ? "satin text-chalk" : "bg-paper text-ink"}`}
+        className={`relative flex min-h-0 overflow-hidden ${dark ? "fatigue" : "satin"} text-chalk`}
         style={{ flexBasis: 0 }}
         animate={{ flexGrow: grow(s) }}
         transition={t}
@@ -123,9 +123,9 @@ export default function SplitHero() {
             className="absolute inset-0 w-full h-full object-cover" animate={{ opacity: open ? 1 : 0 }} transition={t} />
         )}
         {!m.poster && !m.video && (
-          <div className={`absolute inset-0 ${dark ? "bg-[radial-gradient(ellipse_at_30%_40%,rgba(255,255,255,.05),transparent_70%)]" : "bg-[radial-gradient(ellipse_at_70%_40%,#fbf8f2,transparent_70%)]"}`} />
+          <div className={`absolute inset-0 bg-[radial-gradient(ellipse_at_50%_40%,rgba(255,255,255,.05),transparent_70%)]`} />
         )}
-        <motion.div className="absolute inset-0 bg-black pointer-events-none" animate={{ opacity: active && !open ? (dark ? 0.35 : 0.18) : 0 }} transition={t} />
+        <motion.div className="absolute inset-0 bg-black pointer-events-none" animate={{ opacity: active && !open ? 0.35 : 0 }} transition={t} />
 
         {/* Logo: only on the open side, pinned to the top corner (left for Bruffels, right for Passport) */}
         <AnimatePresence>
@@ -133,17 +133,17 @@ export default function SplitHero() {
             <motion.div key="logo" className={`absolute z-10 top-6 md:top-10 ${dark ? "right-6 md:right-10" : "left-6 md:left-10"}`}
               initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ ...t, delay: reduce ? 0 : 0.2 }}>
               {m.logo ? <img src={m.logo} alt={`${title} logo`} className="h-14 md:h-20 w-auto" />
-                : <span className={`grid place-items-center h-14 md:h-20 aspect-square border ${dark ? "border-chalk/40 label-ptp" : "border-ink/30 label-bsa"} text-[10px]`}>Logo</span>}
+                : <span className={`grid place-items-center h-14 md:h-20 aspect-square border border-chalk/40 ${dark ? "label-ptp" : "label-bsa"} text-[10px]`}>Logo</span>}
             </motion.div>
           )}
         </AnimatePresence>
 
         <div ref={textBlocks[s]} className={`relative z-10 mt-auto w-full p-6 md:p-10 ${dark ? "md:text-right" : ""}`}>
-          <p className={dark ? "label-ptp text-chalk-soft" : "label-bsa text-ink-soft"}>{label}</p>
+          <p className={dark ? "label-ptp text-sun" : "label-bsa text-gold"}>{label}</p>
           <motion.h2 className={`${dark ? "h-ptp" : "h-bsa"} mt-2 leading-[1.05] whitespace-nowrap`}
             data-base={dark ? (mobile ? 24 : 30) : (mobile ? 30 : 36)} initial={false} animate={{ fontSize: `${(dark ? (mobile ? 24 : 30) : (mobile ? 30 : 36)) * (open ? 1.5 : 1)}px` }} transition={t}>{title}</motion.h2>
           <motion.a href={href}
-            className={`mt-5 inline-block text-[11px] tracking-[0.22em] uppercase border-b pb-1 ${dark ? "border-chalk/50" : "border-ink/50"}`}
+            className={`mt-5 inline-block text-[11px] tracking-[0.22em] uppercase border-b pb-1 border-chalk/50`}
             animate={{ opacity: open ? 1 : 0, y: open ? 0 : 6 }}
             transition={{ ...t, delay: open && !reduce ? 0.15 : 0 }}
             onFocus={() => setActive(s)}

@@ -1,20 +1,21 @@
 ---
-// Card skeleton matches PassportCard exactly: 4:5 image, then a fixed-height meta block (h-24),
-// so Bruffels and Passport rows line up side by side.
+// Same skeleton as PassportCard: 4:5 image, then a fixed-height meta block (h-44),
+// so both brands line up row for row. Label + name centred like a pen holds them together.
 import { GoneStamp } from "./Gallery";
+import ClaimButton from "./ClaimButton";
 import { formatPrice } from "../lib/price";
-import { pad, type BruffelsPiece } from "../data/products";
-const { p } = Astro.props as { p: BruffelsPiece };
+import { pad, type BrusselsPiece } from "../data/products";
+const { p } = Astro.props as { p: BrusselsPiece };
 ---
-<a href={`/bruffels/${p.id}`} class="group block bg-paper-2/40">
-  <div class="relative aspect-[4/5] overflow-hidden bg-paper-2">
-    <div class:list={["absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,#f8f4ee,#e6ddd4)] transition-transform duration-[1200ms] ease-[var(--ease-calm)] group-hover:scale-[1.04]", p.sold && "opacity-45 grayscale"]} />
+<article class="group satin text-chalk">
+  <a href={`/bruffels/${p.id}`} class="block relative aspect-[4/5] overflow-hidden bg-paper-2">
+    <div class:list={["absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,#faf8fb,#e9e4ee)] transition-transform duration-[1200ms] ease-[var(--ease-calm)] group-hover:scale-[1.04]", p.sold && "opacity-45 grayscale"]} />
     {p.sold ? <GoneStamp small /> : <span class="absolute top-3 left-3 label-bsa text-[10px] text-gold-deep">1 of 1</span>}
+  </a>
+  <div class="h-44 p-4 flex flex-col items-center text-center justify-between tag-in">
+    <p class="label-bsa text-gold w-full truncate text-[10px] sm:text-[11px]">Piece {pad(p.pieceNo)} · {p.maker}</p>
+    <a href={`/bruffels/${p.id}`} class:list={["text-sm w-full truncate hover:underline underline-offset-4 decoration-gold/50", p.sold && "text-chalk-soft"]}>{p.name}</a>
+    <p class="text-sm tabular-nums text-chalk-soft">{p.sold ? "Gone" : formatPrice(p.priceUsd)}</p>
+    <ClaimButton client:visible id={p.id} name={p.name} priceUsd={p.priceUsd} sold={p.sold} />
   </div>
-  <div class="h-24 p-4 flex flex-col justify-between tag-in">
-    <p class="label-bsa text-ink-soft">Piece {pad(p.pieceNo)} · {p.maker}</p>
-    <div class:list={["text-sm md:flex md:justify-between md:gap-2", p.sold && "text-ink-soft"]}>
-      <p class="truncate">{p.name}</p><p class="tabular-nums shrink-0">{p.sold ? "Gone" : formatPrice(p.priceUsd)}</p>
-    </div>
-  </div>
-</a>
+</article>

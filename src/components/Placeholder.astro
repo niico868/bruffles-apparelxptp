@@ -1,8 +1,8 @@
 ---
-// Stand-in for Higgsfield photography. tone: paper | plum
+// Stand-in for Higgsfield photography. tone: paper | dark
 const { label = "", tone = "paper", ratio = "4/5", class: cls = "" } = Astro.props;
 ---
-<div class:list={["relative w-full overflow-hidden", tone === "plum" ? "bg-plum-2" : "bg-paper-2", cls]} style={`aspect-ratio:${ratio}`}>
+<div class:list={["relative w-full overflow-hidden", tone === "dark" ? "bg-army-2" : "bg-paper-2", cls]} style={`aspect-ratio:${ratio}`}>
   <slot />
-  <span class:list={["absolute bottom-2 left-2 label-ptp opacity-40", tone === "plum" ? "text-chalk" : "text-ink"]}>{label}</span>
+  <span class:list={["absolute bottom-2 left-2 label-ptp opacity-40", tone === "dark" ? "text-chalk" : "text-ink"]}>{label}</span>
 </div>

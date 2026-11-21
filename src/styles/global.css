@@ -7,23 +7,35 @@
 
 /* Tokens: see DESIGN.md. Pages use names, never raw values. */
 @theme {
-  --color-paper: #f4f0e8;      /* Bruffels surface (warm off-white) */
-  --color-paper-2: #ebe4dc;    /* Bruffels placeholder / raised */
-  --color-ink: #2a1a3d;        /* primary text: deep royal purple, replaces black */
-  --color-ink-soft: #625873;   /* secondary text on paper */
-  --color-line: #ddd3d0;       /* hairlines */
-  --color-plum: #26153b;       /* Passport surface: matte satin royal purple */
-  --color-plum-2: #331f4d;     /* Passport raised / cards */
-  --color-plum-3: #3e2a5c;     /* Passport image placeholder */
-  --color-chalk: #f0ebf4;      /* text on plum */
-  --color-chalk-soft: #b6abc6; /* secondary on plum */
-  --color-gold: #c4a15a;       /* monogram, 1-of-1, stamps, key hovers. Sparingly */
-  --color-gold-deep: #84682c;  /* gold text on paper */
+  /* Site */
+  --color-paper: #ffffff;      /* page background: white */
+  --color-paper-2: #f3f0f5;    /* image placeholders on white */
+  --color-line: #e5e0ea;       /* hairlines */
+  --color-ink: #22103a;        /* text on white: dark royal purple */
+  --color-ink-soft: #5d5170;   /* secondary text on white */
+  --color-chalk: #f4eee2;      /* text on dark surfaces (warm cream) */
+  --color-chalk-soft: #cdc3ad; /* secondary text on dark surfaces */
+  --color-gold: #c9a55a;       /* gold: stamps, piece labels, key accents */
+  --color-gold-deep: #84682c;  /* gold text on white */
 
-  --font-sans: "Manrope Variable", system-ui, sans-serif;               /* shared + Bruffels subheads/body */
-  --font-serif: "Fraunces Variable", Georgia, serif;                     /* Bruffels headings only */
-  --font-air: "Barlow Semi Condensed", "Manrope Variable", sans-serif;   /* Passport headings: airport signage */
-  --font-mono: "DM Mono", ui-monospace, monospace;                       /* Passport labels, departure board */
+  /* Bruffels: dark royal purple, matte satin */
+  --color-royal: #261040;
+  --color-royal-2: #331656;
+  --color-royal-3: #40206a;
+
+  /* Passport: modern Rasta in a khaki suit. Army green, olive, earth brown, sun, leaf, clay */
+  --color-army: #343b24;       /* olive drab surface */
+  --color-army-2: #424a2e;     /* raised / cards */
+  --color-army-3: #6f6047;     /* earth-brown image placeholder */
+  --color-khaki: #c8b68e;      /* khaki details */
+  --color-sun: #e2b340;        /* Irie sun yellow-gold */
+  --color-leaf: #4f7d3c;       /* Ital leaf green */
+  --color-clay: #a9482f;       /* clay red, used rarely */
+
+  --font-sans: "Manrope Variable", system-ui, sans-serif;
+  --font-serif: "Fraunces Variable", Georgia, serif;
+  --font-air: "Barlow Semi Condensed", "Manrope Variable", sans-serif;
+  --font-mono: "DM Mono", ui-monospace, monospace;
 
   --ease-calm: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-zip: cubic-bezier(0.5, 0, 0.1, 1);
@@ -49,8 +61,10 @@
 .js .tag-in { opacity: 0; transform: translateY(6px); transition: opacity .9s var(--ease-calm), transform .9s var(--ease-calm); }
 .js .tag-in.is-in { opacity: 1; transform: none; }
 
-/* Satin, not shiny: soft low-contrast sheen across the purple */
-.satin { background-color: var(--color-plum); background-image: radial-gradient(120% 80% at 20% 0%, rgba(255,255,255,.07), transparent 60%), linear-gradient(160deg, #3a2160 0%, #2c1849 55%, #24133d 100%); }
+/* Bruffels: matte satin royal purple (soft sheen, not shiny) */
+.satin { background-color: var(--color-royal); background-image: radial-gradient(120% 80% at 20% 0%, rgba(255,255,255,.07), transparent 60%), linear-gradient(160deg, #331656 0%, #261040 55%, #1d0b33 100%); }
+/* Passport: olive fatigue canvas with a faint woven texture and a warm sun glow */
+.fatigue { background-color: var(--color-army); background-image: radial-gradient(90% 70% at 85% 0%, rgba(226,179,64,.10), transparent 60%), repeating-linear-gradient(45deg, rgba(255,255,255,.018) 0 2px, transparent 2px 6px), linear-gradient(165deg, #3f472b 0%, #343b24 55%, #2b311d 100%); }
 /* Bruffels serif headings: Fraunces at a wide, soft, luxe optical setting */
 .h-bsa { font-family: var(--font-serif); font-weight: 500; font-variation-settings: "opsz" 72, "SOFT" 50, "WONK" 0; letter-spacing: -0.01em; }
 .h-ptp { font-family: var(--font-air); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }

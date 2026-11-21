@@ -4,10 +4,10 @@
 const { brand, title, href, tag, id } = Astro.props as { brand: "bsa" | "ptp"; title: string; href: string; tag: string; id?: string };
 const dark = brand === "ptp";
 ---
-<div id={id} class:list={["p-4 md:p-8", dark ? "satin text-chalk" : "bg-paper text-ink"]}>
+<div id={id} class:list={["p-4 md:p-8", dark ? "fatigue text-chalk" : "bg-paper text-ink"]}>
   <header class="relative h-16 flex items-center justify-between">
     <h2 class:list={[dark ? "h-ptp text-xl" : "h-bsa text-2xl"]}>{title}</h2>
-    <a href={href} class:list={[dark ? "label-ptp text-chalk-soft hover:text-gold" : "label-bsa text-ink-soft hover:text-ink", "transition-colors"]}>{tag}</a>
+    <a href={href} class:list={[dark ? "label-ptp text-sun hover:text-chalk" : "label-bsa text-ink-soft hover:text-ink", "transition-colors"]}>{tag}</a>
     <div class="absolute inset-x-0 bottom-0"><slot name="rule" /></div>
   </header>
   <div class="grid grid-cols-2 gap-4 mt-4"><slot /></div>
