@@ -15,3 +15,7 @@
 - Send Higgsfield assets: 2 split-screen loops, stamp graphic, product shots.
 
 **Test on the Chromebook:** `npm install` then `npm run dev`, open http://localhost:4321, hover each half, add a Passport item, open the size drawer.
+
+## Chromebook fix
+Nico's Chromebook CPU has no AVX2, so Astro's native compiler crashed with "Illegal instruction".
+`npm run dev` now forces the universal WASM compiler (`NAPI_RS_FORCE_WASI=1`). `npm run dev:fast` uses the native one on newer machines. Builds (Cloudflare) stay native.
