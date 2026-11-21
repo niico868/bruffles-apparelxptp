@@ -1,5 +1,5 @@
 // Mock catalogue for the Phase 0 demo. Replaced by Supabase in Phase 1.
-export type BrusselsPiece = {
+export type BruffelsPiece = {
   brand: "brussels"; id: string; pieceNo: number; name: string; maker: string;
   source: string; condition: string; size: string; priceUsd: number; sold: boolean;
   description: string; measurements: Record<string, string>; receiptRef?: string;
@@ -9,7 +9,7 @@ export type PassportItem = {
   qty: number; packOf: number; description: string;
 };
 
-export const brussels: BrusselsPiece[] = [
+export const brussels: BruffelsPiece[] = [
   { brand: "brussels", id: "BSA-047", pieceNo: 47, name: "Tech Fleece Windrunner", maker: "Nike", source: "nike.com", condition: "New with tags", size: "M", priceUsd: 18500, sold: false,
     description: "Heather grey tech fleece with a full-length zip and a chevron yoke. Bought new from Nike's official store; tags intact.",
     measurements: { Chest: "58 cm", Length: "71 cm", Sleeve: "64 cm", Shoulder: "47 cm" }, receiptRef: "Restock 2026-11 · Order #1" },

@@ -1,12 +1,12 @@
 ---
 // Card skeleton matches PassportCard exactly: 4:5 image, then a fixed-height meta block (h-24),
-// so Brussels and Passport rows line up side by side.
+// so Bruffels and Passport rows line up side by side.
 import { GoneStamp } from "./Gallery";
 import { formatPrice } from "../lib/price";
-import { pad, type BrusselsPiece } from "../data/products";
-const { p } = Astro.props as { p: BrusselsPiece };
+import { pad, type BruffelsPiece } from "../data/products";
+const { p } = Astro.props as { p: BruffelsPiece };
 ---
-<a href={`/brussels/${p.id}`} class="group block bg-paper-2/40">
+<a href={`/bruffels/${p.id}`} class="group block bg-paper-2/40">
   <div class="relative aspect-[4/5] overflow-hidden bg-paper-2">
     <div class:list={["absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,#f8f4ee,#e6ddd4)] transition-transform duration-[1200ms] ease-[var(--ease-calm)] group-hover:scale-[1.04]", p.sold && "opacity-45 grayscale"]} />
     {p.sold ? <GoneStamp small /> : <span class="absolute top-3 left-3 label-bsa text-[10px] text-gold-deep">1 of 1</span>}

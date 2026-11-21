@@ -31,3 +31,9 @@ Local dev on the Chromebook is not needed: preview on the .workers.dev link inst
 - Palette: black replaced with deep royal purple; Passport side is matte satin purple.
 - Fonts: Fraunces (Brussels headings), Manrope (body), Barlow Semi Condensed + DM Mono (Passport).
 **Blocked:** Supabase project "Brussels apparel XPTP" isn't visible to the connected account (only Neikoli Devs is). Nico to check its organization.
+
+## Session 3 · Hero behaviour + rename
+- Brand renamed Brussels → **Bruffels** across the site; pages now at `/bruffels`.
+- Split screen can't widen until **10s after the first mouse movement** (and 20+ movements). Tested: widened at 10.6s.
+- Open (70%) side: heading 1.5× bigger, logo slot in the top corner, brand video plays. Switching sides pauses the other video. Click the video or press Space to play/pause; no icons.
+- Media slots in `src/data/media.ts` (poster, video, logo per brand). Files go in `public/media/`.

@@ -1,20 +1,21 @@
-import { useEffect, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
 import Monogram from "./Monogram";
+import { heroMedia } from "../data/media";
 
-type Side = "bsa" | "ptp" | null;
+type Side = "bsa" | "ptp";
 const EASE = [0.22, 1, 0.36, 1] as const;
-const ARM_MS = 2500;
-const DURATION = 0.75; // 20% slower than the original 0.6s
+const DURATION = 0.75;      // widening speed (20% slower than the original 0.6s)
+const ARM_MS = 10_000;      // minimum wait, counted from the visitor's FIRST mouse movement
+const ARM_MOVES = 20;       // and at least this many mouse movements before hover can widen
 
 export default function SplitHero() {
-  const [active, setActive] = useState<Side>(null);
+  const [active, setActive] = useState<Side | null>(null);
   const [mobile, setMobile] = useState(false);
-  // Armed: ignore the cursor for the first moments so visitors first see the even 50/50 split.
-  // After ARM_MS, the next real mouse movement over a half starts the widening.
   const [armed, setArmed] = useState(false);
-  useEffect(() => { const id = setTimeout(() => setArmed(true), ARM_MS); return () => clearTimeout(id); }, []);
   const reduce = useReducedMotion();
+  const videos = { bsa: useRef<HTMLVideoElement>(null), ptp: useRef<HTMLVideoElement>(null) };
+  const root = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 767px)");
@@ -23,55 +24,112 @@ export default function SplitHero() {
     return () => mq.removeEventListener("change", set);
   }, []);
 
-  const grow = (s: Exclude<Side, null>) => (active === null ? 1 : active === s ? 7 : 3); // 70 / 30
+  // Arming sensor: nothing happens until the mouse first moves. From then, the visitor must
+  // keep browsing for ARM_MS and ARM_MOVES before hover is allowed to widen a half.
+  useEffect(() => {
+    let start = 0, moves = 0;
+    const onMove = (e: PointerEvent) => {
+      if (e.pointerType !== "mouse") return;
+      if (!start) start = performance.now();
+      moves++;
+      if (moves >= ARM_MOVES && performance.now() - start >= ARM_MS) {
+        setArmed(true);
+        window.removeEventListener("pointermove", onMove);
+      }
+    };
+    window.addEventListener("pointermove", onMove);
+    return () => window.removeEventListener("pointermove", onMove);
+  }, []);
+
+  // Video rules: only the open (70%) side plays; switching sides pauses the other.
+  useEffect(() => {
+    (["bsa", "ptp"] as Side[]).forEach((s) => {
+      const v = videos[s].current; if (!v) return;
+      if (s === active && !reduce) v.play().catch(() => {}); else v.pause();
+    });
+  }, [active, reduce]);
+
+  // Click on the open side's video, or Space, toggles that video. No icons, no controls.
+  const toggle = () => { const v = active && videos[active].current; if (v) v.paused ? v.play().catch(() => {}) : v.pause(); };
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.code !== "Space" || !active) return;
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "BUTTON" || tag === "A") return;
+      const r = root.current?.getBoundingClientRect();
+      if (!r || r.bottom < 0 || r.top > window.innerHeight) return; // only while the hero is on screen
+      e.preventDefault(); toggle();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  });
+
+  const grow = (s: Side) => (active === null ? 1 : active === s ? 7 : 3); // 70 / 30
   const t = { duration: reduce ? 0 : DURATION, ease: EASE };
   const linePct = active === "bsa" ? 70 : active === "ptp" ? 30 : 50;
 
-  // Desktop: hover previews, click enters. Mobile: first tap expands, "Enter" navigates.
-  const half = (s: Exclude<Side, null>, href: string, children: React.ReactNode, dark: boolean) => (
-    <motion.section
-      className={`relative flex min-h-0 overflow-hidden ${dark ? "satin text-chalk" : "bg-paper text-ink"}`}
-      style={{ flexBasis: 0 }}
-      animate={{ flexGrow: grow(s) }}
-      transition={t}
-      onPointerMove={(e) => e.pointerType === "mouse" && armed && !mobile && active !== s && setActive(s)}
-      onPointerLeave={(e) => e.pointerType === "mouse" && armed && !mobile && setActive(null)}
-      onClick={() => mobile && setActive(active === s ? null : s)}
-      aria-label={s === "bsa" ? "Brussels Apparel" : "Passport to Paradise"}
-    >
-      {/* video loop slot: drop Higgsfield <video> here */}
-      <div className={`absolute inset-0 ${dark ? "bg-[radial-gradient(ellipse_at_30%_40%,rgba(255,255,255,.05),transparent_70%)]" : "bg-[radial-gradient(ellipse_at_70%_40%,#fbf8f2,transparent_70%)]"}`} />
-      <motion.div className="absolute inset-0 bg-black pointer-events-none" animate={{ opacity: active && active !== s ? (dark ? 0.35 : 0.18) : 0 }} transition={t} />
-      <div className={`relative z-10 mt-auto w-full p-6 md:p-10 ${dark ? "md:text-right" : ""}`}>
-        {children}
-        <motion.a
-          href={href}
-          className={`mt-5 inline-block text-[11px] tracking-[0.22em] uppercase border-b pb-1 ${dark ? "border-chalk/50" : "border-ink/50"}`}
-          animate={{ opacity: active === s ? 1 : 0, y: active === s ? 0 : 6 }}
-          transition={{ ...t, delay: active === s && !reduce ? 0.15 : 0 }}
-          tabIndex={0}
-          onFocus={() => setActive(s)}
-          style={{ pointerEvents: active === s ? "auto" : "none" }}
-        >Enter</motion.a>
-      </div>
-    </motion.section>
-  );
+  const half = (s: Side, href: string, label: string, title: string, dark: boolean) => {
+    const open = active === s;
+    const m = heroMedia[s];
+    return (
+      <motion.section
+        className={`relative flex min-h-0 overflow-hidden ${dark ? "satin text-chalk" : "bg-paper text-ink"}`}
+        style={{ flexBasis: 0 }}
+        animate={{ flexGrow: grow(s) }}
+        transition={t}
+        onPointerMove={(e) => e.pointerType === "mouse" && armed && !mobile && active !== s && setActive(s)}
+        onPointerLeave={(e) => e.pointerType === "mouse" && armed && !mobile && setActive(null)}
+        onClick={(e) => {
+          if ((e.target as HTMLElement).closest("a")) return;
+          if (mobile && !open) return setActive(s);
+          if (open) toggle();
+        }}
+        aria-label={title}
+      >
+        {/* Media: still image by default; the brand video plays only while this half is open */}
+        {m.poster && <img src={m.poster} alt="" className="absolute inset-0 w-full h-full object-cover" />}
+        {m.video && (
+          <motion.video ref={videos[s]} src={m.video} poster={m.poster} muted loop playsInline preload="metadata"
+            className="absolute inset-0 w-full h-full object-cover" animate={{ opacity: open ? 1 : 0 }} transition={t} />
+        )}
+        {!m.poster && !m.video && (
+          <div className={`absolute inset-0 ${dark ? "bg-[radial-gradient(ellipse_at_30%_40%,rgba(255,255,255,.05),transparent_70%)]" : "bg-[radial-gradient(ellipse_at_70%_40%,#fbf8f2,transparent_70%)]"}`} />
+        )}
+        <motion.div className="absolute inset-0 bg-black pointer-events-none" animate={{ opacity: active && !open ? (dark ? 0.35 : 0.18) : 0 }} transition={t} />
+
+        {/* Logo: only on the open side, pinned to the top corner (left for Bruffels, right for Passport) */}
+        <AnimatePresence>
+          {open && (
+            <motion.div key="logo" className={`absolute z-10 top-6 md:top-10 ${dark ? "right-6 md:right-10" : "left-6 md:left-10"}`}
+              initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ ...t, delay: reduce ? 0 : 0.2 }}>
+              {m.logo ? <img src={m.logo} alt={`${title} logo`} className="h-14 md:h-20 w-auto" />
+                : <span className={`grid place-items-center h-14 md:h-20 aspect-square border ${dark ? "border-chalk/40 label-ptp" : "border-ink/30 label-bsa"} text-[10px]`}>Logo</span>}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <div className={`relative z-10 mt-auto w-full p-6 md:p-10 ${dark ? "md:text-right" : ""}`}>
+          <p className={dark ? "label-ptp text-chalk-soft" : "label-bsa text-ink-soft"}>{label}</p>
+          <motion.h2 className={`${dark ? "h-ptp" : "h-bsa"} mt-2 leading-[1.05]`}
+            initial={false} animate={{ fontSize: `${(dark ? (mobile ? 24 : 30) : (mobile ? 30 : 36)) * (open ? 1.5 : 1)}px` }} transition={t}>{title}</motion.h2>
+          <motion.a href={href}
+            className={`mt-5 inline-block text-[11px] tracking-[0.22em] uppercase border-b pb-1 ${dark ? "border-chalk/50" : "border-ink/50"}`}
+            animate={{ opacity: open ? 1 : 0, y: open ? 0 : 6 }}
+            transition={{ ...t, delay: open && !reduce ? 0.15 : 0 }}
+            onFocus={() => setActive(s)}
+            style={{ pointerEvents: open ? "auto" : "none" }}
+          >Enter</motion.a>
+        </div>
+      </motion.section>
+    );
+  };
 
   return (
-    <div className="relative flex flex-col md:flex-row h-[calc(100svh-56px)] min-h-[560px]">
-      {half("bsa", "/brussels", <>
-        <p className="label-bsa text-ink-soft">One of one · Est. Port of Spain</p>
-        <h2 className="h-bsa text-3xl md:text-4xl mt-2">Brussels Apparel</h2>
-      </>, false)}
-      {half("ptp", "/passport", <>
-        <p className="label-ptp text-chalk-soft">Gate 02 · Bulk accessories</p>
-        <h2 className="h-ptp text-2xl md:text-3xl mt-2">Passport to Paradise</h2>
-      </>, true)}
-      {/* Monogram rides the seam */}
-      <motion.div
-        className="absolute z-20 pointer-events-none -translate-x-1/2 -translate-y-1/2 hidden md:block top-1/2"
-        animate={{ left: `${linePct}%` }} transition={t}
-      ><Monogram /></motion.div>
+    <div ref={root} className="relative flex flex-col md:flex-row h-[calc(100svh-56px)] min-h-[560px]">
+      {half("bsa", "/bruffels", "One of one · Est. Port of Spain", "Bruffels Apparel", false)}
+      {half("ptp", "/passport", "Gate 02 · Bulk accessories", "Passport to Paradise", true)}
+      <motion.div className="absolute z-20 pointer-events-none -translate-x-1/2 -translate-y-1/2 hidden md:block top-1/2"
+        animate={{ left: `${linePct}%` }} transition={t}><Monogram /></motion.div>
       <div className="absolute z-20 pointer-events-none left-1/2 -translate-x-1/2 -translate-y-1/2 md:hidden"
         style={{ top: active === "bsa" ? "70%" : active === "ptp" ? "30%" : "50%", transition: `top ${DURATION}s var(--ease-calm)` }}>
         <Monogram size={64} />

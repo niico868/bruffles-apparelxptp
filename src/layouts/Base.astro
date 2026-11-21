@@ -1,7 +1,7 @@
 ---
 import "../styles/global.css";
 import CartCount from "../components/CartCount";
-const { title = "Brussels Apparel × Passport to Paradise", description = "Authentic one-of-one menswear and bulk accessories." } = Astro.props;
+const { title = "Bruffels Apparel × Passport to Paradise", description = "Authentic one-of-one menswear and bulk accessories." } = Astro.props;
 ---
 <!doctype html>
 <html lang="en">
@@ -13,7 +13,7 @@ const { title = "Brussels Apparel × Passport to Paradise", description = "Authe
   <!-- Shared chrome: one clean sans so both brands feel like one store -->
   <header class="sticky top-0 z-30 h-14 bg-paper/90 backdrop-blur border-b border-line">
     <nav class="h-full max-w-[1400px] mx-auto px-4 md:px-8 flex items-center justify-between text-[13px]">
-      <div class="flex gap-5"><a href="/#drop">Shop</a><a href="/brussels" class="hidden sm:inline">Brussels</a><a href="/passport" class="hidden sm:inline">Passport</a></div>
+      <div class="flex gap-5"><a href="/#drop">Shop</a><a href="/bruffels" class="hidden sm:inline">Bruffels</a><a href="/passport" class="hidden sm:inline">Passport</a></div>
       <a href="/" class="h-bsa text-lg tracking-wide">BSA</a>
       <div class="flex gap-5"><a href="/authenticity" class="hidden sm:inline">Authenticity</a><CartCount client:load /></div>
     </nav>
@@ -21,7 +21,7 @@ const { title = "Brussels Apparel × Passport to Paradise", description = "Authe
   <main><slot /></main>
   <footer class="border-t border-line mt-24">
     <div class="max-w-[1400px] mx-auto px-4 md:px-8 py-12 grid gap-8 sm:grid-cols-3 text-[13px] text-ink-soft">
-      <p>Brussels Apparel × Passport to Paradise<br />Trinidad & Tobago · Ships worldwide</p>
+      <p>Bruffels Apparel × Passport to Paradise<br />Trinidad & Tobago · Ships worldwide</p>
       <p class="flex flex-col gap-2"><a href="#">Returns</a><a href="#">Delivery</a><a href="#">Privacy</a></p>
       <p class="flex flex-col gap-2"><a href="/authenticity">Sourcing & authenticity</a><a href="#">Contact</a></p>
     </div>

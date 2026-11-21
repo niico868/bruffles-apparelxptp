@@ -11,7 +11,7 @@ export function getStaticPaths() {
 }
 const { p } = Astro.props;
 ---
-<Base title={`${p.name} · ${p.id} · Brussels Apparel`} description={p.description}>
+<Base title={`${p.name} · ${p.id} · Bruffels Apparel`} description={p.description}>
   <article class="max-w-[1400px] mx-auto px-4 md:px-8 pt-6 md:pt-12 md:grid md:grid-cols-[1.4fr_1fr] md:gap-16">
     <Gallery client:load sold={p.sold} />
 

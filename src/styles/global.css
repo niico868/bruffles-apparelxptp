@@ -7,8 +7,8 @@
 
 /* Tokens: see DESIGN.md. Pages use names, never raw values. */
 @theme {
-  --color-paper: #f4f0e8;      /* Brussels surface (warm off-white) */
-  --color-paper-2: #ebe4dc;    /* Brussels placeholder / raised */
+  --color-paper: #f4f0e8;      /* Bruffels surface (warm off-white) */
+  --color-paper-2: #ebe4dc;    /* Bruffels placeholder / raised */
   --color-ink: #2a1a3d;        /* primary text: deep royal purple, replaces black */
   --color-ink-soft: #625873;   /* secondary text on paper */
   --color-line: #ddd3d0;       /* hairlines */
@@ -20,8 +20,8 @@
   --color-gold: #c4a15a;       /* monogram, 1-of-1, stamps, key hovers. Sparingly */
   --color-gold-deep: #84682c;  /* gold text on paper */
 
-  --font-sans: "Manrope Variable", system-ui, sans-serif;               /* shared + Brussels subheads/body */
-  --font-serif: "Fraunces Variable", Georgia, serif;                     /* Brussels headings only */
+  --font-sans: "Manrope Variable", system-ui, sans-serif;               /* shared + Bruffels subheads/body */
+  --font-serif: "Fraunces Variable", Georgia, serif;                     /* Bruffels headings only */
   --font-air: "Barlow Semi Condensed", "Manrope Variable", sans-serif;   /* Passport headings: airport signage */
   --font-mono: "DM Mono", ui-monospace, monospace;                       /* Passport labels, departure board */
 
@@ -45,12 +45,12 @@
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
 
-/* Brussels: labels settle in like gallery tags. Gated on .js so no-JS still shows them. */
+/* Bruffels: labels settle in like gallery tags. Gated on .js so no-JS still shows them. */
 .js .tag-in { opacity: 0; transform: translateY(6px); transition: opacity .9s var(--ease-calm), transform .9s var(--ease-calm); }
 .js .tag-in.is-in { opacity: 1; transform: none; }
 
 /* Satin, not shiny: soft low-contrast sheen across the purple */
 .satin { background-color: var(--color-plum); background-image: radial-gradient(120% 80% at 20% 0%, rgba(255,255,255,.07), transparent 60%), linear-gradient(160deg, #3a2160 0%, #2c1849 55%, #24133d 100%); }
-/* Brussels serif headings: Fraunces at a wide, soft, luxe optical setting */
+/* Bruffels serif headings: Fraunces at a wide, soft, luxe optical setting */
 .h-bsa { font-family: var(--font-serif); font-weight: 500; font-variation-settings: "opsz" 72, "SOFT" 50, "WONK" 0; letter-spacing: -0.01em; }
 .h-ptp { font-family: var(--font-air); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
