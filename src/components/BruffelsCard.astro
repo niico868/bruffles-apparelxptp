@@ -7,15 +7,15 @@ import { formatPrice } from "../lib/price";
 import { pad, type BrusselsPiece } from "../data/products";
 const { p } = Astro.props as { p: BrusselsPiece };
 ---
-<article class="group/card bg-white text-royal">
-  <a href={`/bruffels/${p.id}`} class="block relative aspect-[4/5] overflow-hidden bg-paper-2">
-    <div class:list={["absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,#faf8fb,#e9e4ee)] transition-transform duration-[1200ms] ease-[var(--ease-calm)] group-hover/card:scale-[1.04]", p.sold && "opacity-45 grayscale"]} />
+<article class="group/card card-jet text-chalk">
+  <a href={`/bruffels/${p.id}`} class="block relative aspect-[4/5] overflow-hidden card-jet-img">
+    <div class:list={["absolute inset-0 card-jet-img transition-transform duration-[1200ms] ease-[var(--ease-calm)] group-hover/card:scale-[1.04]", p.sold && "opacity-45 grayscale"]} />
     {p.sold ? <GoneStamp small /> : <span class="absolute top-3 left-3 label-bsa text-[10px] gold-text font-bold">1 of 1</span>}
   </a>
   <div class="h-44 p-4 flex flex-col items-center text-center justify-between tag-in">
-    <p class="label-bsa gold-text font-bold w-full truncate text-[10px] sm:text-[11px]">Piece {pad(p.pieceNo)} · {p.maker}</p>
-    <a href={`/bruffels/${p.id}`} class:list={["name-hover text-sm w-full truncate", p.sold ? "text-ink-soft" : "text-royal"]}>{p.name}</a>
-    <p class="text-sm tabular-nums text-royal">{p.sold ? "Gone" : formatPrice(p.priceUsd)}</p>
+    <p class="label-bsa gold-text font-bold w-full truncate text-sm">Piece {pad(p.pieceNo)} · {p.maker}</p>
+    <a href={`/bruffels/${p.id}`} class:list={["name-hover text-sm w-full truncate", p.sold ? "text-chalk-soft" : "text-chalk hover:text-white"]}>{p.name}</a>
+    <p class="text-sm tabular-nums text-chalk-soft">{p.sold ? "Gone" : formatPrice(p.priceUsd)}</p>
     <ClaimButton client:visible id={p.id} name={p.name} priceUsd={p.priceUsd} sold={p.sold} />
   </div>
 </article>

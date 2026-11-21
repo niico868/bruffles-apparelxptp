@@ -23,7 +23,7 @@ import { brussels, passport } from "../data/products";
       </DropColumn>
       <DropColumn brand="ptp" title="Passport to Paradise" href="/passport" tag="All departures" id="passport">
         <TravelInk slot="art" />
-        <PlanePath slot="rule" client:visible />
+        <PlanePath slot="rule" dark={false} client:visible />
         {passport.map((item) => <PassportCard client:visible item={item} />)}
       </DropColumn>
     </div>

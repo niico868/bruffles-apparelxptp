@@ -18,13 +18,13 @@ export default function PassportCard({ item }: { item: PassportItem }) {
   };
 
   return (
-    <motion.article animate={card} className="relative bg-jet-2/70 backdrop-blur-[1px] text-chalk">
-      <a href={`/passport/${item.id}`} className="block relative aspect-[4/5] bg-jet-3/60 overflow-hidden">
-        <span className="absolute bottom-2 left-2 label-ptp opacity-40">Product shot</span>
+    <motion.article animate={card} className="relative card-light text-jet shadow-[0_1px_0_rgba(14,31,56,.06)]">
+      <a href={`/passport/${item.id}`} className="block relative aspect-[4/5] card-light-img overflow-hidden">
+        <span className="absolute bottom-2 left-2 label-ptp text-jet opacity-40">Product shot</span>
         <AnimatePresence>
           {stamped > 0 && (
             <motion.div key={stamped}
-              className="absolute right-4 top-4 grid place-items-center w-24 h-24 rounded-full border-2 border-signal text-signal label-ptp text-center leading-tight rotate-[-14deg]"
+              className="absolute right-4 top-4 grid place-items-center w-24 h-24 rounded-full border-2 border-signal-deep text-signal-deep label-ptp text-center leading-tight rotate-[-14deg]"
               initial={reduce ? { opacity: 1 } : { scale: 2.2, opacity: 0, rotate: -30 }}
               animate={{ scale: [2.2, 0.86, 1.06, 1], scaleY: [2.2, 0.7, 1.05, 1], opacity: 1, rotate: -14 }}
               transition={{ duration: 0.32, times: [0, 0.45, 0.75, 1], ease: "easeOut" }}
@@ -33,9 +33,9 @@ export default function PassportCard({ item }: { item: PassportItem }) {
         </AnimatePresence>
       </a>
       <div className="h-44 p-4 flex flex-col items-center text-center justify-between">
-        <p className="label-ptp text-signal w-full truncate text-[10px] sm:text-[11px]">Item {item.itemNo} · {out ? "Sold out" : `Qty ${item.qty}`}{item.packOf > 1 ? ` · Pack ${item.packOf}` : ""}</p>
-        <a href={`/passport/${item.id}`} className="h-ptp name-hover text-[15px] max-w-full truncate hover:text-white">{item.name}</a>
-        <FlipPrice text={formatPrice(item.priceUsd)} className="text-sm text-chalk-soft" />
+        <p className="label-ptp text-signal-deep font-medium w-full truncate text-sm">Item {item.itemNo} · {out ? "Sold out" : `Qty ${item.qty}`}{item.packOf > 1 ? ` · Pack ${item.packOf}` : ""}</p>
+        <a href={`/passport/${item.id}`} className="h-ptp name-hover text-[15px] max-w-full truncate hover:text-black">{item.name}</a>
+        <FlipPrice text={formatPrice(item.priceUsd)} className="text-sm text-jet/70" />
         <BoardButton out={out} onBoard={add} />
       </div>
     </motion.article>

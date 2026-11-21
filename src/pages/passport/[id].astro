@@ -9,17 +9,17 @@ export function getStaticPaths() { return passport.map((item) => ({ params: { id
 const { item } = Astro.props;
 ---
 <Base title={`${item.name} · Passport to Paradise`} description={item.description}>
-  <section class="runway text-chalk relative overflow-hidden">
+  <section class="sky-field text-jet relative overflow-hidden">
     <TravelInk />
     <article class="relative z-10 max-w-[1400px] mx-auto px-4 md:px-8 py-10 md:py-16 md:grid md:grid-cols-[1.3fr_1fr] md:gap-16">
-      <div class="relative aspect-[4/5] bg-jet-3"><span class="absolute bottom-3 left-3 label-ptp opacity-50">Product shot</span></div>
+      <div class="relative aspect-[4/5] card-light-img"><span class="absolute bottom-3 left-3 label-ptp opacity-50">Product shot</span></div>
       <div class="mt-8 md:mt-0 self-center max-w-md">
-        <p class="label-ptp text-signal">Item {item.itemNo} · {item.qty === 0 ? "Sold out" : `Qty ${item.qty}`}{item.packOf > 1 ? ` · Pack ${item.packOf}` : ""}</p>
+        <p class="label-ptp text-signal-deep">Item {item.itemNo} · {item.qty === 0 ? "Sold out" : `Qty ${item.qty}`}{item.packOf > 1 ? ` · Pack ${item.packOf}` : ""}</p>
         <h1 class="h-ptp text-3xl md:text-4xl mt-3">{item.name}</h1>
-        <p class="mt-4 text-lg"><FlipPrice client:visible text={formatPrice(item.priceUsd)} /> <span class="text-sm text-chalk-soft ml-2">≈ {formatPrice(item.priceUsd, "TTD")}</span></p>
-        <p class="mt-6 text-[15px] leading-relaxed text-chalk-soft">{item.description}</p>
+        <p class="mt-4 text-lg"><FlipPrice client:visible text={formatPrice(item.priceUsd)} /> <span class="text-sm text-jet/70 ml-2">≈ {formatPrice(item.priceUsd, "TTD")}</span></p>
+        <p class="mt-6 text-[15px] leading-relaxed text-jet/70">{item.description}</p>
         <div class="mt-8"><BoardItem client:load id={item.id} name={item.name} priceUsd={item.priceUsd} qty={item.qty} /></div>
-        <a href="/passport" class="mt-8 inline-block label-ptp text-sky hover:text-signal">← All departures</a>
+        <a href="/passport" class="mt-8 inline-block label-ptp text-jet hover:text-signal-deep">← All departures</a>
       </div>
     </article>
   </section>

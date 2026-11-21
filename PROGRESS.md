@@ -50,3 +50,10 @@ Local dev on the Chromebook is not needed: preview on the .workers.dev link inst
 - Passport: airport palette (night navy, sky, signage yellow) + ink-stamped line art (globe, stamps, planes, clouds, six country flags) seen through translucent cards.
 - Name hover on both brands: bolder + bigger. Passport names/images open new product pages `/passport/PTP-xx` (with bulk quantity stepper).
 - Bruffels product page: "Favorited X times · Carted X times" beside the description (mock numbers until Phase 1).
+
+## Session 6 · Swap + speed
+- BSA → **BFA** (monogram, nav, piece IDs: BFA-047 etc.).
+- Card schemes swapped: Bruffels = navy cards on royal purple; Passport = light cards on a very light electric-blue field. Cards have a soft off-card light spot.
+- Labels, View all / All departures, Claim/Gone text enlarged to product-name size.
+- Hero logos ride down under the navbar while scrolling, stopping 16px above the "1 of 1" / "Gate 02" labels.
+- **Performance:** the live ink filter caused the lag (34.6ms avg / 100ms worst frames). Art is now a pre-rendered image (`public/art/travel-ink.webp`, re-render with `node scripts/render-ink.cjs`). Now 16.6ms avg / 16.8ms worst = smooth 60fps.

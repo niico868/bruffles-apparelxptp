@@ -31,6 +31,7 @@
   --color-sky: #7fb8e6;        /* sky blue, line art + details */
   --color-signal: #f2c230;     /* airport signage yellow: labels, stamp, Board button */
   --color-runway: #e9eef4;     /* cloud white */
+  --color-signal-deep: #8a6400; /* signage amber, readable on white */
 
   --font-sans: "Manrope Variable", system-ui, sans-serif;
   --font-serif: "Fraunces Variable", Georgia, serif;
@@ -77,3 +78,11 @@
 .name-hover { display: inline-block; transition: transform .2s var(--ease-calm), font-weight .2s, color .2s; font-weight: 500; }
 .name-hover:hover { font-weight: 800; transform: scale(1.06); }
 .bg-white .name-hover:hover { color: #14062a; }
+
+/* Card surfaces: two close tones with a soft light spot whose focal point sits off the card */
+.card-jet { background: radial-gradient(140% 100% at -25% -30%, #24456f 0%, #16304f 62%); }
+.card-jet-img { background: radial-gradient(130% 110% at 125% -25%, #3d5f86 0%, #2b4565 65%); }
+.card-light { background: radial-gradient(140% 100% at -25% -30%, #ffffff 0%, #f0f4f9 65%); }
+.card-light-img { background: radial-gradient(130% 110% at 125% -25%, #ffffff 0%, #e6edf5 65%); }
+/* Passport field: very light electric blue */
+.sky-field { background-color: #dff0ff; background-image: radial-gradient(90% 60% at 85% 0%, rgba(255,255,255,.75), transparent 60%), linear-gradient(170deg, #e6f4ff 0%, #d4ebff 100%); }

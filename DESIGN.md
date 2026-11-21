@@ -13,7 +13,8 @@ Not based on live UXKIN comparisons; direction follows the brief's references (S
 | gold / gold-deep | #c9a55a / #84682c | stamps, piece labels, Claim button |
 | royal / `.royal-field` | #261040 / #45207a→#2e1350 | **Bruffels**: hero half (dark satin) and the Shared Drop column (lighter royal field) |
 | `.gold-metal` / `.gold-text` | brushed gradient #8a6a2b→#f6e3a6 | Bruffels accents: piece labels, Claim button fill, Gone stamp |
-| jet / -2 / -3 | #0e1f38 / #16304f / #2b4565 | **Passport**: night-flight navy surface, translucent cards, slate placeholders (`.runway`) |
+| jet / `.card-jet` | #0e1f38 / #16304f | navy card scheme, now used by **Bruffels** cards (hero Passport half stays navy `.runway`) |
+| `.card-light` / `.sky-field` | #fff→#f0f4f9 / #e6f4ff→#d4ebff | **Passport** cards (light) on a very light electric-blue field |
 | sky · signal · runway | #7fb8e6 · #f2c230 · #e9eef4 | Passport: ink line art (sky), airport signage yellow (labels, stamp, Board ticket), cloud white |
 
 ## Type

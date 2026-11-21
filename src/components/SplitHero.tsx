@@ -21,6 +21,8 @@ export default function SplitHero() {
   // Scroll cutoff: once the line 2rem above the brand text scrolls under the header,
   // snap back to 50/50 and stop reacting to hover until the visitor scrolls back up.
   const [locked, setLocked] = useState(false);
+  // Logo position: rides down with the navbar while scrolling, stopping just above the brand labels.
+  const [logoTop, setLogoTop] = useState(40);
   useEffect(() => {
     const check = () => {
       const header = document.querySelector("header")?.getBoundingClientRect().bottom ?? 0;
@@ -36,6 +38,14 @@ export default function SplitHero() {
         return el.getBoundingClientRect().top + grow + pad;
       });
       const cutoff = Math.min(...tops) - 2 * rem;
+      const heroTop = root.current?.getBoundingClientRect().top ?? 0;
+      const logoH = window.innerWidth < 768 ? 56 : 80;
+      const base = window.innerWidth < 768 ? 24 : 40;
+      const follow = header - heroTop + 24;                       // 24px below the navbar
+      // 16px above where the "1 of 1" / "Gate 02" labels actually are right now (they rise when a heading enlarges)
+      const labelNow = Math.min(...(["bsa", "ptp"] as Side[]).map((k) => textBlocks[k].current?.querySelector("p")?.getBoundingClientRect().top ?? Infinity));
+      const limit = labelNow - heroTop - logoH - 16;
+      setLogoTop(Math.max(base, Math.min(follow, limit)));
       const isLocked = cutoff < header;
       setLocked(isLocked);
       if (isLocked) setActive(null);
@@ -44,7 +54,8 @@ export default function SplitHero() {
     // Fonts change the text height; re-measure once they've loaded so the cutoff line is accurate.
     window.addEventListener("scroll", check, { passive: true });
     window.addEventListener("resize", check);
-    return () => { window.removeEventListener("scroll", check); window.removeEventListener("resize", check); };
+    const id = setInterval(check, 120); // labels move while a heading animates; keep the logo clear of them
+    return () => { clearInterval(id); window.removeEventListener("scroll", check); window.removeEventListener("resize", check); };
   }, []);
 
   useEffect(() => {
@@ -130,7 +141,7 @@ export default function SplitHero() {
         {/* Logo: only on the open side, pinned to the top corner (left for Bruffels, right for Passport) */}
         <AnimatePresence>
           {open && (
-            <motion.div key="logo" className={`absolute z-10 top-6 md:top-10 ${dark ? "right-6 md:right-10" : "left-6 md:left-10"}`}
+            <motion.div key="logo" className={`absolute z-10 ${dark ? "right-6 md:right-10" : "left-6 md:left-10"}`} style={{ top: logoTop }}
               initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ ...t, delay: reduce ? 0 : 0.2 }}>
               {m.logo ? <img src={m.logo} alt={`${title} logo`} className="h-14 md:h-20 w-auto" />
                 : <span className={`grid place-items-center h-14 md:h-20 aspect-square border border-chalk/40 ${dark ? "label-ptp" : "label-bsa"} text-[10px]`}>Logo</span>}
