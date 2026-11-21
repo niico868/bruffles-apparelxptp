@@ -1,0 +1,49 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter";
+@import "@fontsource/instrument-serif";
+@import "@fontsource/instrument-serif/400-italic.css";
+@import "@fontsource-variable/space-grotesk";
+@import "@fontsource/dm-mono";
+
+/* Tokens: see DESIGN.md. Pages use names, never raw values. */
+@theme {
+  --color-paper: #f4f0e8;      /* Brussels surface */
+  --color-paper-2: #ebe5d9;    /* Brussels placeholder / raised */
+  --color-ink: #1c1b19;        /* primary text on paper */
+  --color-ink-soft: #625d55;   /* secondary text on paper (6.1:1) */
+  --color-line: #d9d2c4;       /* hairlines on paper */
+  --color-coal: #1d1e20;       /* Passport surface */
+  --color-coal-2: #2a2b2e;     /* Passport raised */
+  --color-chalk: #ece9e2;      /* text on coal */
+  --color-chalk-soft: #a19e96; /* secondary on coal (6.9:1) */
+  --color-gold: #b8964e;       /* monogram, 1-of-1, key buttons. Never body text on paper */
+  --color-gold-deep: #85692e;  /* gold text on paper (4.6:1) */
+
+  --font-sans: "Inter Variable", system-ui, sans-serif;          /* shared: nav, cart, checkout */
+  --font-serif: "Instrument Serif", Georgia, serif;              /* Brussels headlines */
+  --font-grotesk: "Space Grotesk Variable", system-ui, sans-serif; /* Passport headlines */
+  --font-mono: "DM Mono", ui-monospace, monospace;               /* Passport labels */
+
+  --ease-calm: cubic-bezier(0.22, 1, 0.36, 1);   /* Brussels */
+  --ease-zip: cubic-bezier(0.5, 0, 0.1, 1);      /* Passport */
+}
+
+@layer base {
+  html { background: var(--color-paper); color: var(--color-ink); }
+  body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+  :focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; }
+}
+
+@layer components {
+  /* "PIECE 047 · 1 OF 1": gallery-tag labels */
+  .label-bsa { font-family: var(--font-sans); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; font-variant-caps: all-small-caps; }
+  .label-ptp { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* Brussels: labels settle in like gallery tags. Gated on .js so no-JS still shows them. */
+.js .tag-in { opacity: 0; transform: translateY(6px); transition: opacity .9s var(--ease-calm), transform .9s var(--ease-calm); }
+.js .tag-in.is-in { opacity: 1; transform: none; }

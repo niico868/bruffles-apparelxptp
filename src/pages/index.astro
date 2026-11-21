@@ -1,0 +1,43 @@
+---
+import Base from "../layouts/Base.astro";
+import SplitHero from "../components/SplitHero";
+import BrusselsCard from "../components/BrusselsCard.astro";
+import PassportCard from "../components/PassportCard";
+import PlanePath from "../components/PlanePath";
+import { brussels, passport } from "../data/products";
+---
+<Base>
+  <SplitHero client:load />
+
+  <section id="drop" class="max-w-[1400px] mx-auto px-4 md:px-8 pt-24">
+    <header class="flex items-baseline justify-between border-b border-line pb-4">
+      <h1 class="text-[13px] tracking-[0.2em] uppercase">Shared Drop · November</h1>
+      <p class="label-bsa text-ink-soft">Restocked twice a month</p>
+    </header>
+
+    <div class="grid md:grid-cols-2 gap-px bg-line mt-8">
+      <!-- Brussels column -->
+      <div class="bg-paper md:pr-8 pb-10">
+        <div class="flex items-baseline justify-between py-6">
+          <h2 class="font-serif text-2xl">Brussels Apparel</h2>
+          <a href="/brussels/BSA-047" class="label-bsa text-ink-soft hover:text-ink">View all</a>
+        </div>
+        <div class="grid grid-cols-2 gap-x-4 gap-y-10">
+          {brussels.map((p) => <BrusselsCard p={p} />)}
+        </div>
+      </div>
+
+      <!-- Passport column -->
+      <div id="passport" class="bg-coal text-chalk p-4 md:p-8 pb-10">
+        <div class="flex items-baseline justify-between pb-2">
+          <h2 class="font-grotesk text-xl font-medium tracking-tight">Passport to Paradise</h2>
+          <span class="label-ptp text-chalk-soft">Departures</span>
+        </div>
+        <PlanePath client:visible />
+        <div class="grid grid-cols-2 gap-4 mt-2">
+          {passport.map((item) => <PassportCard client:visible item={item} />)}
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
