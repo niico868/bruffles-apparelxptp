@@ -4,6 +4,7 @@ import SplitHero from "../components/SplitHero";
 import BrusselsCard from "../components/BrusselsCard.astro";
 import PassportCard from "../components/PassportCard";
 import PlanePath from "../components/PlanePath";
+import DropColumn from "../components/DropColumn.astro";
 import { brussels, passport } from "../data/products";
 ---
 <Base>
@@ -15,29 +16,14 @@ import { brussels, passport } from "../data/products";
       <p class="label-bsa text-ink-soft">Restocked twice a month</p>
     </header>
 
-    <div class="grid md:grid-cols-2 gap-px bg-line mt-8">
-      <!-- Brussels column -->
-      <div class="bg-paper md:pr-8 pb-10">
-        <div class="flex items-baseline justify-between py-6">
-          <h2 class="font-serif text-2xl">Brussels Apparel</h2>
-          <a href="/brussels/BSA-047" class="label-bsa text-ink-soft hover:text-ink">View all</a>
-        </div>
-        <div class="grid grid-cols-2 gap-x-4 gap-y-10">
-          {brussels.map((p) => <BrusselsCard p={p} />)}
-        </div>
-      </div>
-
-      <!-- Passport column -->
-      <div id="passport" class="bg-coal text-chalk p-4 md:p-8 pb-10">
-        <div class="flex items-baseline justify-between pb-2">
-          <h2 class="font-grotesk text-xl font-medium tracking-tight">Passport to Paradise</h2>
-          <span class="label-ptp text-chalk-soft">Departures</span>
-        </div>
-        <PlanePath client:visible />
-        <div class="grid grid-cols-2 gap-4 mt-2">
-          {passport.map((item) => <PassportCard client:visible item={item} />)}
-        </div>
-      </div>
+    <div class="grid md:grid-cols-2 mt-8">
+      <DropColumn brand="bsa" title="Brussels Apparel" href="/brussels" tag="View all">
+        {brussels.map((p) => <BrusselsCard p={p} />)}
+      </DropColumn>
+      <DropColumn brand="ptp" title="Passport to Paradise" href="/passport" tag="All departures" id="passport">
+        <PlanePath slot="rule" client:visible />
+        {passport.map((item) => <PassportCard client:visible item={item} />)}
+      </DropColumn>
     </div>
   </section>
 </Base>

@@ -23,3 +23,11 @@ Nico's Chromebook CPU has no AVX2, so Astro's native compiler crashed with "Ille
 ## Hosting
 Cloudflare Workers project `bruffles-apparelxptp` builds this branch (`npm run build`, serves `dist/` via `wrangler.jsonc`).
 Local dev on the Chromebook is not needed: preview on the .workers.dev link instead.
+
+## Session 2 · Design tweaks
+- Split screen waits 2.5s before reacting to the mouse, then eases 20% slower (0.75s).
+- Shared Drop: Brussels and Passport cards now line up row for row.
+- New brand pages `/brussels` and `/passport`; split-screen "Enter" goes to them. New `/authenticity` page; nav links work.
+- Palette: black replaced with deep royal purple; Passport side is matte satin purple.
+- Fonts: Fraunces (Brussels headings), Manrope (body), Barlow Semi Condensed + DM Mono (Passport).
+**Blocked:** Supabase project "Brussels apparel XPTP" isn't visible to the connected account (only Neikoli Devs is). Nico to check its organization.

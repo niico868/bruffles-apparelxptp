@@ -5,9 +5,9 @@ export default function PlanePath({ dark = true }: { dark?: boolean }) {
   const reduce = useReducedMotion();
   const stroke = dark ? "#a19e96" : "#625d55";
   return (
-    <div className="relative h-12 overflow-hidden" aria-hidden>
+    <div className="relative h-4 overflow-hidden" aria-hidden>
       <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 10">
-        <path d="M0 7 Q 50 1 100 7" fill="none" stroke={stroke} strokeWidth=".3" strokeDasharray="1 1.4" vectorEffect="non-scaling-stroke" />
+        <path d="M0 5 L 100 5" fill="none" stroke={stroke} strokeWidth=".3" strokeDasharray="1 1.4" vectorEffect="non-scaling-stroke" />
       </svg>
       <motion.svg width="18" height="18" viewBox="0 0 24 24" className="absolute top-1/2 -translate-y-1/2" fill="var(--color-gold)"
         initial={{ left: "-5%" }} whileInView={{ left: reduce ? "50%" : "102%" }} viewport={{ once: true, amount: 1 }}

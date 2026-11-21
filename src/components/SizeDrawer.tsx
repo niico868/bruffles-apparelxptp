@@ -19,7 +19,7 @@ export default function SizeDrawer({ size, measurements }: { size: string; measu
               className="fixed z-50 bg-paper bottom-0 inset-x-0 md:inset-y-0 md:left-auto md:w-[420px] p-8 max-h-[80svh] md:max-h-none overflow-auto"
               initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}>
               <div className="flex justify-between items-baseline">
-                <h2 className="font-serif text-2xl">Measurements</h2>
+                <h2 className="h-bsa text-2xl">Measurements</h2>
                 <button onClick={() => setOpen(false)} className="label-bsa min-h-11">Close</button>
               </div>
               <p className="label-bsa text-ink-soft mt-2">Tagged size {size} · measured flat, by hand</p>
