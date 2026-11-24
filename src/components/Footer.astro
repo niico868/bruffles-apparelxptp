@@ -1,0 +1,38 @@
+---
+import DropAlerts from "./DropAlerts";
+const { alerts = true } = Astro.props as { alerts?: boolean };
+---
+<footer class="bf border-t border-hair">
+  <div class="wrap py-24 grid gap-16 md:grid-cols-12">
+    <div class="md:col-span-5">
+      {alerts ? <>
+        <p class="label-bf text-gold-text">Drop alerts</p>
+        <p class="h-bf text-[32px] mt-2">Get the next drop first.</p>
+        <div class="mt-6"><DropAlerts client:visible compact /></div>
+      </> : <p class="h-bf text-[32px]">Real recognize real.</p>}
+    </div>
+    <div class="md:col-span-3 md:col-start-7">
+      <img src="/brand/bruffles-monogram-gold-deep.webp" alt="Bruffles Apparel monogram" width="48" height="48" />
+      <p class="mt-4 font-semibold">Bruffles Apparel</p>
+      <p class="text-ink-soft">Authentic pieces, one of each.</p>
+      <ul class="mt-4 space-y-2 label-bf"><li><a href="/bruffles" class="hover:text-gold-text">Shop Bruffles</a></li>
+        <li><a href="#" class="hover:text-gold-text">Instagram · [CLIENT TO CONFIRM]</a></li></ul>
+    </div>
+    <div class="md:col-span-3">
+      <img src="/brand/passport-badge.webp" alt="Passport to Paradise logo" width="57" height="48" class="h-12 w-auto" />
+      <p class="mt-4 font-semibold">Passport to Paradise</p>
+      <p class="text-ink-soft">Papers, filters and tools. 18+ only.</p>
+      <ul class="mt-4 space-y-2 label-bf"><li><a href="/passport" class="hover:text-gold-text">Shop Passport</a></li>
+        <li><a href="#" class="hover:text-gold-text">Instagram · [CLIENT TO CONFIRM]</a></li></ul>
+    </div>
+  </div>
+  <div class="wrap py-8 border-t border-hair flex flex-col md:flex-row gap-6 md:items-center md:justify-between">
+    <ul class="flex flex-wrap gap-x-6 gap-y-2 label-bf">
+      <li><a href="/policies/returns" class="hover:text-gold-text">Returns</a></li>
+      <li><a href="/policies/delivery" class="hover:text-gold-text">Delivery</a></li>
+      <li><a href="/policies/privacy" class="hover:text-gold-text">Privacy</a></li>
+      <li><a href="/policies/sourcing" class="hover:text-gold-text">Sourcing</a></li>
+    </ul>
+    <p class="label-bf text-ink-soft">Bruffles Apparel × Passport to Paradise · Trinidad & Tobago</p>
+  </div>
+</footer>

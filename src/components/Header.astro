@@ -1,0 +1,68 @@
+---
+// Sticky header. Transparent over the homepage hero (text uses difference blending so it reads on
+// both bone and charcoal), solid once you scroll. Brand switch, bag count and a menu drawer.
+import CartCount from "./CartCount";
+const { world = "home" } = Astro.props as { world?: "home" | "bf" | "pp" };
+const lockup = world === "bf" ? "BA" : world === "pp" ? "PTP" : "BA × PTP";
+const seg = (w: "bf" | "pp") => world === w ? "bg-current/0 underline underline-offset-[6px] decoration-1" : "opacity-70 hover:opacity-100";
+---
+<header id="site-header" data-world={world} data-transparent={world === "home" ? "true" : "false"}
+  class="site-header fixed top-0 inset-x-0 z-40 h-16 transition-[background-color,border-color] duration-500">
+  <nav class="wrap h-full grid grid-cols-[1fr_auto_1fr] items-center" aria-label="Main">
+    <div class="flex items-center gap-6">
+      <button type="button" class="menu-open label-bf min-h-12 -ml-2 px-2 flex items-center gap-2" aria-haspopup="dialog" aria-controls="menu">
+        <span aria-hidden class="grid gap-[5px]"><span class="block w-5 h-px bg-current"></span><span class="block w-5 h-px bg-current"></span></span>
+        <span class="hidden sm:inline">Menu</span>
+      </button>
+      <div class="hidden md:flex items-center gap-1 label-bf" role="group" aria-label="Choose a brand">
+        <a href="/bruffles" class:list={["px-3 py-2", seg("bf")]} aria-current={world === "bf" ? "page" : undefined}>Bruffles</a>
+        <span aria-hidden class="opacity-40">/</span>
+        <a href="/passport" class:list={["px-3 py-2", seg("pp")]} aria-current={world === "pp" ? "page" : undefined}>Passport</a>
+      </div>
+    </div>
+    <a href="/" class:list={["text-[20px] whitespace-nowrap", world === "pp" ? "h-pp" : "h-bf"]} aria-label="Home">{lockup}</a>
+    <div class="flex justify-end label-bf"><CartCount client:load /></div>
+  </nav>
+</header>
+
+<dialog id="menu" class="menu m-0 h-full max-h-none w-full max-w-[420px] bg-bone text-ink p-0 backdrop:bg-ink/40">
+  <div class="h-full flex flex-col px-6 py-6">
+    <div class="flex items-center justify-between"><p class="label-bf text-ink-soft">Menu</p>
+      <button type="button" class="menu-close label-bf min-h-12 px-2">Close</button></div>
+    <div class="mt-8 grid grid-cols-2 border border-ink" role="group" aria-label="Choose a brand">
+      <a href="/bruffles" class:list={["min-h-12 grid place-items-center label-bf", world === "bf" ? "bg-ink text-bone" : ""]}>Bruffles</a>
+      <a href="/passport" class:list={["min-h-12 grid place-items-center label-bf border-l border-ink", world === "pp" ? "bg-char text-signal" : ""]}>Passport</a>
+    </div>
+    <ul class="mt-12 space-y-4 h-bf text-[32px]">
+      <li><a href="/" class="hover:text-gold-text">Home</a></li>
+      <li><a href="/bruffles" class="hover:text-gold-text">Bruffles collection</a></li>
+      <li><a href="/passport" class="hover:text-gold-text">Passport departures</a></li>
+      <li><a href="/authenticity" class="hover:text-gold-text">How authenticity works</a></li>
+      <li><a href="/#drop-alerts" class="hover:text-gold-text">Drop alerts</a></li>
+    </ul>
+    <ul class="mt-auto pt-12 grid grid-cols-2 gap-3 label-bf text-ink-soft">
+      <li><a href="/policies/returns">Returns</a></li><li><a href="/policies/delivery">Delivery</a></li>
+      <li><a href="/policies/privacy">Privacy</a></li><li><a href="/policies/sourcing">Sourcing</a></li>
+    </ul>
+  </div>
+</dialog>
+
+<style>
+  .site-header { background: var(--color-bone); color: var(--color-ink); border-bottom: 1px solid var(--color-hair); }
+  .site-header[data-world="pp"] { background: var(--color-char); color: var(--color-paper); border-color: var(--color-char-3); }
+  /* Over the hero: no fill, white text with difference blending = dark on bone, light on charcoal */
+  .site-header[data-transparent="true"]:not(.is-solid) { background: transparent; border-color: transparent; color: #fff; mix-blend-mode: difference; }
+  .menu[open] { animation: menu-in .6s var(--ease-calm); }
+  @keyframes menu-in { from { transform: translateX(-100%); } to { transform: none; } }
+</style>
+<script>
+  const h = document.getElementById("site-header")!;
+  if (h.dataset.transparent === "true") {
+    const set = () => h.classList.toggle("is-solid", window.scrollY > window.innerHeight * 0.85);
+    set(); addEventListener("scroll", set, { passive: true });
+  }
+  const menu = document.getElementById("menu") as HTMLDialogElement;
+  document.querySelector(".menu-open")?.addEventListener("click", () => menu.showModal());
+  document.querySelector(".menu-close")?.addEventListener("click", () => menu.close());
+  menu.addEventListener("click", (e) => { if (e.target === menu) menu.close(); });
+</script>

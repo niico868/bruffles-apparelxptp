@@ -3,14 +3,19 @@ import Base from "../layouts/Base.astro";
 import SplitHero from "../components/SplitHero";
 import BrufflesCard from "../components/BrufflesCard.astro";
 import DepartureBoard from "../components/DepartureBoard";
+import AuthSteps from "../components/AuthSteps.astro";
+import GoneStrip from "../components/GoneStrip.astro";
+import DropAlerts from "../components/DropAlerts";
 import { bruffles, passport } from "../data/products";
 const latest = bruffles.filter((p) => !p.sold).slice(0, 2);
 ---
 <Base>
   <SplitHero client:load />
 
-  <section class="bf py-[var(--spacing-section)]" aria-labelledby="bf-latest">
-    <div class="wrap flex items-end justify-between gap-4 border-b border-hair pb-6">
+  <AuthSteps />
+
+  <section class="bf pb-[var(--spacing-section)]" aria-labelledby="bf-latest">
+    <div class="wrap flex items-end justify-between gap-4 border-t border-hair pt-12">
       <div><p class="label-bf text-gold-text rise">Bruffles Apparel</p><h2 id="bf-latest" class="h-bf text-[32px] md:text-[48px] mt-2 rise" style="--i:1">Just landed</h2></div>
       <a href="/bruffles" class="label-bf hover:text-gold-text">View all</a>
     </div>
@@ -19,11 +24,40 @@ const latest = bruffles.filter((p) => !p.sold).slice(0, 2);
     </div>
   </section>
 
+  <GoneStrip />
+
   <section class="pp py-[var(--spacing-section)]" aria-labelledby="pp-board">
     <div class="wrap flex items-end justify-between gap-4 pb-6">
-      <div><p class="label-pp text-signal">Passport to Paradise</p><h2 id="pp-board" class="h-pp text-[32px] md:text-[48px] mt-2">Departures</h2></div>
+      <div><p class="label-pp text-signal">Passport to Paradise · 18+</p><h2 id="pp-board" class="h-pp text-[32px] md:text-[48px] mt-2">Departures</h2></div>
       <a href="/passport" class="label-pp hover:text-signal">All departures →</a>
     </div>
     <div class="wrap"><DepartureBoard client:visible items={passport.slice(0, 4)} /></div>
+  </section>
+
+  <section class="bf py-[var(--spacing-section)]" aria-labelledby="story">
+    <div class="wrap md:grid md:grid-cols-12 md:gap-8">
+      <div class="md:col-span-4">
+        <img src="/brand/bruffles-monogram-gold-deep.webp" alt="" aria-hidden width="96" height="96" class="rise" />
+        <p class="label-bf text-gold-text mt-6 rise" style="--i:1">Our story</p>
+      </div>
+      <div class="md:col-span-7 md:col-start-6 mt-6 md:mt-0">
+        <h2 id="story" class="h-bf text-[32px] md:text-[48px] rise">Real recognize real.</h2>
+        <div class="mt-8 border border-dashed border-gold-deep/60 p-6 md:p-8 rise" style="--i:1">
+          <p class="label-bf text-gold-text">[CLIENT TO WRITE]</p>
+          <p class="mt-3 text-ink-soft">Two or three short paragraphs in the owners' words: how Bruffles started, why every piece is one of one, and what Passport to Paradise stands for. We'll set it here exactly as written.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="drop-alerts" class="bf-alt bg-bone-2 py-[var(--spacing-section)]" aria-labelledby="alerts">
+    <div class="wrap md:grid md:grid-cols-12 md:gap-8 md:items-end">
+      <div class="md:col-span-6">
+        <p class="label-bf text-gold-text rise">Drop alerts</p>
+        <h2 id="alerts" class="h-bf text-[40px] md:text-[64px] mt-2 rise" style="--i:1">Get the next drop first.</h2>
+        <p class="mt-4 text-ink-soft max-w-[40ch] rise" style="--i:2">Pieces are one of one and restocked twice a month. Hear about each drop by email or WhatsApp before it goes up.</p>
+      </div>
+      <div class="md:col-span-5 md:col-start-8 mt-8 md:mt-0"><DropAlerts client:visible /></div>
+    </div>
   </section>
 </Base>

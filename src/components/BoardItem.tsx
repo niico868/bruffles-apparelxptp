@@ -18,7 +18,7 @@ export default function BoardItem({ id, name, priceUsd, qty }: { id: string; nam
         </div>
       )}
       <button onClick={add} disabled={out} className="btn-pp w-full label-pp disabled:bg-char-3 disabled:text-muted">
-        {out ? "Booked out" : <>Add to bag <span aria-hidden>→</span></>}
+        {out ? "Booked out" : "Add to bag"}
       </button>
       {stamps > 0 && <p className="label-pp text-signal" aria-live="polite">Cleared · in your bag</p>}
     </div>

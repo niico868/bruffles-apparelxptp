@@ -1,0 +1,16 @@
+---
+import Base from "../../layouts/Base.astro";
+const pages = { returns: "Returns", delivery: "Delivery", privacy: "Privacy", sourcing: "Sourcing" } as const;
+export function getStaticPaths() { return Object.keys({ returns: 1, delivery: 1, privacy: 1, sourcing: 1 }).map((slug) => ({ params: { slug } })); }
+const title = pages[Astro.params.slug as keyof typeof pages];
+---
+<Base title={`${title} · Bruffles Apparel × Passport to Paradise`} world="bf">
+  <section class="wrap pt-32 pb-[var(--spacing-section)] max-w-3xl">
+    <p class="label-bf text-gold-text">Policy</p>
+    <h1 class="h-bf text-[48px] mt-2">{title}</h1>
+    <div class="mt-12 border border-dashed border-gold-deep/60 p-8">
+      <p class="label-bf text-gold-text">[CLIENT TO CONFIRM]</p>
+      <p class="mt-3 text-ink-soft">The {title.toLowerCase()} policy text comes from the owners. This page is a placeholder in the demo.</p>
+    </div>
+  </section>
+</Base>

@@ -1,10 +1,11 @@
 ---
 import "../styles/global.css";
-import CartCount from "../components/CartCount";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import AgeGate from "../components/AgeGate.astro";
 type World = "home" | "bf" | "pp";
 const { title = "Bruffles Apparel × Passport to Paradise", description = "Authentic one-of-one menswear from Bruffles Apparel, and accessories from Passport to Paradise.", world = "home" } =
   Astro.props as { title?: string; description?: string; world?: World };
-const lockup = world === "bf" ? "BA" : world === "pp" ? "PTP" : "BA × PTP";
 ---
 <!doctype html>
 <html lang="en">
@@ -17,14 +18,10 @@ const lockup = world === "bf" ? "BA" : world === "pp" ? "PTP" : "BA × PTP";
   <link rel="icon" href="/brand/bruffles-monogram-gold-deep.webp" />
 </head>
 <body class:list={["min-h-svh", world === "pp" ? "pp" : "bf"]}>
-  <header class:list={["fixed top-0 inset-x-0 z-30 h-16", world === "pp" ? "bg-char/95 text-paper border-b border-char-3" : "bg-bone/95 text-ink border-b border-hair"]}>
-    <nav class="wrap h-full grid grid-cols-[1fr_auto_1fr] items-center">
-      <div class="flex gap-6 label-bf"><a href="/bruffles">Bruffles</a><a href="/passport">Passport</a></div>
-      <a href="/" class:list={["text-[20px]", world === "pp" ? "h-pp" : "h-bf"]}>{lockup}</a>
-      <div class="flex justify-end label-bf"><CartCount client:load /></div>
-    </nav>
-  </header>
+  <Header world={world} />
   <main><slot /></main>
+  <Footer alerts={world !== "home"} />
+  {world === "pp" && <AgeGate />}
   <script>
     // Reveal on scroll. A wipe starts fully clipped, so we watch its parent (clipped boxes can read as hidden).
     const io = new IntersectionObserver((es) => es.forEach((e) => {

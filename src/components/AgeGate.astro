@@ -1,0 +1,33 @@
+---
+// 18+ confirmation on Passport pages (smoking accessories). Remembered for the browser session.
+---
+<div id="age-gate" class="pp fixed inset-0 z-50 hidden place-items-center bg-char/95 p-4" role="dialog" aria-modal="true" aria-labelledby="age-title">
+  <div class="age-card w-full max-w-[440px] bg-paper text-char">
+    <div class="flex items-center justify-between px-6 py-4 bg-char text-signal label-pp"><span>Boarding check</span><span>Gate 02</span></div>
+    <div class="p-6 md:p-8">
+      <img src="/brand/passport-badge.webp" alt="Passport to Paradise logo" width="594" height="505" class="w-28 mx-auto" />
+      <h2 id="age-title" class="h-pp text-[32px] text-center mt-6">Are you 18 or over?</h2>
+      <p class="text-center mt-3 text-char/75">Passport to Paradise sells smoking accessories. You must be 18 or over to enter.</p>
+      <div class="mt-8 grid gap-3">
+        <button type="button" id="age-yes" class="btn-pp label-pp w-full">Yes, I'm 18 or over</button>
+        <a href="/" class="min-h-12 grid place-items-center label-pp border border-char/30 hover:border-char">No, take me back</a>
+      </div>
+    </div>
+    <div aria-hidden class="border-t-2 border-dashed border-char/20 mx-6"></div>
+    <p class="px-6 py-4 label-pp text-char/70 text-center">Asked once per visit</p>
+  </div>
+</div>
+<style>
+  #age-gate.is-open { display: grid; }
+  #age-gate.is-open .age-card { animation: gate-in .35s var(--ease-zip); }
+  @keyframes gate-in { from { transform: translateY(16px) scale(.98); opacity: 0; } to { transform: none; opacity: 1; } }
+</style>
+<script>
+  const gate = document.getElementById("age-gate")!;
+  let ok = false; try { ok = sessionStorage.getItem("ptp-18") === "yes"; } catch {}
+  if (!ok) { gate.classList.add("is-open"); document.documentElement.style.overflow = "hidden"; (document.getElementById("age-yes") as HTMLElement).focus(); }
+  document.getElementById("age-yes")?.addEventListener("click", () => {
+    try { sessionStorage.setItem("ptp-18", "yes"); } catch {}
+    gate.classList.remove("is-open"); document.documentElement.style.overflow = "";
+  });
+</script>

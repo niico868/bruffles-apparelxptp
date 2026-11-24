@@ -3,6 +3,7 @@ import Base from "../../layouts/Base.astro";
 import Gallery from "../../components/Gallery";
 import SizeDrawer from "../../components/SizeDrawer";
 import AddPiece from "../../components/AddPiece";
+import AskPiece from "../../components/AskPiece";
 import Certificate from "../../components/Certificate.astro";
 import { bruffles, pad } from "../../data/products";
 import { formatPrice } from "../../lib/price";
@@ -31,6 +32,7 @@ const n = pad(p.pieceNo);
 
           <div class="mt-8 space-y-3">
             <AddPiece client:load id={p.id} name={p.name} priceUsd={p.priceUsd} sold={p.sold} />
+            <AskPiece client:idle num={n} />
           </div>
           <div class="mt-8"><SizeDrawer client:idle size={p.size} measurements={p.measurements} /></div>
           <p class="mt-8 text-ink-soft">{p.description}</p>

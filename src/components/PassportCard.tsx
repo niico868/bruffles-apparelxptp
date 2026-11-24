@@ -21,8 +21,8 @@ export default function PassportCard({ item }: { item: PassportItem }) {
         <p className="label-pp text-muted">{out ? "Booked out" : `${item.qty} in stock`}{item.packOf > 1 ? ` · Pack of ${item.packOf}` : ""}</p>
         <h3 className="h-pp text-[20px] leading-tight"><a href={`/passport/${item.id}`} className="hover:text-signal transition-colors duration-150">{item.name}</a></h3>
         <FlipPrice text={formatPrice(item.priceUsd)} className="text-[16px] text-paper" />
-        <button onClick={add} disabled={out} className="btn-pp w-full label-pp mt-1 disabled:bg-char-3 disabled:text-muted">
-          {out ? "Booked out" : <>Add to bag <span aria-hidden>→</span></>}
+        <button onClick={add} disabled={out} className="btn-pp w-full label-pp mt-1 !px-3 whitespace-nowrap disabled:bg-char-3 disabled:text-muted">
+          {out ? "Booked out" : "Add to bag"}
         </button>
       </div>
     </article>
