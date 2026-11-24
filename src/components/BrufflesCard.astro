@@ -1,21 +1,32 @@
 ---
-// Same skeleton as PassportCard: 4:5 image, then a fixed-height meta block (h-44).
-// White meta panel, royal purple name/price, brushed-gold accents.
-import { GoneStamp } from "./Gallery";
-import ClaimButton from "./ClaimButton";
+// Lookbook card: image first, then the piece number set large as type.
+// Gone pieces stay in the grid, greyed, as proof the pieces move.
 import { formatPrice } from "../lib/price";
 import { pad, type BrufflesPiece } from "../data/products";
-const { p } = Astro.props as { p: BrufflesPiece };
+const { p, feature = false, i = 0 } = Astro.props as { p: BrufflesPiece; feature?: boolean; i?: number };
+const n = pad(p.pieceNo);
 ---
-<article class="group/card card-jet text-chalk">
-  <a href={`/bruffles/${p.id}`} class="block relative aspect-[4/5] overflow-hidden card-jet-img">
-    <div class:list={["absolute inset-0 card-jet-img transition-transform duration-[1200ms] ease-[var(--ease-calm)] group-hover/card:scale-[1.04]", p.sold && "opacity-45 grayscale"]} />
-    {p.sold ? <GoneStamp small /> : <span class="absolute top-3 left-3 label-bsa text-[10px] gold-text font-bold">1 of 1</span>}
+<article class:list={["group/card", feature && "md:grid md:grid-cols-12 md:gap-8 md:items-end"]}>
+  <a href={`/bruffles/${p.id}`} class:list={["block", feature && "md:col-span-7"]} aria-label={`${p.name}, piece ${n}`}>
+    <div class="wipe relative aspect-[4/5] overflow-hidden" style={`--i:${i}`}>
+      <div class:list={["absolute inset-0 ph-bf transition-transform duration-[900ms] ease-[var(--ease-calm)] group-hover/card:scale-[1.03]", p.sold && "grayscale opacity-60"]}>
+        <span class="absolute left-3 top-3 md:left-4 md:top-4 label-bf text-ink-soft">Photo</span>
+      </div>
+      {!p.sold && <span class="absolute left-3 bottom-3 md:left-4 md:bottom-4 label-bf text-gold-text bg-bone/90 px-2 py-1">1 of 1</span>}
+    </div>
   </a>
-  <div class="h-44 p-4 flex flex-col items-center text-center justify-between tag-in">
-    <p class="label-bsa gold-text font-bold w-full truncate text-sm">Piece {pad(p.pieceNo)} · {p.maker}</p>
-    <a href={`/bruffles/${p.id}`} class:list={["name-hover text-sm w-full truncate", p.sold ? "text-chalk-soft" : "text-chalk hover:text-white"]}>{p.name}</a>
-    <p class="text-sm tabular-nums text-chalk-soft">{p.sold ? "Gone" : formatPrice(p.priceUsd)}</p>
-    <ClaimButton client:visible id={p.id} name={p.name} priceUsd={p.priceUsd} sold={p.sold} />
+  <div class:list={["mt-4 flex flex-col gap-2 md:flex-row md:items-end md:gap-4", feature && "md:col-span-5 md:mt-0 md:!flex-col md:!items-start md:!gap-6 md:pb-4"]}>
+    <span aria-hidden class:list={["num-bf transition-[transform,color] duration-700 ease-[var(--ease-calm)] group-hover/card:translate-x-1",
+      feature ? "text-[72px] md:text-[clamp(96px,12vw,192px)]" : "text-[48px] md:text-[72px]",
+      p.sold ? "text-ink-soft/40" : "text-ink group-hover/card:text-gold-deep"]}>{n}</span>
+    <div class="min-w-0 flex-1">
+      <p class="label-bf text-ink-soft truncate">{p.maker} · {p.size}</p>
+      <h3 class:list={["mt-1 md:truncate", feature ? "h-bf text-[24px] md:text-[32px]" : "text-[16px] font-semibold leading-snug"]}>
+        <a href={`/bruffles/${p.id}`} class="hover:underline underline-offset-4 decoration-hair">{p.name}</a></h3>
+      {p.sold
+        ? <p class="mt-1 text-ink-soft">Gone · Found its owner</p>
+        : <p class="mt-1 tabular-nums">{formatPrice(p.priceUsd)}</p>}
+      {feature && !p.sold && <a href={`/bruffles/${p.id}`} class="btn-bf mt-6 hidden md:inline-flex">View piece {n}</a>}
+    </div>
   </div>
 </article>

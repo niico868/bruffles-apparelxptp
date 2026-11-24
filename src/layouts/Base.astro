@@ -1,7 +1,10 @@
 ---
 import "../styles/global.css";
 import CartCount from "../components/CartCount";
-const { title = "Bruffles Apparel × Passport to Paradise", description = "Authentic one-of-one menswear and bulk accessories." } = Astro.props;
+type World = "home" | "bf" | "pp";
+const { title = "Bruffles Apparel × Passport to Paradise", description = "Authentic one-of-one menswear from Bruffles Apparel, and accessories from Passport to Paradise.", world = "home" } =
+  Astro.props as { title?: string; description?: string; world?: World };
+const lockup = world === "bf" ? "BA" : world === "pp" ? "PTP" : "BA × PTP";
 ---
 <!doctype html>
 <html lang="en">
@@ -11,27 +14,26 @@ const { title = "Bruffles Apparel × Passport to Paradise", description = "Authe
   <meta property="og:type" content="website" /><meta property="og:site_name" content="Bruffles Apparel × Passport to Paradise" />
   <meta property="og:title" content={title} /><meta property="og:description" content={description} />
   <meta name="twitter:card" content="summary" /><meta name="twitter:title" content={title} /><meta name="twitter:description" content={description} />
+  <link rel="icon" href="/brand/bruffles-monogram-gold-deep.webp" />
 </head>
-<body class="min-h-svh">
-  <!-- Shared chrome: one clean sans so both brands feel like one store -->
-  <header class="sticky top-0 z-30 h-14 bg-[#fbfaf7]/90 backdrop-blur border-b border-line">
-    <nav class="h-full max-w-[1400px] mx-auto px-4 md:px-8 flex items-center justify-between text-[13px]">
-      <div class="flex gap-5"><a href="/#drop">Shop</a><a href="/bruffles" class="hidden sm:inline">Bruffles</a><a href="/passport" class="hidden sm:inline">Passport</a></div>
-      <a href="/" class="h-bsa text-lg tracking-wide">BFA</a>
-      <div class="flex gap-5"><a href="/authenticity" class="hidden sm:inline">Authenticity</a><CartCount client:load /></div>
+<body class:list={["min-h-svh", world === "pp" ? "pp" : "bf"]}>
+  <header class:list={["fixed top-0 inset-x-0 z-30 h-16", world === "pp" ? "bg-char/95 text-paper border-b border-char-3" : "bg-bone/95 text-ink border-b border-hair"]}>
+    <nav class="wrap h-full grid grid-cols-[1fr_auto_1fr] items-center">
+      <div class="flex gap-6 label-bf"><a href="/bruffles">Bruffles</a><a href="/passport">Passport</a></div>
+      <a href="/" class:list={["text-[20px]", world === "pp" ? "h-pp" : "h-bf"]}>{lockup}</a>
+      <div class="flex justify-end label-bf"><CartCount client:load /></div>
     </nav>
   </header>
   <main><slot /></main>
-  <footer class="border-t border-line mt-24">
-    <div class="max-w-[1400px] mx-auto px-4 md:px-8 py-12 grid gap-8 sm:grid-cols-3 text-[13px] text-ink-soft">
-      <p>Bruffles Apparel × Passport to Paradise<br />Trinidad & Tobago</p>
-      <p class="flex flex-col gap-2"><a href="#">Returns</a><a href="#">Delivery</a><a href="#">Privacy</a></p>
-      <p class="flex flex-col gap-2"><a href="/authenticity">Sourcing & authenticity</a><a href="#">Contact</a></p>
-    </div>
-  </footer>
   <script>
-    const io = new IntersectionObserver((es) => es.forEach((e) => e.isIntersecting && (e.target.classList.add("is-in"), io.unobserve(e.target))), { threshold: 0.4 });
-    document.querySelectorAll(".tag-in").forEach((el) => io.observe(el));
+    // Reveal on scroll. A wipe starts fully clipped, so we watch its parent (clipped boxes can read as hidden).
+    const io = new IntersectionObserver((es) => es.forEach((e) => {
+      if (!e.isIntersecting) return;
+      const el = (e.target as HTMLElement & { _rv?: Element })._rv ?? e.target;
+      el.classList.add("is-in"); io.unobserve(e.target);
+    }), { threshold: 0.15 });
+    document.querySelectorAll(".rise").forEach((el) => io.observe(el));
+    document.querySelectorAll(".wipe").forEach((el) => { const host = el.parentElement!; (host as any)._rv = el; io.observe(host); });
   </script>
 </body>
 </html>

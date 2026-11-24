@@ -1,59 +1,55 @@
 import { useState } from "react";
-import { motion, useAnimationControls, useReducedMotion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import FlipPrice from "./FlipPrice";
 import { addToCart } from "../lib/cart";
 import { formatPrice } from "../lib/price";
 import type { PassportItem } from "../data/products";
 
+// Passport card on charcoal. "Add to bag" fires the passport stamp (see Stamp below).
 export default function PassportCard({ item }: { item: PassportItem }) {
-  const card = useAnimationControls();
-  const [stamped, setStamped] = useState(0);
-  const reduce = useReducedMotion();
+  const [stamps, setStamps] = useState(0);
   const out = item.qty === 0;
-
-  const add = () => {
-    addToCart({ id: item.id, name: item.name, priceUsd: item.priceUsd });
-    setStamped((n) => n + 1); // re-key so the stamp smacks every time
-    if (!reduce) card.start({ x: [0, -5, 4, -2, 0], transition: { duration: 0.28, delay: 0.12 } });
-  };
-
+  const add = () => { addToCart({ id: item.id, name: item.name, priceUsd: item.priceUsd }); setStamps((n) => n + 1); nudge(); };
   return (
-    <motion.article animate={card} className="relative card-light text-jet shadow-[0_1px_0_rgba(14,31,56,.06)]">
-      <a href={`/passport/${item.id}`} className="block relative aspect-[4/5] card-light-img overflow-hidden">
-        <span className="absolute bottom-2 left-2 label-ptp text-jet opacity-40">Product shot</span>
-        <AnimatePresence>
-          {stamped > 0 && (
-            <motion.div key={stamped}
-              className="absolute right-4 top-4 grid place-items-center w-24 h-24 rounded-full border-2 border-signal-deep text-signal-deep label-ptp text-center leading-tight rotate-[-14deg]"
-              initial={reduce ? { opacity: 1 } : { scale: 2.2, opacity: 0, rotate: -30 }}
-              animate={{ scale: [2.2, 0.86, 1.06, 1], scaleY: [2.2, 0.7, 1.05, 1], opacity: 1, rotate: -14 }}
-              transition={{ duration: 0.32, times: [0, 0.45, 0.75, 1], ease: "easeOut" }}
-            >Cleared<br />for<br />departure</motion.div>
-          )}
-        </AnimatePresence>
+    <article className="group/pp relative bg-char-2">
+      <a href={`/passport/${item.id}`} className="block relative aspect-[4/5] ph-pp overflow-hidden" aria-label={item.name}>
+        <span className="absolute left-3 top-3 label-pp text-muted">Photo</span>
+        <span className="absolute right-3 top-3 label-pp bg-char text-signal px-2 py-1">{item.id}</span>
+        <AnimatePresence>{stamps > 0 && <Stamp key={stamps} />}</AnimatePresence>
       </a>
-      <div className="h-44 p-4 flex flex-col items-center text-center justify-between">
-        <p className="label-ptp text-signal-deep font-medium w-full truncate text-sm">Item {item.itemNo} · {out ? "Sold out" : `Qty ${item.qty}`}{item.packOf > 1 ? ` · Pack ${item.packOf}` : ""}</p>
-        <a href={`/passport/${item.id}`} className="h-ptp name-hover text-[15px] max-w-full truncate hover:text-black">{item.name}</a>
-        <FlipPrice text={formatPrice(item.priceUsd)} className="text-sm text-jet/70" />
-        <BoardButton out={out} onBoard={add} />
+      <div className="p-4 flex flex-col gap-3">
+        <p className="label-pp text-muted">{out ? "Booked out" : `${item.qty} in stock`}{item.packOf > 1 ? ` · Pack of ${item.packOf}` : ""}</p>
+        <h3 className="h-pp text-[20px] leading-tight"><a href={`/passport/${item.id}`} className="hover:text-signal transition-colors duration-150">{item.name}</a></h3>
+        <FlipPrice text={formatPrice(item.priceUsd)} className="text-[16px] text-paper" />
+        <button onClick={add} disabled={out} className="btn-pp w-full label-pp mt-1 disabled:bg-char-3 disabled:text-muted">
+          {out ? "Booked out" : <>Add to bag <span aria-hidden>→</span></>}
+        </button>
       </div>
-    </motion.article>
+    </article>
   );
 }
 
-// Passport button: a boarding-pass ticket. Leaf-green body with punched notches and a perforated
-// stub; a quick lift on hover and a squash on press, like a ticket being torn at the gate.
-export function BoardButton({ out, onBoard }: { out: boolean; onBoard: () => void }) {
-  const notch = { WebkitMask: "radial-gradient(circle 7px at 0 50%, transparent 98%, #000) left / 51% 100% no-repeat, radial-gradient(circle 7px at 100% 50%, transparent 98%, #000) right / 51% 100% no-repeat",
-                  mask: "radial-gradient(circle 7px at 0 50%, transparent 98%, #000) left / 51% 100% no-repeat, radial-gradient(circle 7px at 100% 50%, transparent 98%, #000) right / 51% 100% no-repeat" } as React.CSSProperties;
+// The 2px screen nudge that sells the stamp's weight. Transform only, skipped under reduced motion.
+export function nudge() {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  document.querySelector("main")?.animate(
+    [{ transform: "translate(0,0)" }, { transform: "translate(2px,1px)" }, { transform: "translate(-1px,0)" }, { transform: "translate(0,0)" }],
+    { duration: 160, delay: 170, easing: "ease-out" });
+}
+
+// Stamp slams in from 1.4x at -8°, lands in 180ms, then the ink fades over 1.2s.
+export function Stamp() {
+  const reduce = useReducedMotion();
   return (
-    <motion.button onClick={onBoard} disabled={out} style={notch}
-      whileHover={out ? undefined : { y: -2 }} whileTap={out ? undefined : { scaleY: 0.9, scaleX: 1.03 }}
-      transition={{ duration: 0.15, ease: [0.5, 0, 0.1, 1] }}
-      className={`relative w-full min-h-11 flex items-stretch label-ptp ${out ? "bg-jet-3/60 text-chalk-soft" : "bg-signal text-jet hover:bg-[#ffd447]"} transition-colors duration-150`}>
-      <span className="flex-1 grid place-items-center tracking-[0.14em] whitespace-nowrap">{out ? "Booked" : <><span className="sm:hidden">Board</span><span className="hidden sm:inline">Board · Add to bag</span></>}</span>
-      <span aria-hidden className={`w-10 sm:w-12 grid place-items-center border-l border-dashed ${out ? "border-chalk/20" : "border-jet/40 text-jet"}`}>{out ? "—" : "+1"}</span>
-    </motion.button>
+    <motion.div aria-hidden className="absolute inset-0 grid place-items-center pointer-events-none"
+      initial={{ opacity: 1 }} animate={{ opacity: 0 }} exit={{ opacity: 0 }} transition={{ delay: 0.5, duration: 1.2, ease: "easeIn" }}>
+      <motion.div className="grid place-items-center w-36 h-36 rounded-full border-[3px] border-stamp text-stamp text-center"
+        initial={reduce ? { scale: 1, rotate: -8, opacity: 1 } : { scale: 1.4, rotate: -8, opacity: 0 }}
+        animate={{ scale: 1, rotate: -8, opacity: 1 }} transition={{ duration: reduce ? 0 : 0.18, ease: [0.5, 0, 0.1, 1] }}>
+        <div className="w-[86%] h-[86%] rounded-full border border-stamp grid place-items-center">
+          <span className="h-pp text-[22px] leading-none">Cleared<br /><span className="label-pp text-[12px]">for departure</span></span>
+        </div>
+      </motion.div>
+    </motion.div>
   );
 }

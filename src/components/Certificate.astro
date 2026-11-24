@@ -1,0 +1,35 @@
+---
+// Authenticity block styled as a certificate: double rule, monogram seal, numbered fields.
+import { pad, type BrufflesPiece } from "../data/products";
+const { p } = Astro.props as { p: BrufflesPiece };
+---
+<section aria-labelledby="cert" class="relative bg-bone-2/60 p-2">
+  <div class="relative border border-gold-deep/60 outline outline-1 outline-gold-deep/30 outline-offset-[6px] px-6 py-12 md:px-16 md:py-16 overflow-hidden">
+    <img src="/brand/bruffles-monogram-gold-deep.webp" alt="" aria-hidden class="absolute -right-16 -bottom-16 w-80 opacity-[.07] pointer-events-none" />
+    <div class="text-center">
+      <img src="/brand/bruffles-monogram-gold-deep.webp" alt="Bruffles Apparel monogram" width="56" height="56" class="mx-auto" />
+      <p class="label-bf text-gold-text mt-4">Certificate of authenticity</p>
+      <h2 id="cert" class="h-bf text-[32px] md:text-[48px] mt-2">Piece {pad(p.pieceNo)}</h2>
+    </div>
+    <div class="mt-12 grid gap-12 md:grid-cols-[1fr_200px] md:items-start max-w-3xl mx-auto">
+      <dl class="divide-y divide-hair border-y border-hair">
+        {[
+          ["Piece ID", p.id],
+          ["Source", "Purchased from official brand stores — receipt on file"],
+          ["Condition", p.condition],
+          ["Proof", p.receiptRef ? `Receipt on file · ${p.receiptRef}` : "Receipt on file"],
+        ].map(([k, v]) => (
+          <div class="grid grid-cols-[96px_1fr] md:grid-cols-[120px_1fr] gap-4 py-4">
+            <dt class="label-bf text-ink-soft pt-1">{k}</dt><dd class="tabular-nums">{v}</dd>
+          </div>
+        ))}
+      </dl>
+      <figure>
+        <div class="relative aspect-square ph-bf border border-dashed border-gold-deep/60 grid place-items-center">
+          <span class="label-bf text-ink-soft text-center px-4">Tag photo<br />goes here</span>
+        </div>
+        <figcaption class="label-bf text-ink-soft mt-3">Brand tag · {p.maker}</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>

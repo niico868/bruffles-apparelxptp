@@ -1,183 +1,95 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import Monogram from "./Monogram";
+import PlaneFlight from "./PlaneFlight";
 import { heroMedia } from "../data/media";
 
-type Side = "bsa" | "ptp";
-const EASE = [0.22, 1, 0.36, 1] as const;
-const DURATION = 0.75;      // widening speed (20% slower than the original 0.6s)
-const ARM_MS = 10_000;      // minimum wait, counted from the visitor's FIRST mouse movement
-const ARM_MOVES = 20;       // and at least this many mouse movements before hover can widen
+type Side = "bf" | "pp";
+const EXPO = [0.16, 1, 0.3, 1] as const;
+const OPEN = 0.2;          // a hovered side gains 20% of the width (50/50 -> 70/30)
+const PANEL = 0.7;         // each panel is 70% wide; the extra is hidden under the other panel
+const GRACE_MS = 1200;     // let the 50/50 split be seen before hover can open a side
 
+// Desktop: two overlapping panels moved only with transform (no layout work per frame), so the
+// open/close stays smooth on slow phones. The monogram rides the seam like a hinge.
+// Mobile: two stacked full-width panels, each with its own button; the monogram joins them.
 export default function SplitHero() {
   const [active, setActive] = useState<Side | null>(null);
-  const [mobile, setMobile] = useState(false);
-  const [armed, setArmed] = useState(false);
+  const [ready, setReady] = useState(false);
   const reduce = useReducedMotion();
-  const videos = { bsa: useRef<HTMLVideoElement>(null), ptp: useRef<HTMLVideoElement>(null) };
   const root = useRef<HTMLDivElement>(null);
-  const textBlocks = { bsa: useRef<HTMLDivElement>(null), ptp: useRef<HTMLDivElement>(null) };
 
-  // Scroll cutoff, judged PER HALF: a half locks (snaps closed, ignores hover/tap) once the line
-  // 2rem above its own label scrolls under the navbar. Measured at the half's normal 50/50 position,
-  // so one half opening or shrinking can never lock the other (the mobile stacked-layout bug).
-  const [locked, setLocked] = useState<Record<Side, boolean>>({ bsa: false, ptp: false });
-  // Logo position: rides down with the navbar while scrolling, stopping just above the brand labels.
-  const [logoTop, setLogoTop] = useState(40);
-  useEffect(() => {
-    const check = () => {
-      const header = document.querySelector("header")?.getBoundingClientRect().bottom ?? 0;
-      const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
-      const heroR = root.current?.getBoundingClientRect();
-      if (!heroR) return;
-      const stacked = window.innerWidth < 768;
-      const closedLabel = {} as Record<Side, number>;
-      (["bsa", "ptp"] as Side[]).forEach((k) => {
-        const el = textBlocks[k].current; if (!el) { closedLabel[k] = Infinity; return; }
-        const h2 = el.querySelector("h2") as HTMLElement | null;
-        const label = el.querySelector("p") as HTMLElement | null;
-        // undo the heading's enlargement
-        const grow = h2 ? h2.offsetHeight * (1 - Number(h2.dataset.base) / parseFloat(getComputedStyle(h2).fontSize)) : 0;
-        // undo the section resize: when stacked, the top half's bottom edge moves as it grows/shrinks
-        const sec = el.parentElement!.getBoundingClientRect();
-        const resize = stacked && k === "bsa" ? sec.height - heroR.height / 2 : 0;
-        closedLabel[k] = (label?.getBoundingClientRect().top ?? Infinity) + grow - resize;
-      });
-      const next = { bsa: closedLabel.bsa - 2 * rem < header, ptp: closedLabel.ptp - 2 * rem < header };
-      setLocked((prev) => (prev.bsa === next.bsa && prev.ptp === next.ptp ? prev : next));
-      setActive((a) => (a && next[a] ? null : a));
+  useEffect(() => { const t = setTimeout(() => setReady(true), GRACE_MS); return () => clearTimeout(t); }, []);
 
-      const logoH = stacked ? 56 : 80;
-      const base = stacked ? 24 : 40;
-      const follow = header - heroR.top + 24;                     // 24px below the navbar
-      const labelNow = Math.min(...(["bsa", "ptp"] as Side[]).map((k) => textBlocks[k].current?.querySelector("p")?.getBoundingClientRect().top ?? Infinity));
-      setLogoTop(Math.max(base, Math.min(follow, labelNow - heroR.top - logoH - 16))); // stop 16px above the labels
-    };
-    check();
-    window.addEventListener("scroll", check, { passive: true });
-    window.addEventListener("resize", check);
-    const id = setInterval(check, 120); // labels move while a heading animates
-    return () => { clearInterval(id); window.removeEventListener("scroll", check); window.removeEventListener("resize", check); };
-  }, []);
+  const shift = active === "bf" ? OPEN : active === "pp" ? -OPEN : 0;   // seam movement, share of hero width
+  const t = { duration: reduce ? 0 : 0.8, ease: EXPO };
 
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 767px)");
-    const set = () => setMobile(mq.matches);
-    set(); mq.addEventListener("change", set);
-    return () => mq.removeEventListener("change", set);
-  }, []);
-
-  // Arming sensor: nothing happens until the mouse first moves. From then, the visitor must
-  // keep browsing for ARM_MS and ARM_MOVES before hover is allowed to widen a half.
-  useEffect(() => {
-    let start = 0, moves = 0;
-    const onMove = (e: PointerEvent) => {
-      if (e.pointerType !== "mouse") return;
-      if (!start) start = performance.now();
-      moves++;
-      if (moves >= ARM_MOVES && performance.now() - start >= ARM_MS) {
-        setArmed(true);
-        window.removeEventListener("pointermove", onMove);
-      }
-    };
-    window.addEventListener("pointermove", onMove);
-    return () => window.removeEventListener("pointermove", onMove);
-  }, []);
-
-  // Video rules: only the open (70%) side plays; switching sides pauses the other.
-  useEffect(() => {
-    (["bsa", "ptp"] as Side[]).forEach((s) => {
-      const v = videos[s].current; if (!v) return;
-      if (s === active && !reduce) v.play().catch(() => {}); else v.pause();
-    });
-  }, [active, reduce]);
-
-  // Click on the open side's video, or Space, toggles that video. No icons, no controls.
-  const toggle = () => { const v = active && videos[active].current; if (v) v.paused ? v.play().catch(() => {}) : v.pause(); };
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.code !== "Space" || !active) return;
-      const tag = (e.target as HTMLElement)?.tagName;
-      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "BUTTON" || tag === "A") return;
-      const r = root.current?.getBoundingClientRect();
-      if (!r || r.bottom < 0 || r.top > window.innerHeight) return; // only while the hero is on screen
-      e.preventDefault(); toggle();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  });
-
-  const grow = (s: Side) => (active === null ? 1 : active === s ? 7 : 3); // 70 / 30
-  const t = { duration: reduce ? 0 : DURATION, ease: EASE };
-  const linePct = active === "bsa" ? 70 : active === "ptp" ? 30 : 50;
-
-  const half = (s: Side, href: string, label: string, title: string, dark: boolean) => {
-    const open = active === s;
-    const m = heroMedia[s];
-    return (
-      <motion.section
-        className={`relative flex min-h-0 overflow-hidden ${dark ? "passport-cover" : "satin"} text-chalk`}
-        style={{ flexBasis: 0 }}
-        animate={{ flexGrow: grow(s) }}
-        transition={t}
-        onPointerMove={(e) => e.pointerType === "mouse" && armed && !locked[s] && !mobile && active !== s && setActive(s)}
-        onPointerLeave={(e) => e.pointerType === "mouse" && armed && !mobile && setActive(null)}
-        onClick={(e) => {
-          if ((e.target as HTMLElement).closest("a")) return;
-          if (mobile && !open) return locked[s] ? undefined : setActive(s);
-          if (open) toggle();
-        }}
-        aria-label={title}
-      >
-        {/* Media: still image by default; the brand video plays only while this half is open */}
-        {m.poster && <img src={m.poster} alt="" className="absolute inset-0 w-full h-full object-cover" />}
-        {m.video && (
-          <motion.video ref={videos[s]} src={m.video} poster={m.poster} muted loop playsInline preload="metadata"
-            className="absolute inset-0 w-full h-full object-cover" animate={{ opacity: open ? 1 : 0 }} transition={t} />
-        )}
-        {!m.poster && !m.video && (
-          <div className={`absolute inset-0 bg-[radial-gradient(ellipse_at_50%_40%,rgba(255,255,255,.05),transparent_70%)]`} />
-        )}
-        {dark && <div aria-hidden className="absolute inset-x-0 bottom-0 h-[55%] pointer-events-none bg-gradient-to-t from-[#22070d] via-[#22070d]/70 to-transparent" />}
-        <motion.div className="absolute inset-0 bg-black pointer-events-none" animate={{ opacity: active && !open ? 0.35 : 0 }} transition={t} />
-
-        {/* Logo: only on the open side, pinned to the top corner (left for Bruffles, right for Passport) */}
-        <AnimatePresence>
-          {open && (
-            <motion.div key="logo" className={`absolute z-10 ${dark ? "right-6 md:right-10" : "left-6 md:left-10"}`} style={{ top: logoTop }}
-              initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ ...t, delay: reduce ? 0 : 0.2 }}>
-              {m.logo ? <img src={m.logo} alt={`${title} logo`} className="h-14 md:h-20 w-auto" />
-                : <span className={`grid place-items-center h-14 md:h-20 aspect-square border border-chalk/40 ${dark ? "label-ptp" : "label-bsa"} text-[10px]`}>Logo</span>}
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <div ref={textBlocks[s]} className={`relative z-10 mt-auto w-full p-6 md:p-10 ${dark ? "md:text-right" : ""}`}>
-          <p className={dark ? "label-ptp gold-text" : "label-bsa text-gold"}>{label}</p>
-          <motion.h2 className={`${dark ? "h-ptp" : "h-bsa"} mt-2 leading-[1.05] whitespace-nowrap`}
-            data-base={dark ? (mobile ? 24 : 30) : (mobile ? 30 : 36)} initial={false} animate={{ fontSize: `${(dark ? (mobile ? 24 : 30) : (mobile ? 30 : 36)) * (open ? (mobile ? 1.2 : 1.5) : 1)}px` }} transition={t}>{title}</motion.h2>
-          <motion.a href={href}
-            className={`mt-5 inline-block text-[11px] tracking-[0.22em] uppercase border-b pb-1 border-chalk/50`}
-            animate={{ opacity: open ? 1 : 0, y: open ? 0 : 6 }}
-            transition={{ ...t, delay: open && !reduce ? 0.15 : 0 }}
-            onFocus={() => setActive(s)}
-            style={{ pointerEvents: open ? "auto" : "none" }}
-          >Enter</motion.a>
-        </div>
-      </motion.section>
-    );
+  const onMove = (e: React.PointerEvent) => {
+    if (e.pointerType !== "mouse" || !ready || !root.current) return;
+    const r = root.current.getBoundingClientRect();
+    const seam = r.left + r.width * (0.5 + shift);
+    const next: Side = e.clientX < seam ? "bf" : "pp";
+    if (next !== active) setActive(next);
   };
 
   return (
-    <div ref={root} className="relative flex flex-col md:flex-row h-[calc(100svh-56px)] min-h-[560px]">
-      {half("bsa", "/bruffles", "One of one · Restocked twice a month", "Bruffles Apparel", false)}
-      {half("ptp", "/passport", "Gate 02 · Bulk accessories", "Passport to Paradise", true)}
-      <motion.div className="absolute z-20 pointer-events-none -translate-x-1/2 -translate-y-1/2 hidden md:block top-1/2"
-        animate={{ left: `${linePct}%` }} transition={t}><Monogram /></motion.div>
-      <div className="absolute z-20 pointer-events-none left-1/2 -translate-x-1/2 -translate-y-1/2 md:hidden"
-        style={{ top: active === "bsa" ? "70%" : active === "ptp" ? "30%" : "50%", transition: `top ${DURATION}s var(--ease-calm)` }}>
-        <Monogram size={64} />
+    <div ref={root} className="relative md:h-[100svh] md:min-h-[640px] md:overflow-hidden"
+      onPointerMove={onMove} onPointerLeave={() => setActive(null)}>
+
+      {/* ---------- Bruffles panel ---------- */}
+      <section aria-labelledby="hero-bf" className="bf relative min-h-[78svh] md:min-h-0 md:absolute md:inset-y-0 md:left-0 md:w-[70%] overflow-hidden">
+        {heroMedia.bf.poster && <img src={heroMedia.bf.poster} alt="" className="absolute inset-0 w-full h-full object-cover" />}
+        {/* Featured piece frame: sits in the middle band, visible unless Passport is open */}
+        <div className="absolute hidden md:block left-[44%] right-[31%] top-[18%] bottom-[16%]">
+          <div className="relative h-full ph-bf">
+            <span className="absolute right-4 bottom-3 num-bf text-[96px] text-ink/10" aria-hidden>047</span>
+            <span className="absolute left-4 top-4 label-bf text-ink-soft">Photo · piece 047</span>
+          </div>
+          <p className="mt-3 label-bf text-ink-soft">Piece 047 · Tech Fleece Windrunner</p>
+        </div>
+        <div className="relative md:absolute md:left-0 md:bottom-0 md:w-[42.857%] flex flex-col justify-end min-h-[78svh] md:min-h-0 px-[var(--spacing-gutter)] pt-24 pb-16 md:pb-16">
+          <div className="md:hidden relative w-[62%] aspect-[4/5] ph-bf self-end mb-auto mt-4">
+            <span className="absolute left-3 top-3 label-bf text-ink-soft">Photo · 047</span>
+            <span className="absolute right-3 bottom-1 num-bf text-[64px] text-ink/10" aria-hidden>047</span>
+          </div>
+          <p className="mt-8 md:mt-0 label-bf text-gold-text">1 of 1 · Restocked twice a month</p>
+          <h2 id="hero-bf" className="h-bf text-[48px] md:text-[clamp(48px,5vw,80px)] mt-4">Bruffles<br />Apparel</h2>
+          <p className="mt-4 max-w-[28ch] text-ink-soft">Authentic pieces, one of each. When it's gone, it's gone.</p>
+          <a href="/bruffles" className="btn-bf mt-8 self-start">Shop Bruffles</a>
+        </div>
+      </section>
+
+      {/* ---------- Monogram: mobile hinge between the stacked panels ---------- */}
+      <div className="md:hidden relative z-20 h-0 flex justify-center">
+        <Monogram disc size={72} className="-translate-y-1/2" />
       </div>
+
+      {/* ---------- Passport panel ---------- */}
+      <motion.section aria-labelledby="hero-pp"
+        className="pp relative min-h-[78svh] md:min-h-0 md:absolute md:inset-y-0 md:left-1/2 md:w-[70%] overflow-hidden z-10"
+        initial={false} animate={{ x: `${(shift / PANEL) * 100}%` }} transition={t}
+        style={{ willChange: "transform" }}>
+        {heroMedia.pp.poster && <img src={heroMedia.pp.poster} alt="" className="absolute inset-0 w-full h-full object-cover" />}
+        <PlaneFlight />
+        {/* Runway dash pointing into Passport, starting at the seam */}
+        <div aria-hidden className="hidden md:block absolute inset-y-0 left-2 border-l-2 border-dashed border-signal/40" />
+        <img src="/brand/passport-badge.webp" alt="" aria-hidden width="594" height="505"
+          className="hidden md:block absolute left-[46%] top-[20%] w-[22%] max-w-[300px] opacity-95" />
+        <div className="relative md:absolute md:left-0 md:bottom-0 md:w-[42.857%] flex flex-col justify-end min-h-[78svh] md:min-h-0 px-[var(--spacing-gutter)] pt-24 pb-16 md:pl-16">
+          <img src="/brand/passport-badge.webp" alt="" aria-hidden width="594" height="505" className="md:hidden w-40 mb-auto mt-4 self-end" />
+          <p className="label-pp text-signal">Gate 02 · Now boarding</p>
+          <h2 id="hero-pp" className="h-pp text-[48px] md:text-[clamp(48px,5vw,80px)] mt-4">Passport<br />to Paradise</h2>
+          <p className="mt-4 max-w-[30ch] text-muted">Papers, filters and tools, by the pack and by the box.</p>
+          <a href="/passport" className="btn-pp mt-8 self-start label-pp">Board Passport <span aria-hidden>→</span></a>
+        </div>
+      </motion.section>
+
+      {/* ---------- Seam (desktop): gold hairline + monogram hinge, moved by transform ---------- */}
+      <motion.div aria-hidden className="hidden md:block absolute inset-0 z-20 pointer-events-none"
+        initial={false} animate={{ x: `${shift * 100}%` }} transition={t} style={{ willChange: "transform" }}>
+        <div className="absolute inset-y-0 left-1/2 w-px bg-gold/70" />
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"><Monogram disc size={104} /></div>
+      </motion.div>
     </div>
   );
 }

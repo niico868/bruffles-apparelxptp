@@ -3,12 +3,11 @@
 @import "@fontsource-variable/manrope";
 @import "@fontsource/barlow-semi-condensed/500.css";
 @import "@fontsource/barlow-semi-condensed/600.css";
-@import "@fontsource/dm-mono";
-@import "@fontsource/montserrat/800.css";
+@import "@fontsource/dm-mono/400.css";
+@import "@fontsource/dm-mono/500.css";
 
 /* Tokens: see DESIGN.md. Pages use names, never raw values. */
 @theme {
-  /* ===== Colour system v2 (Session 8). One job per colour. Contrast ratios in DESIGN.md. ===== */
   /* Bruffles: quiet gallery */
   --color-bone: #F4EFE6;       /* page base, warm off-white */
   --color-bone-2: #EAE3D6;     /* image placeholders, raised panels */
@@ -21,109 +20,77 @@
   /* Passport: airport wayfinding */
   --color-char: #1E2023;       /* page base */
   --color-char-2: #2A2D31;     /* cards, departure-board tiles */
-  --color-char-3: #363A3F;     /* image placeholders, borders on charcoal */
+  --color-char-3: #363A3F;     /* placeholders, borders on charcoal */
   --color-paper: #F2F1EC;      /* type on charcoal (14.4:1) */
   --color-muted: #A3A8AE;      /* secondary text on charcoal (6.8:1) */
   --color-signal: #FFC629;     /* wayfinding, labels, CTAs (10.4:1 both ways) */
   --color-stamp: #E0393E;      /* the stamp moment only, large bold type (3.8:1) */
-
-  /* Type scale (px): 12 label · 14 small · 16 body · 20 · 24 · 32 · 48 · 72 */
-  --text-label: 12px;
-  --text-body: 16px;
-
-  /* Spacing: Tailwind's 4px scale, using only 1 2 3 4 6 8 12 16 24 32 (4px to 128px). */
-  --spacing-section: clamp(64px, 10vw, 128px);
-  --spacing-gutter: clamp(16px, 4vw, 48px);
-
-  /* ===== Legacy tokens below: removed in Step 3 ===== */
-  /* Site */
-  --color-paper-2: #f3f0f5;    /* image placeholders on white */
-  --color-line: #e5e0ea;       /* hairlines */
-  --color-chalk: #f4eee2;      /* text on dark surfaces (warm cream) */
-  --color-chalk-soft: #cdc3ad; /* secondary text on dark surfaces */
-
-  /* Bruffles: dark royal purple, matte satin */
-  --color-royal: #261040;
-  --color-royal-2: #331656;
-  --color-royal-3: #40206a;
-
-  /* Passport: international airport. Night-flight navy, jet bridge slate, sky, signage yellow */
-  --color-jet: #0e1f38;        /* deep night-flight navy surface */
-  --color-jet-2: #16304f;      /* raised / cards */
-  --color-jet-3: #2b4565;      /* slate image placeholder */
-  --color-sky: #7fb8e6;        /* sky blue, line art + details */
-  --color-runway: #e9eef4;     /* cloud white */
-  --color-signal-deep: #8a6400; /* signage amber, readable on white */
 
   --font-sans: "Manrope Variable", system-ui, sans-serif;
   --font-serif: "Fraunces Variable", Georgia, serif;
   --font-air: "Barlow Semi Condensed", "Manrope Variable", sans-serif;
   --font-mono: "DM Mono", ui-monospace, monospace;
 
-  --ease-calm: cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-zip: cubic-bezier(0.5, 0, 0.1, 1);
+  /* Spacing: Tailwind's 4px scale, using only 1 2 3 4 6 8 12 16 24 32 (4px to 128px),
+     plus two fluid tokens for page rhythm. */
+  --spacing-section: clamp(64px, 10vw, 128px);
+  --spacing-gutter: clamp(16px, 4vw, 48px);
+
+  --ease-calm: cubic-bezier(0.16, 1, 0.3, 1);   /* ease-out-expo: Bruffles */
+  --ease-zip: cubic-bezier(0.5, 0, 0.1, 1);     /* fast and mechanical: Passport */
 }
 
 @layer base {
   html { background: var(--color-bone); color: var(--color-ink); }
-  body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
-  :focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; }
+  body { font-family: var(--font-sans); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  :focus-visible { outline: 2px solid var(--color-gold-deep); outline-offset: 3px; }
+  .pp :focus-visible { outline-color: var(--color-signal); }
+  img { max-width: 100%; }
 }
 
 @layer components {
-  /* "PIECE 047 · 1 OF 1": gallery-tag labels */
-  .label-bsa { font-family: var(--font-sans); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; font-variant-caps: all-small-caps; }
-  .label-ptp { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
+  /* Page frame: one max width and one gutter everywhere */
+  .wrap { max-width: 1440px; margin-inline: auto; padding-inline: var(--spacing-gutter); }
+
+  /* Type scale (px): 12 label · 14 small · 16 body · 20 · 24 · 32 · 48 · 72 · 96 */
+  .h-bf { font-family: var(--font-serif); font-weight: 400; font-variation-settings: "opsz" 144, "SOFT" 30; letter-spacing: -0.02em; line-height: 1.05; }
+  .h-pp { font-family: var(--font-air); font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; line-height: 1; }
+  .label-bf { font-family: var(--font-sans); font-size: 12px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; line-height: 1.4; }
+  .label-pp { font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.4; }
+  /* Piece numbers as type: "047" */
+  .num-bf { font-family: var(--font-serif); font-weight: 300; font-variation-settings: "opsz" 144; letter-spacing: -0.04em; line-height: 0.85; font-feature-settings: "lnum", "tnum"; }
+
+  /* Brand worlds: set on a wrapper, everything inside inherits */
+  .bf { background: var(--color-bone); color: var(--color-ink); }
+  .pp { background: var(--color-char); color: var(--color-paper); }
+
+  /* Buttons. Min 48px tall. */
+  .btn-bf { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 24px;
+    background: var(--color-ink); color: var(--color-bone); transition: background-color .4s var(--ease-calm), color .4s var(--ease-calm); }
+  .btn-bf:hover { background: var(--color-gold); color: var(--color-ink); }
+  .btn-bf-ghost { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 24px;
+    border: 1px solid var(--color-ink); color: var(--color-ink); transition: background-color .4s var(--ease-calm), color .4s var(--ease-calm); }
+  .btn-bf-ghost:hover { background: var(--color-ink); color: var(--color-bone); }
+  .btn-pp { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 20px;
+    background: var(--color-signal); color: var(--color-char); transition: transform .15s var(--ease-zip), background-color .15s; }
+  .btn-pp:hover { background: #FFD45C; }
+  .btn-pp:active { transform: scale(.97); }
+
+  /* Image placeholders until the shoot */
+  .ph-bf { background: var(--color-bone-2); }
+  .ph-pp { background: var(--color-char-3); }
 }
+
+/* Bruffles text reveal: lines rise 12px and fade in. Gated on .js so no-JS still shows them. */
+.js .rise { opacity: 0; transform: translateY(12px); transition: opacity .8s var(--ease-calm), transform .8s var(--ease-calm); transition-delay: calc(var(--i, 0) * 60ms); }
+.js .rise.is-in { opacity: 1; transform: none; }
+/* Bruffles image reveal: mask wipe upward + settle from 1.04 to 1 */
+.js .wipe { clip-path: inset(100% 0 0 0); transition: clip-path .9s var(--ease-calm); }
+.js .wipe > * { transform: scale(1.04); transition: transform .9s var(--ease-calm); }
+.js .wipe.is-in { clip-path: inset(0 0 0 0); }
+.js .wipe.is-in > * { transform: scale(1); }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; transition-delay: 0ms !important; scroll-behavior: auto !important; }
+  .js .rise, .js .wipe, .js .wipe > * { opacity: 1; transform: none; clip-path: none; }
 }
-
-/* Bruffles: labels settle in like gallery tags. Gated on .js so no-JS still shows them. */
-.js .tag-in { opacity: 0; transform: translateY(6px); transition: opacity .9s var(--ease-calm), transform .9s var(--ease-calm); }
-.js .tag-in.is-in { opacity: 1; transform: none; }
-
-/* Bruffles: matte satin royal purple (soft sheen, not shiny) */
-.satin { background-color: var(--color-royal); background-image: radial-gradient(120% 80% at 20% 0%, rgba(255,255,255,.07), transparent 60%), linear-gradient(160deg, #331656 0%, #261040 55%, #1d0b33 100%); }
-/* Bruffles royal field: the lighter royal purple behind the Bruffles cards */
-.royal-field { background-color: #3a1a62; background-image: radial-gradient(110% 70% at 15% 0%, rgba(255,255,255,.08), transparent 60%), linear-gradient(165deg, #45207a 0%, #391963 55%, #2e1350 100%); }
-/* Passport: night-flight navy with a soft horizon glow */
-.runway { background-color: var(--color-jet); background-image: radial-gradient(90% 60% at 80% 0%, rgba(127,184,230,.16), transparent 60%), linear-gradient(170deg, #14294a 0%, #0e1f38 60%, #0a172b 100%); }
-/* Brushed, shiny gold: metal fill and metal text */
-.gold-metal { background-image: linear-gradient(100deg, #8a6a2b 0%, #e9cf86 22%, #b98f3f 42%, #f6e3a6 58%, #a47a32 78%, #dcbc6c 100%); background-size: 200% 100%; }
-.gold-text { background-image: linear-gradient(100deg, #9c7731 0%, #e2c374 30%, #b08636 55%, #e8cf8a 75%, #a37b33 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
-/* Bruffles serif headings: Fraunces at a wide, soft, luxe optical setting */
-.h-bsa { font-family: var(--font-serif); font-weight: 500; font-variation-settings: "opsz" 72, "SOFT" 50, "WONK" 0; letter-spacing: -0.01em; }
-.h-ptp { font-family: var(--font-air); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
-/* Product name hover (both brands): bolder, darker/brighter and a touch bigger */
-.name-hover { display: inline-block; transition: transform .2s var(--ease-calm), font-weight .2s, color .2s; font-weight: 500; }
-.name-hover:hover { font-weight: 800; transform: scale(1.06); }
-.bg-white .name-hover:hover { color: #14062a; }
-
-/* Card surfaces: two close tones with a soft light spot whose focal point sits off the card */
-.card-jet { background: radial-gradient(140% 100% at -25% -30%, #24456f 0%, #16304f 62%); }
-.card-jet-img { background: radial-gradient(130% 110% at 125% -25%, #3d5f86 0%, #2b4565 65%); }
-.card-light { background: radial-gradient(140% 100% at -25% -30%, #ffffff 0%, #f0f4f9 65%); }
-.card-light-img { background: radial-gradient(130% 110% at 125% -25%, #ffffff 0%, #e6edf5 65%); }
-/* Passport field: very light electric blue */
-.sky-field { background-color: #dff0ff; background-image: radial-gradient(90% 60% at 85% 0%, rgba(255,255,255,.75), transparent 60%), linear-gradient(170deg, #e6f4ff 0%, #d4ebff 100%); }
-
-/* ---- Finish pass: colour chemistry ----
-   Bruffles: aubergine hero + navy satin cards on champagne ivory, joined by brushed gold.
-   (navy and ivory are near-complements; gold is the warm bridge between them)
-   Passport: burgundy Swedish passport cover + light electric blue field + white cards + signage yellow.
-   (burgundy and the cool blue push each other apart; yellow is blue's complement, so the button pops) */
-:root { --porcelain: #fbfaf7; }
-html, body { background: var(--porcelain); }
-/* Navy satin: deep navy with a soft diagonal sheen band, like light across satin */
-.card-jet { background:
-  linear-gradient(115deg, transparent 30%, rgba(255,255,255,.07) 45%, rgba(255,255,255,.02) 52%, transparent 62%),
-  radial-gradient(140% 100% at -25% -30%, #23426b 0%, #142b48 62%); }
-.card-jet-img { background:
-  linear-gradient(115deg, transparent 35%, rgba(255,255,255,.06) 48%, transparent 60%),
-  radial-gradient(130% 110% at 125% -25%, #33547b 0%, #22395a 65%); }
-/* Champagne ivory field behind the Bruffles cards */
-.ivory-field { background-color: #f4eee3; background-image: radial-gradient(100% 70% at 15% 0%, rgba(255,255,255,.7), transparent 60%), linear-gradient(170deg, #f7f2e9 0%, #efe7d8 100%); }
-/* Swedish passport cover (burgundy leather grain, blind-embossed guilloche, gold three crowns) */
-.passport-cover { background: #4e1520 url("/art/passport-cover.webp") center 18% / cover no-repeat; }

@@ -1,7 +1,8 @@
-// Mock catalogue for the Phase 0 demo. Replaced by Supabase in Phase 1.
+// Mock catalogue for the client demo. Names, prices and pieces are placeholders, not real stock.
+// Replaced by Supabase in Phase 1. Piece ID prefix BA confirmed by Divine 2026-11-24.
 export type BrufflesPiece = {
   brand: "bruffles"; id: string; pieceNo: number; name: string; maker: string;
-  source: string; condition: string; size: string; priceUsd: number; sold: boolean;
+  condition: string; size: string; priceUsd: number; sold: boolean;
   description: string; measurements: Record<string, string>; receiptRef?: string;
 };
 export type PassportItem = {
@@ -10,15 +11,21 @@ export type PassportItem = {
 };
 
 export const bruffles: BrufflesPiece[] = [
-  { brand: "bruffles", id: "BFA-047", pieceNo: 47, name: "Tech Fleece Windrunner", maker: "Nike", source: "nike.com", condition: "New with tags", size: "M", priceUsd: 18500, sold: false,
+  { brand: "bruffles", id: "BA-047", pieceNo: 47, name: "Tech Fleece Windrunner", maker: "Nike", condition: "New with tags", size: "M", priceUsd: 18500, sold: false,
     description: "Heather grey tech fleece with a full-length zip and a chevron yoke. Tags intact.",
     measurements: { Chest: "58 cm", Length: "71 cm", Sleeve: "64 cm", Shoulder: "47 cm" }, receiptRef: "Restock 2026-11 · Order #1" },
-  { brand: "bruffles", id: "BFA-046", pieceNo: 46, name: "Club Fleece Cargo Pant", maker: "Nike", source: "nike.com", condition: "New with tags", size: "L", priceUsd: 9500, sold: true,
+  { brand: "bruffles", id: "BA-046", pieceNo: 46, name: "Club Fleece Cargo Pant", maker: "Nike", condition: "New with tags", size: "L", priceUsd: 9500, sold: true,
     description: "Washed black cargo jogger in brushed-back fleece.", measurements: { Waist: "84 cm", Inseam: "76 cm" } },
-  { brand: "bruffles", id: "BFA-045", pieceNo: 45, name: "Oversized Logo Tee", maker: "Stüssy", source: "stussy.com", condition: "New with tags", size: "L", priceUsd: 7000, sold: false,
+  { brand: "bruffles", id: "BA-045", pieceNo: 45, name: "Oversized Logo Tee", maker: "Stüssy", condition: "New with tags", size: "L", priceUsd: 7000, sold: false,
     description: "Pigment-dyed heavyweight tee.", measurements: { Chest: "60 cm", Length: "74 cm" } },
-  { brand: "bruffles", id: "BFA-044", pieceNo: 44, name: "Coach Jacket", maker: "Carhartt WIP", source: "carhartt-wip.com", condition: "New with tags", size: "M", priceUsd: 16000, sold: false,
+  { brand: "bruffles", id: "BA-044", pieceNo: 44, name: "Coach Jacket", maker: "Carhartt WIP", condition: "New with tags", size: "M", priceUsd: 16000, sold: false,
     description: "Water-repellent nylon coach jacket.", measurements: { Chest: "59 cm", Length: "70 cm" } },
+  { brand: "bruffles", id: "BA-043", pieceNo: 43, name: "Essentials Hoodie", maker: "Fear of God", condition: "New with tags", size: "M", priceUsd: 14000, sold: true,
+    description: "Heavyweight fleece hoodie in oatmeal.", measurements: { Chest: "62 cm", Length: "72 cm" } },
+  { brand: "bruffles", id: "BA-042", pieceNo: 42, name: "Fitted Cap, Yankees", maker: "New Era", condition: "New with tags", size: "7 3/8", priceUsd: 4500, sold: false,
+    description: "59FIFTY fitted cap in black.", measurements: { Size: "7 3/8" } },
+  { brand: "bruffles", id: "BA-041", pieceNo: 41, name: "Nuptse Vest", maker: "The North Face", condition: "New with tags", size: "L", priceUsd: 15500, sold: true,
+    description: "700-fill down vest in black.", measurements: { Chest: "61 cm", Length: "68 cm" } },
 ];
 
 export const passport: PassportItem[] = [
@@ -26,6 +33,8 @@ export const passport: PassportItem[] = [
   { brand: "passport", id: "PTP-11", itemNo: 11, name: "Rolling Papers, King Slim", priceUsd: 3600, qty: 120, packOf: 50, description: "Unbleached. Box of 50 booklets." },
   { brand: "passport", id: "PTP-10", itemNo: 10, name: "Glass Tips, Clear", priceUsd: 1800, qty: 0, packOf: 25, description: "Borosilicate. Pack of 25." },
   { brand: "passport", id: "PTP-09", itemNo: 9, name: "Travel Stash Tin", priceUsd: 1500, qty: 64, packOf: 1, description: "Airtight aluminium tin." },
+  { brand: "passport", id: "PTP-08", itemNo: 8, name: "Filter Tips, Slim", priceUsd: 1200, qty: 200, packOf: 50, description: "Unbleached card tips. Pack of 50 booklets." },
+  { brand: "passport", id: "PTP-07", itemNo: 7, name: "Rolling Tray, Medium", priceUsd: 2200, qty: 30, packOf: 1, description: "Metal tray with raised edges." },
 ];
 
 export const pad = (n: number, w = 3) => String(n).padStart(w, "0");

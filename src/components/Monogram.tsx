@@ -1,10 +1,15 @@
-// Gold circular BFA monogram. Placeholder mark until the client's real one arrives.
-export default function Monogram({ size = 88 }: { size?: number }) {
+// The client's gold monogram (cut from their store artwork). Letters await client confirmation,
+// so the alt text names the brand rather than spelling the letters.
+// tone "bright" for dark grounds, "deep" for the bone ground (passes 3:1 as a graphic).
+export default function Monogram({ size = 88, tone = "bright", disc = false, className = "" }:
+  { size?: number; tone?: "bright" | "deep"; disc?: boolean; className?: string }) {
+  const src = tone === "deep" ? "/brand/bruffles-monogram-gold-deep.webp" : "/brand/bruffles-monogram-gold.webp";
+  const img = <img src={src} width={disc ? Math.round(size * 0.72) : size} height={disc ? Math.round(size * 0.72) : size}
+    alt="Bruffles Apparel monogram" decoding="async" className={disc ? "" : className} />;
+  if (!disc) return img;
   return (
-    <svg width={size} height={size} viewBox="0 0 100 100" role="img" aria-label="Bruffles Apparel monogram">
-      <circle cx="50" cy="50" r="48" fill="var(--color-gold)" />
-      <circle cx="50" cy="50" r="42" fill="none" stroke="#f4f0e8" strokeOpacity=".55" strokeWidth=".75" />
-      <text x="50" y="58" textAnchor="middle" fontFamily="Fraunces Variable, serif" fontSize="24" fontWeight="500" letterSpacing="2" fill="#1c1b19">BFA</text>
-    </svg>
+    <span className={`grid place-items-center rounded-full bg-ink ring-1 ring-gold/60 ${className}`} style={{ width: size, height: size }}>
+      {img}
+    </span>
   );
 }

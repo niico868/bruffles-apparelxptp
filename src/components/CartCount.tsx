@@ -9,5 +9,5 @@ export default function CartCount() {
     window.addEventListener("cart:change", sync);
     return () => window.removeEventListener("cart:change", sync);
   }, []);
-  return <span aria-live="polite">Bag ({n})</span>;
+  return <a href="/bag" aria-live="polite">Bag ({n})</a>;
 }

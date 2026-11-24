@@ -1,3 +1,5 @@
 /bruffels /bruffles 301
 /bruffels/ /bruffles/ 301
+/bruffels/BFA-* /bruffles/BA-:splat 301
 /bruffels/* /bruffles/:splat 301
+/bruffles/BFA-* /bruffles/BA-:splat 301

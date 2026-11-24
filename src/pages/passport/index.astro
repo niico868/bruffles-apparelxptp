@@ -1,21 +1,27 @@
 ---
 import Base from "../../layouts/Base.astro";
 import PassportCard from "../../components/PassportCard";
-import PlanePath from "../../components/PlanePath";
-import TravelInk from "../../components/TravelInk.astro";
+import DepartureBoard from "../../components/DepartureBoard";
 import { passport } from "../../data/products";
 ---
-<Base title="Passport to Paradise · Departures">
-  <section class="sky-field text-jet min-h-[80svh] relative overflow-hidden">
-    <TravelInk />
-    <div class="relative z-10 max-w-[1400px] mx-auto px-4 md:px-8 pt-12 pb-16">
-      <p class="label-ptp text-signal-deep">Gate 02 · Bulk accessories</p>
-      <h1 class="h-ptp text-3xl md:text-4xl mt-3">Passport to Paradise</h1>
-      <p class="mt-4 max-w-lg text-[15px] leading-relaxed text-jet/70">Accessories by the pack and by the box. Order in bulk, track every item.</p>
-      <div class="mt-8"><PlanePath dark={false} client:visible /></div>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+<Base title="Passport to Paradise · Departures" description="Papers, filters and tools from Passport to Paradise, by the pack and by the box." world="pp">
+  <div class="pp">
+    <section class="wrap pt-32 md:pt-40 pb-16 md:grid md:grid-cols-12 md:gap-8 md:items-end">
+      <div class="md:col-span-7">
+        <p class="label-pp text-signal">Gate 02 · All departures</p>
+        <h1 class="h-pp text-[56px] md:text-[96px] mt-4">Passport<br />to Paradise</h1>
+      </div>
+      <div class="md:col-span-4 md:col-start-9 mt-6 md:mt-0">
+        <img src="/brand/passport-badge.webp" alt="Passport to Paradise logo" width="594" height="505" class="w-40 md:w-56 mb-6" />
+        <p class="text-muted">Papers, filters and tools, by the pack and by the box.</p>
+      </div>
+    </section>
+    <section class="wrap pb-16" aria-label="Departures board"><DepartureBoard client:visible items={passport} /></section>
+    <section class="wrap pb-[var(--spacing-section)]" aria-label="All items">
+      <div class="flex items-center gap-4 pb-6"><span class="label-pp text-signal">→</span><h2 class="label-pp">All items</h2><span class="flex-1 border-t border-dashed border-char-3"></span></div>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
         {passport.map((item) => <PassportCard client:visible item={item} />)}
       </div>
-    </div>
-  </section>
+    </section>
+  </div>
 </Base>
