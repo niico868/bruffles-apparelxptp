@@ -19,7 +19,7 @@
   --color-gold: #c9a55a;       /* gold: stamps, piece labels, key accents */
   --color-gold-deep: #84682c;  /* gold text on white */
 
-  /* Bruffels: dark royal purple, matte satin */
+  /* Bruffles: dark royal purple, matte satin */
   --color-royal: #261040;
   --color-royal-2: #331656;
   --color-royal-3: #40206a;
@@ -58,20 +58,20 @@
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
 
-/* Bruffels: labels settle in like gallery tags. Gated on .js so no-JS still shows them. */
+/* Bruffles: labels settle in like gallery tags. Gated on .js so no-JS still shows them. */
 .js .tag-in { opacity: 0; transform: translateY(6px); transition: opacity .9s var(--ease-calm), transform .9s var(--ease-calm); }
 .js .tag-in.is-in { opacity: 1; transform: none; }
 
-/* Bruffels: matte satin royal purple (soft sheen, not shiny) */
+/* Bruffles: matte satin royal purple (soft sheen, not shiny) */
 .satin { background-color: var(--color-royal); background-image: radial-gradient(120% 80% at 20% 0%, rgba(255,255,255,.07), transparent 60%), linear-gradient(160deg, #331656 0%, #261040 55%, #1d0b33 100%); }
-/* Bruffels royal field: the lighter royal purple behind the Bruffels cards */
+/* Bruffles royal field: the lighter royal purple behind the Bruffles cards */
 .royal-field { background-color: #3a1a62; background-image: radial-gradient(110% 70% at 15% 0%, rgba(255,255,255,.08), transparent 60%), linear-gradient(165deg, #45207a 0%, #391963 55%, #2e1350 100%); }
 /* Passport: night-flight navy with a soft horizon glow */
 .runway { background-color: var(--color-jet); background-image: radial-gradient(90% 60% at 80% 0%, rgba(127,184,230,.16), transparent 60%), linear-gradient(170deg, #14294a 0%, #0e1f38 60%, #0a172b 100%); }
 /* Brushed, shiny gold: metal fill and metal text */
 .gold-metal { background-image: linear-gradient(100deg, #8a6a2b 0%, #e9cf86 22%, #b98f3f 42%, #f6e3a6 58%, #a47a32 78%, #dcbc6c 100%); background-size: 200% 100%; }
 .gold-text { background-image: linear-gradient(100deg, #9c7731 0%, #e2c374 30%, #b08636 55%, #e8cf8a 75%, #a37b33 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
-/* Bruffels serif headings: Fraunces at a wide, soft, luxe optical setting */
+/* Bruffles serif headings: Fraunces at a wide, soft, luxe optical setting */
 .h-bsa { font-family: var(--font-serif); font-weight: 500; font-variation-settings: "opsz" 72, "SOFT" 50, "WONK" 0; letter-spacing: -0.01em; }
 .h-ptp { font-family: var(--font-air); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
 /* Product name hover (both brands): bolder, darker/brighter and a touch bigger */
@@ -88,7 +88,7 @@
 .sky-field { background-color: #dff0ff; background-image: radial-gradient(90% 60% at 85% 0%, rgba(255,255,255,.75), transparent 60%), linear-gradient(170deg, #e6f4ff 0%, #d4ebff 100%); }
 
 /* ---- Finish pass: colour chemistry ----
-   Bruffels: aubergine hero + navy satin cards on champagne ivory, joined by brushed gold.
+   Bruffles: aubergine hero + navy satin cards on champagne ivory, joined by brushed gold.
    (navy and ivory are near-complements; gold is the warm bridge between them)
    Passport: burgundy Swedish passport cover + light electric blue field + white cards + signage yellow.
    (burgundy and the cool blue push each other apart; yellow is blue's complement, so the button pops) */
@@ -101,7 +101,7 @@ html, body { background: var(--porcelain); }
 .card-jet-img { background:
   linear-gradient(115deg, transparent 35%, rgba(255,255,255,.06) 48%, transparent 60%),
   radial-gradient(130% 110% at 125% -25%, #33547b 0%, #22395a 65%); }
-/* Champagne ivory field behind the Bruffels cards */
+/* Champagne ivory field behind the Bruffles cards */
 .ivory-field { background-color: #f4eee3; background-image: radial-gradient(100% 70% at 15% 0%, rgba(255,255,255,.7), transparent 60%), linear-gradient(170deg, #f7f2e9 0%, #efe7d8 100%); }
 /* Swedish passport cover (burgundy leather grain, blind-embossed guilloche, gold three crowns) */
 .passport-cover { background: #4e1520 url("/art/passport-cover.webp") center 18% / cover no-repeat; }

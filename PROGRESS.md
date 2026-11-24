@@ -61,3 +61,10 @@ Local dev on the Chromebook is not needed: preview on the .workers.dev link inst
 ## Session 7 · Mobile tap fix + finish palette
 - Fixed: on phones, tapping Passport didn't open it (one shared scroll lock was judged by the Bruffels text). Now each half has its own lock. Tested on emulated iPhone 12 at the top and scrolled.
 - Palette: royal purple removed. Bruffels = aubergine satin hero, navy satin cards, champagne-ivory panel, brushed gold. Passport = Swedish passport cover hero (generated: `scripts/passport-cover.svg` → `public/art/passport-cover.webp`), light electric-blue panel, white cards, signage yellow. Page = porcelain white.
+
+## Session 8 · Step 1: name and truth fixes
+- Spelling is **Bruffles** everywhere: copy, page titles, meta, new OG/Twitter tags. Routes `/bruffles`; `public/_redirects` 301s old `/bruffels` links.
+- Removed: Favorited/Carted counts, "Est. Port of Spain", "Ships worldwide", TTD estimates (product + Passport pages).
+- Sourcing line: "Purchased from official brand stores — receipt on file". No brand-partnership wording.
+- Authenticity page trimmed to the 3 confirmed steps (official store → receipt per restock → tag photo). Removed unconfirmed claims (six shots, emailed certificate).
+- Monogram letters + BFA piece prefix: waiting on the client's confirmation.

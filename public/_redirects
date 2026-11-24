@@ -1,0 +1,3 @@
+/bruffels /bruffles 301
+/bruffels/ /bruffles/ 301
+/bruffels/* /bruffles/:splat 301

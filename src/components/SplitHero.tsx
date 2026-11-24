@@ -141,7 +141,7 @@ export default function SplitHero() {
         {dark && <div aria-hidden className="absolute inset-x-0 bottom-0 h-[55%] pointer-events-none bg-gradient-to-t from-[#22070d] via-[#22070d]/70 to-transparent" />}
         <motion.div className="absolute inset-0 bg-black pointer-events-none" animate={{ opacity: active && !open ? 0.35 : 0 }} transition={t} />
 
-        {/* Logo: only on the open side, pinned to the top corner (left for Bruffels, right for Passport) */}
+        {/* Logo: only on the open side, pinned to the top corner (left for Bruffles, right for Passport) */}
         <AnimatePresence>
           {open && (
             <motion.div key="logo" className={`absolute z-10 ${dark ? "right-6 md:right-10" : "left-6 md:left-10"}`} style={{ top: logoTop }}
@@ -170,7 +170,7 @@ export default function SplitHero() {
 
   return (
     <div ref={root} className="relative flex flex-col md:flex-row h-[calc(100svh-56px)] min-h-[560px]">
-      {half("bsa", "/bruffels", "One of one · Est. Port of Spain", "Bruffels Apparel", false)}
+      {half("bsa", "/bruffles", "One of one · Restocked twice a month", "Bruffles Apparel", false)}
       {half("ptp", "/passport", "Gate 02 · Bulk accessories", "Passport to Paradise", true)}
       <motion.div className="absolute z-20 pointer-events-none -translate-x-1/2 -translate-y-1/2 hidden md:block top-1/2"
         animate={{ left: `${linePct}%` }} transition={t}><Monogram /></motion.div>

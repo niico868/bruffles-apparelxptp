@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { addToCart } from "../lib/cart";
 
-// Bruffels button: brushed-gold outline that simply illuminates. On hover the gold fill
+// Bruffles button: brushed-gold outline that simply illuminates. On hover the gold fill
 // fades in smoothly (no sweep, no charge-up) and the text turns royal purple.
 export default function ClaimButton({ id, name, priceUsd, sold, full = false }: { id: string; name: string; priceUsd: number; sold: boolean; full?: boolean }) {
   const [claimed, setClaimed] = useState(false);

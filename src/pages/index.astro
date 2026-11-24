@@ -1,12 +1,12 @@
 ---
 import Base from "../layouts/Base.astro";
 import SplitHero from "../components/SplitHero";
-import BruffelsCard from "../components/BruffelsCard.astro";
+import BrufflesCard from "../components/BrufflesCard.astro";
 import PassportCard from "../components/PassportCard";
 import PlanePath from "../components/PlanePath";
 import DropColumn from "../components/DropColumn.astro";
 import TravelInk from "../components/TravelInk.astro";
-import { brussels, passport } from "../data/products";
+import { bruffles, passport } from "../data/products";
 ---
 <Base>
   <SplitHero client:load />
@@ -18,8 +18,8 @@ import { brussels, passport } from "../data/products";
     </header>
 
     <div class="grid md:grid-cols-2 mt-8">
-      <DropColumn brand="bsa" title="Bruffels Apparel" href="/bruffels" tag="View all">
-        {brussels.map((p) => <BruffelsCard p={p} />)}
+      <DropColumn brand="bsa" title="Bruffles Apparel" href="/bruffles" tag="View all">
+        {bruffles.map((p) => <BrufflesCard p={p} />)}
       </DropColumn>
       <DropColumn brand="ptp" title="Passport to Paradise" href="/passport" tag="All departures" id="passport">
         <TravelInk slot="art" />

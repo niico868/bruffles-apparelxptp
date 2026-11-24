@@ -16,7 +16,7 @@ const { item } = Astro.props;
       <div class="mt-8 md:mt-0 self-center max-w-md">
         <p class="label-ptp text-signal-deep">Item {item.itemNo} · {item.qty === 0 ? "Sold out" : `Qty ${item.qty}`}{item.packOf > 1 ? ` · Pack ${item.packOf}` : ""}</p>
         <h1 class="h-ptp text-3xl md:text-4xl mt-3">{item.name}</h1>
-        <p class="mt-4 text-lg"><FlipPrice client:visible text={formatPrice(item.priceUsd)} /> <span class="text-sm text-jet/70 ml-2">≈ {formatPrice(item.priceUsd, "TTD")}</span></p>
+        <p class="mt-4 text-lg"><FlipPrice client:visible text={formatPrice(item.priceUsd)} /></p>
         <p class="mt-6 text-[15px] leading-relaxed text-jet/70">{item.description}</p>
         <div class="mt-8"><BoardItem client:load id={item.id} name={item.name} priceUsd={item.priceUsd} qty={item.qty} /></div>
         <a href="/passport" class="mt-8 inline-block label-ptp text-jet hover:text-signal-deep">← All departures</a>
