@@ -22,11 +22,11 @@ export default function DropAlerts({ compact = false }: { compact?: boolean }) {
           </label>
         ))}
       </fieldset>
-      <div className="mt-2 flex flex-col sm:flex-row gap-3">
+      <div className="mt-2 flex flex-col sm:flex-row md:flex-col lg:flex-row gap-3">
         <label htmlFor={id} className="sr-only">{via === "email" ? "Email address" : "WhatsApp number"}</label>
         <input id={id} required type={via === "email" ? "email" : "tel"} autoComplete={via === "email" ? "email" : "tel"}
           placeholder={via === "email" ? "you@example.com" : "+1 868 000 0000"}
-          className="flex-1 min-h-12 px-4 bg-transparent border border-ink placeholder:text-ink-soft focus:outline-none focus:border-gold-deep focus:ring-1 focus:ring-gold-deep" />
+          className="flex-1 min-w-0 min-h-12 px-4 bg-transparent border border-ink placeholder:text-ink-soft focus:outline-none focus:border-gold-deep focus:ring-1 focus:ring-gold-deep" />
         <button className="btn-bf label-bf">Notify me</button>
       </div>
     </form>

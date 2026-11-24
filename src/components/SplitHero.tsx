@@ -38,7 +38,7 @@ export default function SplitHero() {
       onPointerMove={onMove} onPointerLeave={() => setActive(null)}>
 
       {/* ---------- Bruffles panel ---------- */}
-      <section aria-labelledby="hero-bf" className="bf relative min-h-[78svh] md:min-h-0 md:absolute md:inset-y-0 md:left-0 md:w-[70%] overflow-hidden">
+      <section aria-labelledby="hero-bf" className="bf relative min-h-[70svh] md:min-h-0 md:absolute md:inset-y-0 md:left-0 md:w-[70%] overflow-hidden">
         {heroMedia.bf.poster && <img src={heroMedia.bf.poster} alt="" className="absolute inset-0 w-full h-full object-cover" />}
         {/* Featured piece frame: sits in the middle band, visible unless Passport is open */}
         <div className="absolute hidden md:block left-[44%] right-[31%] top-[18%] bottom-[16%]">
@@ -48,7 +48,7 @@ export default function SplitHero() {
           </div>
           <p className="mt-3 label-bf text-ink-soft">Piece 047 · Tech Fleece Windrunner</p>
         </div>
-        <div className="relative md:absolute md:left-0 md:bottom-0 md:w-[42.857%] flex flex-col justify-end min-h-[78svh] md:min-h-0 px-[var(--spacing-gutter)] pt-24 pb-16 md:pb-16">
+        <div className="relative md:absolute md:left-0 md:bottom-0 md:w-[42.857%] flex flex-col justify-end min-h-[70svh] md:min-h-0 px-[var(--spacing-gutter)] md:pr-16 pt-24 pb-16 md:pb-16">
           <div className="md:hidden relative w-[62%] aspect-[4/5] ph-bf self-end mb-auto mt-4">
             <span className="absolute left-3 top-3 label-bf text-ink-soft">Photo · 047</span>
             <span className="absolute right-3 bottom-1 num-bf text-[64px] text-ink/10" aria-hidden>047</span>
@@ -67,7 +67,7 @@ export default function SplitHero() {
 
       {/* ---------- Passport panel ---------- */}
       <motion.section aria-labelledby="hero-pp"
-        className="pp relative min-h-[78svh] md:min-h-0 md:absolute md:inset-y-0 md:left-1/2 md:w-[70%] overflow-hidden z-10"
+        className="pp relative min-h-[70svh] md:min-h-0 md:absolute md:inset-y-0 md:left-1/2 md:w-[70%] overflow-hidden z-10"
         initial={false} animate={{ x: `${(shift / PANEL) * 100}%` }} transition={t}
         style={{ willChange: "transform" }}>
         {heroMedia.pp.poster && <img src={heroMedia.pp.poster} alt="" className="absolute inset-0 w-full h-full object-cover" />}
@@ -76,7 +76,7 @@ export default function SplitHero() {
         <div aria-hidden className="hidden md:block absolute inset-y-0 left-2 border-l-2 border-dashed border-signal/40" />
         <img src="/brand/passport-badge.webp" alt="" aria-hidden width="594" height="505"
           className="hidden md:block absolute left-[46%] top-[20%] w-[22%] max-w-[300px] opacity-95" />
-        <div className="relative md:absolute md:left-0 md:bottom-0 md:w-[42.857%] flex flex-col justify-end min-h-[78svh] md:min-h-0 px-[var(--spacing-gutter)] pt-24 pb-16 md:pl-16">
+        <div className="relative md:absolute md:left-0 md:bottom-0 md:w-[42.857%] flex flex-col justify-end min-h-[70svh] md:min-h-0 px-[var(--spacing-gutter)] pt-24 pb-16 md:pl-16">
           <img src="/brand/passport-badge.webp" alt="" aria-hidden width="594" height="505" className="md:hidden w-40 mb-auto mt-4 self-end" />
           <p className="label-pp text-signal"><FlipPrice text="GATE 02 · NOW BOARDING" /></p>
           <h2 id="hero-pp" className="h-pp text-[48px] md:text-[clamp(48px,4.4vw,72px)] mt-4">Passport<br />to Paradise</h2>

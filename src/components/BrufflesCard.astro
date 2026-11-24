@@ -15,11 +15,11 @@ const n = pad(p.pieceNo);
       {!p.sold && <span class="absolute left-3 bottom-3 md:left-4 md:bottom-4 label-bf text-gold-text bg-bone/90 px-2 py-1">1 of 1</span>}
     </div>
   </a>
-  <div class:list={["mt-4 flex flex-col gap-2 md:flex-row md:items-end md:gap-4", feature && "md:col-span-5 md:mt-0 md:!flex-col md:!items-start md:!gap-6 md:pb-4"]}>
+  <div class:list={["mt-4 flex flex-col gap-2 md:flex-row md:items-end md:gap-4", feature && "md:col-span-5 min-w-0 md:mt-0 md:!flex-col md:!items-start md:!gap-6 md:pb-4"]}>
     <span aria-hidden class:list={["num-bf transition-[transform,color] duration-700 ease-[var(--ease-calm)] group-hover/card:translate-x-1",
       feature ? "text-[72px] md:text-[clamp(96px,12vw,192px)]" : "text-[48px] md:text-[72px]",
       p.sold ? "text-ink-soft/40" : "text-ink group-hover/card:text-gold-deep"]}>{n}</span>
-    <div class="min-w-0 flex-1">
+    <div class="min-w-0 flex-1 w-full">
       <p class="label-bf text-ink-soft truncate">{p.maker} · {p.size}</p>
       <h3 class:list={["mt-1 md:truncate", feature ? "h-bf text-[24px] md:text-[32px]" : "text-[16px] font-semibold leading-snug"]}>
         <a href={`/bruffles/${p.id}`} class="hover:underline underline-offset-4 decoration-hair">{p.name}</a></h3>

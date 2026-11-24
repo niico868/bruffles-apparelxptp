@@ -68,3 +68,11 @@ Local dev on the Chromebook is not needed: preview on the .workers.dev link inst
 - Sourcing line: "Purchased from official brand stores — receipt on file". No brand-partnership wording.
 - Authenticity page trimmed to the 3 confirmed steps (official store → receipt per restock → tag photo). Removed unconfirmed claims (six shots, emailed certificate).
 - Monogram letters + BFA piece prefix: waiting on the client's confirmation.
+
+## Session 8 · Steps 2 to 6 (branch `claude/elevate-demo`)
+- Colour system v2 (bone/ink/gold for Bruffles, charcoal/signal/stamp for Passport), documented with contrast ratios in DESIGN.md.
+- Real logos in `public/brand/` (gold monogram cut from the store artwork, Passport badge). Lockups: BA × PTP (home), BA, PTP. Piece IDs BA-047; `_redirects` forwards BFA links.
+- New layout: transform-only split hero, lookbook collection, Nike-style product page with certificate, departures board.
+- New sections: sticky header + menu, How authenticity works, drop alerts (demo success state), Gone strip, story [CLIENT TO WRITE], footer + policy placeholders, 18+ gate on Passport pages, Ask about this piece.
+- Motion tested at 4x CPU slowdown: 60fps on hero, plane, stamp and reveals after load.
+- Removed: purple/navy/sky palette, travel-ink art, Swedish passport cover, Montserrat.

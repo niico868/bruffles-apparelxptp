@@ -21,7 +21,7 @@ export default function Gallery({ sold = false, num }: { sold?: boolean; num: st
         <div ref={strip} onScroll={onScroll} className="flex overflow-x-auto snap-x snap-mandatory [scrollbar-width:none]" aria-label="Photos, swipe for more">
           {SHOTS.map((s, n) => <div key={s} className="snap-center shrink-0 w-full">{shot(s, n)}</div>)}
         </div>
-        <p className="absolute right-4 bottom-4 label-bf bg-bone/90 px-2 py-1 tabular-nums" aria-live="polite">{i + 1} / {SHOTS.length}</p>
+        <p className="absolute right-4 top-4 label-bf bg-bone/90 px-2 py-1 tabular-nums" aria-live="polite">{i + 1} / {SHOTS.length}</p>
       </div>
     </div>
   );
