@@ -1,0 +1,36 @@
+---
+// KOI product photo: computers swap to the second photo on hover (or keyboard focus);
+// phones swipe between the two, with two small dots. Missing photos show a labelled placeholder.
+import Img from "./Img.astro";
+import type { Pic } from "../lib/pic";
+const { a, b, sizes = "50vw", grey = false, label = "Photo · front" } = Astro.props as { a?: Pic; b?: Pic; sizes?: string; grey?: boolean; label?: string };
+const two = !!(a && b);
+---
+<div class:list={["swap relative aspect-[4/5] overflow-hidden", grey && "grayscale opacity-60"]} data-two={two ? "" : undefined}>
+  {two ? (
+    <div class="swap-track absolute inset-0 flex overflow-x-auto snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div class="swap-a relative shrink-0 w-full h-full snap-center"><Img pic={a} sizes={sizes} /></div>
+      <div class="swap-b relative shrink-0 w-full h-full snap-center"><Img pic={b} sizes={sizes} /></div>
+    </div>
+  ) : <Img pic={a} sizes={sizes} label={label} />}
+  {two && <div class="swap-dots absolute bottom-3 inset-x-0 flex justify-center gap-2" aria-hidden="true"><span class="is-on"></span><span></span></div>}
+</div>
+
+<style>
+  .swap-dots span { width: 6px; height: 6px; border-radius: 9999px; background: rgb(28 26 23 / .25); transition: background-color .3s; }
+  .swap-dots span.is-on { background: var(--color-ink); }
+  /* Computers: stack the two photos and crossfade on hover / focus instead of swiping */
+  @media (hover: hover) and (pointer: fine) {
+    .swap-track { overflow: hidden; display: block; }
+    .swap-a, .swap-b { position: absolute; inset: 0; }
+    .swap-b { opacity: 0; transition: opacity .4s var(--ease-calm); }
+    :global(.group\/card:hover) .swap-b, :global(.group\/card:focus-within) .swap-b { opacity: 1; }
+    .swap-dots { display: none; }
+  }
+</style>
+<script>
+  document.querySelectorAll<HTMLElement>(".swap[data-two] .swap-track").forEach((t) => {
+    const dots = t.parentElement!.querySelectorAll(".swap-dots span");
+    t.addEventListener("scroll", () => { const i = Math.round(t.scrollLeft / t.clientWidth); dots.forEach((d, n) => d.classList.toggle("is-on", n === i)); }, { passive: true });
+  });
+</script>

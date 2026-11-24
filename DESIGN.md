@@ -33,10 +33,11 @@ Tokens live in `src/styles/global.css` `@theme`. One job per colour. Ratios are 
 **Seam:** bone meets charcoal along a 1px gold rule; the monogram sits on it in an ink disc (bright gold mark); a signal-yellow runway dash points into Passport.
 
 ## Type
-- Body 16px / 1.6 (Manrope). Labels 12px uppercase: `.label-bf` (Manrope, 0.16em) and `.label-pp` (DM Mono).
+- Body 16px / 1.6 (Manrope). Labels uppercase: `.label-bf` (Archivo Narrow 600, 13px, 0.04em) and `.label-pp` (DM Mono 12px).
+- KOI merge (2026-11-24): **Archivo Narrow** is the UI voice. `.ui` = 14px uppercase 0.04em for nav, grid product names, prices, small links. `.h-koi` = Archivo Narrow 700 uppercase for collab-lockup headlines only ("BRUFFLES APPAREL", "LATEST PIECES"). Barlow Semi Condensed removed; `.h-pp` now uses Archivo Narrow 700.
 - Scale (px): 12 · 14 · 16 · 20 · 24 · 32 · 48 · 72 · 96. Nothing else.
 - Bruffles headings `.h-bf`: Fraunces, light optical size. Piece numbers `.num-bf` (047) are set large as a typographic element.
-- Passport headings `.h-pp`: Barlow Semi Condensed uppercase, signage feel.
+- Passport headings `.h-pp`: Archivo Narrow 700 uppercase, signage feel.
 - Montserrat removed (only drew the old GONE stamp).
 
 ## Space & shape
@@ -63,3 +64,14 @@ Transform and opacity only (plus clip-path for Bruffles image wipes). Everything
 
 Reveals use plain CSS + one IntersectionObserver in `Base.astro`; Framer Motion runs the hero, plane and drawers. No Lenis, no GSAP.
 Tested at 4x CPU slowdown: hero, plane, stamp and reveals hold 60fps once the page has loaded.
+
+## KOI merge (2026-11-24): "flagship store with a street-campaign window"
+Reference: kidsofimmigrants.us, survey in project files `koi-merge/01-site-survey.md`. Photos carry the colour; the interface stays neutral. No text inside images.
+- **Homepage = exactly 8 blocks:** header · split hero (campaign media per half) · Latest pieces (two-up) · authenticity strip · film · Passport (two-up + departures) · community wall mosaic · footer (holds drop alerts, `#drop-alerts`).
+- **Media slots:** listed in `src/data/media.json`; photos in `src/assets/media/` (Astro makes phone-size WebP), films in `public/media/`. Product photos by name: `src/assets/media/pieces/<ID>/01-front … 06-fabric`. Folder READMEs give sizes. `scripts/check-media.mjs` runs before every build: photo > 600 KB, film over cap (hero 4 MB, film 8 MB) or missing alt text = build stops.
+- **Empty slot rule:** every slot falls back to its labelled placeholder (`Img.astro`), so the site always looks finished.
+- **Hero media:** separate phone / computer crops; optional loop over the photo (never with reduced motion or data saver); bottom scrim + light top shade when a photo is present. Homepage Passport media = lifestyle/brand only; product close-ups stay behind the 18+ gate.
+- **Photo swap** (`SwapImage.astro`): hover or keyboard focus crossfades to the on-body photo (400ms); phones swipe, two dots.
+- **Film** (`Film.astro`): poster first, plays muted only on screen, one Pause/Play button; hidden until a film exists.
+- **Product page:** KOI gallery (first photo full width, 2-col grid, last photo full width when the rest don't pair) + full-screen viewer; single size box ("M · the only one", never a size grid); story box [CLIENT TO WRITE]; tabs (size & measurements / delivery / care); desktop sticky mini bar; certificate; "More 1 of 1s". Product JSON-LD (no ratings).
+- **Footer:** ink band (charcoal on Passport pages), link columns + drop alerts.

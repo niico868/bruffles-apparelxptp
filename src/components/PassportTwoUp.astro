@@ -1,0 +1,16 @@
+---
+// KOI two-up gallery in the Passport world: two campaign photos edge to edge, each with a small
+// signal-yellow button. Homepage rule: lifestyle or brand photos only (no product close-ups).
+import Img from "./Img.astro";
+import { media } from "../data/media";
+import { toPic } from "../lib/pic";
+const pics = await Promise.all(media.ppTwoUp.map((s) => toPic(s, [480, 800, 1200, 1600])));
+---
+<div class="grid grid-cols-2 gap-1">
+  {media.ppTwoUp.map((s, i) => (
+    <div class="relative aspect-[4/5] overflow-hidden">
+      <div class="wipe absolute inset-0" style={`--i:${i}`}><div class="absolute inset-0"><Img pic={pics[i]} world="pp" sizes="50vw" label={`Photo · Passport ${i + 1}`} /></div></div>
+      <a href={s.href} class="btn-pp label-pp absolute inset-x-2 bottom-2 md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:bottom-8 md:whitespace-nowrap text-center !min-h-11 md:!min-h-12 !px-2 md:!px-5 !text-[10px] md:!text-[12px] leading-tight">{s.button}</a>
+    </div>
+  ))}
+</div>

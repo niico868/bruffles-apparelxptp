@@ -78,3 +78,12 @@ Local dev on the Chromebook is not needed: preview on the .workers.dev link inst
 - Removed: purple/navy/sky palette, travel-ink art, Swedish passport cover, Montserrat.
 - 2026-11-24: Divine approved; `claude/elevate-demo` merged into the live branch `claude/phase-0-demo`.
 - Note: Cloudflare branch-preview builds fail (logs only in the dashboard), and Cloudflare skips a production build for a commit it already built as a preview. Always land a fresh commit on the live branch to trigger a deploy.
+
+## Session 9 · KOI merge (branch `claude/koi-merge`, PR for Divine's approval)
+- Direction approved 2026-11-24: split hero with campaign media. Bone background and Archivo Narrow kept as defaults.
+- Homepage cut to 8 blocks (see DESIGN.md). Moved off the homepage: Gone strip (gone pieces already show greyed in the collection), Our story (waits for client text), standalone drop alerts (now in every footer).
+- Media framework: `src/data/media.json` + `src/assets/media/` + `public/media/`, folder READMEs, `scripts/check-media.mjs` before every build.
+- Product page: KOI gallery + viewer, one size box, story box, tabs, sticky mini bar, More 1 of 1s, Product JSON-LD.
+- Header: Archivo labels, "Shop Bruffles / Shop Passport", compact after 40px scroll, menu button + home link labels fixed. CSS inlined into each page.
+- Lighthouse mobile (local, compressed like Cloudflare): home 100/100/100/100, BA-047 100/100/100/100; LCP 1.3 s / 1.5 s.
+- Client gaps: piece story, delivery, care, Passport two-up button labels, restock rhythm wording, Instagram links, all photos and the film.

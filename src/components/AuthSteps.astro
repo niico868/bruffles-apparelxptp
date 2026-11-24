@@ -8,8 +8,24 @@ const steps = [
   { t: "Tag photo on every piece", d: "Each piece is photographed with its brand tag, so you see exactly what arrives.",
     icon: `<path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.5"/>` },
 ];
-const { heading = true } = Astro.props as { heading?: boolean };
+const { heading = true, strip = false } = Astro.props as { heading?: boolean; strip?: boolean };
 ---
+{strip ? (
+<section class="bf border-y border-hair" aria-labelledby="auth-how">
+  <div class="wrap py-10 md:py-12 md:grid md:grid-cols-12 md:gap-8 md:items-center">
+    <h2 id="auth-how" class="label-bf text-gold-text md:col-span-2 rise">How authenticity works</h2>
+    <ol class="mt-6 md:mt-0 md:col-span-8 grid gap-6 md:grid-cols-3">
+      {steps.map((s, i) => (
+        <li class="flex items-baseline gap-4 rise" style={`--i:${i + 1}`}>
+          <span class="num-bf text-[40px] text-gold-deep">0{i + 1}</span>
+          <span class="ui text-[14px]">{s.t}</span>
+        </li>
+      ))}
+    </ol>
+    <a href="/authenticity" class="ui text-[13px] underline underline-offset-4 decoration-hair hover:decoration-ink md:col-span-2 md:text-right inline-block mt-6 md:mt-0 rise" style="--i:4">Read the sourcing promise</a>
+  </div>
+</section>
+) : (
 <section class="bf py-[var(--spacing-section)]" aria-labelledby="auth-how">
   <div class="wrap">
     <div class="md:grid md:grid-cols-12 md:gap-8 items-end">
@@ -31,3 +47,4 @@ const { heading = true } = Astro.props as { heading?: boolean };
     </ol>
   </div>
 </section>
+)}

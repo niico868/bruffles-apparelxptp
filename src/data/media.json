@@ -1,0 +1,84 @@
+{
+  "_readme": "Every photo and film slot on the homepage. Drop a file with the matching name into src/assets/media/ (photos) or public/media/ (films), then write its alt text here: one plain sentence describing the photo for people who can't see it. Leave a slot empty and the page shows a placeholder. focal = which part of the photo must stay in frame when it is cropped (\"50% 30%\" = centre, upper third).",
+  "hero": {
+    "bf": {
+      "desktop": {
+        "file": "home/hero-bf-desktop",
+        "alt": "",
+        "focal": "50% 50%"
+      },
+      "mobile": {
+        "file": "home/hero-bf-mobile",
+        "alt": "",
+        "focal": "50% 50%"
+      },
+      "video": "home/hero-bf.mp4"
+    },
+    "pp": {
+      "_rule": "Homepage Passport media = lifestyle or brand only (beach, travel, packaging, logo). Product close-ups stay behind the 18+ gate on /passport.",
+      "desktop": {
+        "file": "home/hero-pp-desktop",
+        "alt": "",
+        "focal": "50% 50%"
+      },
+      "mobile": {
+        "file": "home/hero-pp-mobile",
+        "alt": "",
+        "focal": "50% 50%"
+      },
+      "video": "home/hero-pp.mp4"
+    }
+  },
+  "film": {
+    "video": "home/film.mp4",
+    "poster": {
+      "file": "home/film-poster",
+      "alt": "",
+      "focal": "50% 50%"
+    },
+    "label": "Campaign film"
+  },
+  "ppTwoUp": [
+    {
+      "file": "home/pp-1",
+      "alt": "",
+      "focal": "50% 50%",
+      "button": "Shop papers [CLIENT TO CONFIRM]",
+      "href": "/passport"
+    },
+    {
+      "file": "home/pp-2",
+      "alt": "",
+      "focal": "50% 50%",
+      "button": "Shop tools [CLIENT TO CONFIRM]",
+      "href": "/passport"
+    }
+  ],
+  "wall": [
+    {
+      "file": "home/wall-1",
+      "alt": "",
+      "focal": "50% 50%"
+    },
+    {
+      "file": "home/wall-2",
+      "alt": "",
+      "focal": "50% 50%"
+    },
+    {
+      "file": "home/wall-3",
+      "alt": "",
+      "focal": "50% 50%"
+    },
+    {
+      "file": "home/wall-4",
+      "alt": "",
+      "focal": "50% 50%"
+    },
+    {
+      "file": "home/wall-5",
+      "alt": "",
+      "focal": "50% 50%"
+    }
+  ]
+}
