@@ -4,18 +4,33 @@ Quiet luxury. Small-to-medium type, lots of space, images do the talking. No gia
 Tokens live in `src/styles/global.css` (`@theme`). Use names, never raw values.
 Not based on live UXKIN comparisons; direction follows the brief's references (SSENSE, The Row, Aimé Leon Dore).
 
-## Colour
-| Token | Value | Role |
-|---|---|---|
-| paper / paper-2 | #ffffff / #f3f0f5 | site background (white) / image placeholders |
-| ink / ink-soft | #22103a / #5d5170 | text on white: dark royal purple |
-| chalk / chalk-soft | #f4eee2 / #cdc3ad | text on dark surfaces |
-| gold / gold-deep | #c9a55a / #84682c | stamps, piece labels, Claim button |
-| royal / `.royal-field` | #261040 / #45207a→#2e1350 | **Bruffles**: hero half (dark satin) and the Shared Drop column (lighter royal field) |
-| `.gold-metal` / `.gold-text` | brushed gradient #8a6a2b→#f6e3a6 | Bruffles accents: piece labels, Claim button fill, Gone stamp |
-| jet / `.card-jet` | #0e1f38 / #16304f | navy card scheme, now used by **Bruffles** cards (hero Passport half stays navy `.runway`) |
-| `.card-light` / `.sky-field` | #fff→#f0f4f9 / #e6f4ff→#d4ebff | **Passport** cards (light) on a very light electric-blue field |
-| sky · signal · runway | #7fb8e6 · #f2c230 · #e9eef4 | Passport: ink line art (sky), airport signage yellow (labels, stamp, Board ticket), cloud white |
+## Colour (v2, approved 2026-11-24)
+Tokens live in `src/styles/global.css` `@theme`. One job per colour. Ratios are WCAG contrast.
+
+**Bruffles: quiet gallery.** No UI gradients, no pure black on pure white.
+| Token | Hex | Role | Contrast |
+|---|---|---|---|
+| bone | #F4EFE6 | page base | |
+| bone-2 | #EAE3D6 | image placeholders, raised panels | |
+| hair | #D9D1C3 | hairlines only, never text | decorative |
+| ink | #1C1A17 | all type, primary button fill | 15.2:1 on bone |
+| ink-soft | #5E584E | secondary text, "Found its owner" | 6.2:1 bone, 5.5:1 bone-2 |
+| gold | #C9A24E | monogram on dark, primary CTA hover fill | 7.2:1 with ink |
+| gold-deep | #A7832F | monogram + 1-of-1 marks on bone (graphics only) | 3.1:1 on bone |
+| gold-text | #7A5E22 | gold text on bone | 5.3:1 on bone |
+
+**Passport: airport wayfinding.**
+| Token | Hex | Role | Contrast |
+|---|---|---|---|
+| char | #1E2023 | page base | |
+| char-2 | #2A2D31 | cards, departure-board tiles | |
+| char-3 | #363A3F | placeholders, borders on charcoal | |
+| paper | #F2F1EC | type on charcoal | 14.4:1 |
+| muted | #A3A8AE | secondary text | 6.8:1 char, 5.8:1 char-2 |
+| signal | #FFC629 | wayfinding, labels, CTAs | 10.4:1 both ways |
+| stamp | #E0393E | stamp moment only, large bold type | 3.8:1 (large/graphic) |
+
+**Seam:** bone meets charcoal along a 1px gold rule; the monogram sits on it in an ink disc (bright gold mark); a signal-yellow runway dash points into Passport.
 
 ## Type
 - Shared chrome + all subheads/body: Manrope.

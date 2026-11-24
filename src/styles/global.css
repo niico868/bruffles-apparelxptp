@@ -8,16 +8,39 @@
 
 /* Tokens: see DESIGN.md. Pages use names, never raw values. */
 @theme {
+  /* ===== Colour system v2 (Session 8). One job per colour. Contrast ratios in DESIGN.md. ===== */
+  /* Bruffles: quiet gallery */
+  --color-bone: #F4EFE6;       /* page base, warm off-white */
+  --color-bone-2: #EAE3D6;     /* image placeholders, raised panels */
+  --color-hair: #D9D1C3;       /* hairlines only, never text */
+  --color-ink: #1C1A17;        /* all type, primary button fill (15.2:1 on bone) */
+  --color-ink-soft: #5E584E;   /* secondary text, "Found its owner" (6.2:1 on bone) */
+  --color-gold: #C9A24E;       /* monogram on dark, primary CTA hover fill (7.2:1 with ink) */
+  --color-gold-deep: #A7832F;  /* monogram + 1-of-1 marks on bone, graphics only (3.1:1) */
+  --color-gold-text: #7A5E22;  /* gold text on bone (5.3:1) */
+  /* Passport: airport wayfinding */
+  --color-char: #1E2023;       /* page base */
+  --color-char-2: #2A2D31;     /* cards, departure-board tiles */
+  --color-char-3: #363A3F;     /* image placeholders, borders on charcoal */
+  --color-paper: #F2F1EC;      /* type on charcoal (14.4:1) */
+  --color-muted: #A3A8AE;      /* secondary text on charcoal (6.8:1) */
+  --color-signal: #FFC629;     /* wayfinding, labels, CTAs (10.4:1 both ways) */
+  --color-stamp: #E0393E;      /* the stamp moment only, large bold type (3.8:1) */
+
+  /* Type scale (px): 12 label · 14 small · 16 body · 20 · 24 · 32 · 48 · 72 */
+  --text-label: 12px;
+  --text-body: 16px;
+
+  /* Spacing: Tailwind's 4px scale, using only 1 2 3 4 6 8 12 16 24 32 (4px to 128px). */
+  --spacing-section: clamp(64px, 10vw, 128px);
+  --spacing-gutter: clamp(16px, 4vw, 48px);
+
+  /* ===== Legacy tokens below: removed in Step 3 ===== */
   /* Site */
-  --color-paper: #ffffff;      /* page background: white */
   --color-paper-2: #f3f0f5;    /* image placeholders on white */
   --color-line: #e5e0ea;       /* hairlines */
-  --color-ink: #22103a;        /* text on white: dark royal purple */
-  --color-ink-soft: #5d5170;   /* secondary text on white */
   --color-chalk: #f4eee2;      /* text on dark surfaces (warm cream) */
   --color-chalk-soft: #cdc3ad; /* secondary text on dark surfaces */
-  --color-gold: #c9a55a;       /* gold: stamps, piece labels, key accents */
-  --color-gold-deep: #84682c;  /* gold text on white */
 
   /* Bruffles: dark royal purple, matte satin */
   --color-royal: #261040;
@@ -29,7 +52,6 @@
   --color-jet-2: #16304f;      /* raised / cards */
   --color-jet-3: #2b4565;      /* slate image placeholder */
   --color-sky: #7fb8e6;        /* sky blue, line art + details */
-  --color-signal: #f2c230;     /* airport signage yellow: labels, stamp, Board button */
   --color-runway: #e9eef4;     /* cloud white */
   --color-signal-deep: #8a6400; /* signage amber, readable on white */
 
@@ -43,7 +65,7 @@
 }
 
 @layer base {
-  html { background: var(--color-paper); color: var(--color-ink); }
+  html { background: var(--color-bone); color: var(--color-ink); }
   body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
   :focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; }
 }
