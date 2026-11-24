@@ -76,3 +76,5 @@ Local dev on the Chromebook is not needed: preview on the .workers.dev link inst
 - New sections: sticky header + menu, How authenticity works, drop alerts (demo success state), Gone strip, story [CLIENT TO WRITE], footer + policy placeholders, 18+ gate on Passport pages, Ask about this piece.
 - Motion tested at 4x CPU slowdown: 60fps on hero, plane, stamp and reveals after load.
 - Removed: purple/navy/sky palette, travel-ink art, Swedish passport cover, Montserrat.
+- 2026-11-24: Divine approved; `claude/elevate-demo` merged into the live branch `claude/phase-0-demo`.
+- Note: Cloudflare branch-preview builds fail (logs only in the dashboard), and Cloudflare skips a production build for a commit it already built as a preview. Always land a fresh commit on the live branch to trigger a deploy.
