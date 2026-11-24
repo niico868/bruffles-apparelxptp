@@ -52,3 +52,14 @@ Tokens live in `src/styles/global.css` `@theme`. One job per colour. Ratios are 
 
 ## Lockups
 "BA × PTP" on the homepage, "BA" on Bruffles pages, "PTP" on Passport pages (Divine, 2026-11-24). Piece IDs: BA-047.
+
+## Motion
+Transform and opacity only (plus clip-path for Bruffles image wipes). Everything collapses under `prefers-reduced-motion`.
+| Brand | Feel | Moments |
+|---|---|---|
+| Bruffles | calm, ease-out-expo (0.16,1,0.3,1), 700 to 900ms | images wipe up + settle 1.04 to 1 (`.wipe`); text lines rise 12px, 60ms stagger (`.rise`); card hover: image 1.03, piece number shifts and turns gold |
+| Passport | fast, mechanical (0.5,0,0.1,1) | split-flap characters (`FlipPrice`, pure CSS); stamp slams from 1.4x at -8° in 180ms, ink fades 1.2s, 2px page nudge (Web Animations, no re-render); plane flies the hero path once |
+| Seam | 800ms expo | hovering a side moves the Passport panel and the seam layer by transform (50/50 to 70/30); monogram rides the seam |
+
+Reveals use plain CSS + one IntersectionObserver in `Base.astro`; Framer Motion runs the hero, plane and drawers. No Lenis, no GSAP.
+Tested at 4x CPU slowdown: hero, plane, stamp and reveals hold 60fps once the page has loaded.
