@@ -1,0 +1,36 @@
+---
+// KOI full-width film. Poster first; plays muted on a loop only once it is on screen, and never for
+// visitors who asked for reduced motion or data saving. One quiet Pause/Play button.
+// Hidden entirely until a film file exists.
+import { media } from "../data/media";
+import { toPic } from "../lib/pic";
+const { video, label } = media.film;
+const poster = await toPic(media.film.poster, [960, 1920]);
+---
+{video && (
+  <section class="film relative bg-ink" aria-label={label}>
+    <video class="block w-full aspect-[4/5] md:aspect-video object-cover" src={video} poster={poster?.src} muted loop playsinline preload="none"
+      style={poster ? `object-position:${poster.focal}` : undefined} aria-label={poster?.alt || label}></video>
+    <button type="button" class="film-toggle absolute right-4 bottom-4 md:right-6 md:bottom-6 w-12 h-12 rounded-full bg-bone/90 text-ink grid place-items-center hover:bg-gold transition-colors" aria-pressed="false">
+      <span class="sr-only film-label">Play film</span>
+      <svg class="film-play" aria-hidden width="16" height="16" viewBox="0 0 16 16"><path d="M4 2l10 6-10 6z" fill="currentColor"/></svg>
+      <svg class="film-pause hidden" aria-hidden width="16" height="16" viewBox="0 0 16 16"><path d="M4 2h3v12H4zM9 2h3v12H9z" fill="currentColor"/></svg>
+    </button>
+  </section>
+)}
+<script>
+  document.querySelectorAll<HTMLElement>(".film").forEach((f) => {
+    const v = f.querySelector("video")!, b = f.querySelector<HTMLButtonElement>(".film-toggle")!;
+    const quiet = matchMedia("(prefers-reduced-motion: reduce)").matches || (navigator as any).connection?.saveData;
+    let userPaused = !!quiet;
+    const show = (playing: boolean) => {
+      b.setAttribute("aria-pressed", String(playing));
+      b.querySelector(".film-label")!.textContent = playing ? "Pause film" : "Play film";
+      b.querySelector(".film-play")!.classList.toggle("hidden", playing);
+      b.querySelector(".film-pause")!.classList.toggle("hidden", !playing);
+    };
+    v.addEventListener("play", () => show(true)); v.addEventListener("pause", () => show(false));
+    b.addEventListener("click", () => { if (v.paused) { userPaused = false; v.play(); } else { userPaused = true; v.pause(); } });
+    new IntersectionObserver(([e]) => { if (e.isIntersecting && !userPaused) v.play().catch(() => {}); else if (!e.isIntersecting) v.pause(); }, { threshold: 0.4 }).observe(v);
+  });
+</script>

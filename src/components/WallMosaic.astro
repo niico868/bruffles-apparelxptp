@@ -1,0 +1,30 @@
+---
+// KOI five-photo mosaic, used as the community wall: store, customers, fits.
+// Desktop: two small left, one big centre, two small right. Phone: big first, then a 2x2.
+import Img from "./Img.astro";
+import { media } from "../data/media";
+import { toPic } from "../lib/pic";
+const pics = await Promise.all(media.wall.map((s, i) => toPic(s, i === 0 ? [800, 1200, 1600] : [480, 800, 1200])));
+const [big, ...small] = pics;
+const tile = "wipe relative overflow-hidden";
+// Literal class names so Tailwind sees them: left column, then right column.
+const place = ["md:col-span-3 md:col-start-1 md:row-start-1", "md:col-span-3 md:col-start-1 md:row-start-2", "md:col-span-3 md:col-start-10 md:row-start-1", "md:col-span-3 md:col-start-10 md:row-start-2"];
+---
+<section class="bf py-[var(--spacing-section)]" aria-labelledby="wall">
+  <div class="wrap md:flex md:items-end md:justify-between gap-6">
+    <div>
+      <p class="label-bf text-gold-text rise">From the store and the street</p>
+      <h2 id="wall" class="h-bf text-[32px] md:text-[48px] mt-2 rise" style="--i:1">Real recognize real.</h2>
+    </div>
+    <p class="ui text-ink-soft mt-4 md:mt-0 rise" style="--i:2" aria-disabled="true">Sign the wall · coming soon</p>
+  </div>
+  <div class="wrap mt-10 grid grid-cols-2 md:grid-cols-12 gap-1">
+    <div class="col-span-2 md:col-span-6 md:col-start-4 md:row-span-2 md:row-start-1 aspect-[4/5] md:aspect-auto"><div class:list={[tile, "h-full"]}><div class="absolute inset-0"><Img pic={big} sizes="(min-width: 768px) 50vw, 100vw" label="Photo · the store" /></div></div></div>
+    {small.map((p, i) => (
+      <div class:list={["aspect-square", place[i]]}
+        style={`--i:${i + 1}`}>
+        <div class:list={[tile, "h-full"]}><div class="absolute inset-0"><Img pic={p} sizes="(min-width: 768px) 25vw, 50vw" label={["Photo · a customer", "Photo · a fit", "Photo · the wall", "Photo · a drop day"][i]} /></div></div>
+      </div>
+    ))}
+  </div>
+</section>

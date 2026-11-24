@@ -1,38 +1,51 @@
 ---
+// KOI-style footer: a solid dark band with link columns and the drop-alert sign-up.
+// Ink on Bruffles and home pages, charcoal on Passport pages.
 import DropAlerts from "./DropAlerts";
-const { alerts = true } = Astro.props as { alerts?: boolean };
+const { world = "home" } = Astro.props as { world?: "home" | "bf" | "pp" };
+const pp = world === "pp";
+const link = pp ? "hover:text-signal" : "hover:text-gold";
 ---
-<footer class="bf border-t border-hair">
-  <div class="wrap py-24 grid gap-16 md:grid-cols-12">
-    <div class="md:col-span-5">
-      {alerts ? <>
-        <p class="label-bf text-gold-text">Drop alerts</p>
-        <p class="h-bf text-[32px] mt-2">Get the next drop first.</p>
-        <div class="mt-6"><DropAlerts client:idle compact /></div>
-      </> : <p class="h-bf text-[32px]">Real recognize real.</p>}
+<footer class:list={[pp ? "bg-char text-paper border-t border-char-3" : "bg-ink text-bone"]}>
+  <div class="wrap py-16 md:py-24 grid gap-12 md:grid-cols-12">
+    <div class="grid grid-cols-2 gap-8 md:col-span-6 md:grid-cols-3">
+      <div>
+        <p class="ui text-[13px] opacity-60">Bruffles Apparel</p>
+        <ul class="mt-4 space-y-3 ui text-[13px]">
+          <li><a href="/bruffles" class={link}>Shop Bruffles</a></li>
+          <li><a href="/authenticity" class={link}>How authenticity works</a></li>
+          <li><a href="#" class={link}>Instagram · [CLIENT TO CONFIRM]</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="ui text-[13px] opacity-60">Passport to Paradise</p>
+        <ul class="mt-4 space-y-3 ui text-[13px]">
+          <li><a href="/passport" class={link}>Shop Passport · 18+</a></li>
+          <li><a href="#" class={link}>Instagram · [CLIENT TO CONFIRM]</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="ui text-[13px] opacity-60">Help</p>
+        <ul class="mt-4 space-y-3 ui text-[13px]">
+          <li><a href="/policies/returns" class={link}>Returns</a></li>
+          <li><a href="/policies/delivery" class={link}>Delivery</a></li>
+          <li><a href="/policies/privacy" class={link}>Privacy</a></li>
+          <li><a href="/policies/sourcing" class={link}>Sourcing</a></li>
+        </ul>
+      </div>
     </div>
-    <div class="md:col-span-3 md:col-start-7">
-      <img src="/brand/bruffles-monogram-gold-deep.webp" alt="Bruffles Apparel monogram" width="48" height="48" />
-      <p class="mt-4 font-semibold">Bruffles Apparel</p>
-      <p class="text-ink-soft">Authentic pieces, one of each.</p>
-      <ul class="mt-4 space-y-2 label-bf"><li><a href="/bruffles" class="hover:text-gold-text">Shop Bruffles</a></li>
-        <li><a href="#" class="hover:text-gold-text">Instagram · [CLIENT TO CONFIRM]</a></li></ul>
-    </div>
-    <div class="md:col-span-3">
-      <img src="/brand/passport-badge.webp" alt="Passport to Paradise logo" width="57" height="48" class="h-12 w-auto" />
-      <p class="mt-4 font-semibold">Passport to Paradise</p>
-      <p class="text-ink-soft">Papers, filters and tools. 18+ only.</p>
-      <ul class="mt-4 space-y-2 label-bf"><li><a href="/passport" class="hover:text-gold-text">Shop Passport</a></li>
-        <li><a href="#" class="hover:text-gold-text">Instagram · [CLIENT TO CONFIRM]</a></li></ul>
+    <div id="drop-alerts" class="md:col-span-5 md:col-start-8 scroll-mt-24">
+      <p class:list={["label-bf", pp ? "text-signal" : "text-gold"]}>Drop alerts</p>
+      <p class:list={["text-[28px] md:text-[32px] mt-2", pp ? "h-pp" : "h-bf"]}>Get the next drop first.</p>
+      <p class="mt-2 opacity-75 max-w-[44ch]">Hear about each drop by email or WhatsApp before it goes up.</p>
+      <div class="mt-6"><DropAlerts client:idle compact dark /></div>
     </div>
   </div>
-  <div class="wrap py-8 border-t border-hair flex flex-col md:flex-row gap-6 md:items-center md:justify-between">
-    <ul class="flex flex-wrap gap-x-6 gap-y-2 label-bf">
-      <li><a href="/policies/returns" class="hover:text-gold-text">Returns</a></li>
-      <li><a href="/policies/delivery" class="hover:text-gold-text">Delivery</a></li>
-      <li><a href="/policies/privacy" class="hover:text-gold-text">Privacy</a></li>
-      <li><a href="/policies/sourcing" class="hover:text-gold-text">Sourcing</a></li>
-    </ul>
-    <p class="label-bf text-ink-soft">Bruffles Apparel × Passport to Paradise · Trinidad & Tobago</p>
+  <div class:list={["wrap py-8 border-t flex flex-col md:flex-row gap-4 md:items-center md:justify-between", pp ? "border-char-3" : "border-bone/15"]}>
+    <div class="flex items-center gap-4">
+      <img src="/brand/bruffles-monogram-gold.webp" alt="Bruffles Apparel monogram" width="32" height="32" />
+      <img src="/brand/passport-badge.webp" alt="Passport to Paradise logo" width="38" height="32" class="h-8 w-auto" />
+    </div>
+    <p class="ui text-[12px] opacity-60">Bruffles Apparel × Passport to Paradise · Trinidad & Tobago</p>
   </div>
 </footer>

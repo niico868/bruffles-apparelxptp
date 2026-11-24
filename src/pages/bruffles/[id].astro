@@ -1,11 +1,18 @@
 ---
+// Bruffles product page, KOI merge: KOI gallery (one big photo, then a 2-column grid) on the left,
+// sticky buy column on the right, story that lands on two bold lines, tabs, sticky mini bar,
+// certificate, then "More 1 of 1s".
 import Base from "../../layouts/Base.astro";
-import Gallery from "../../components/Gallery";
-import SizeDrawer from "../../components/SizeDrawer";
+import Gallery, { type Shot } from "../../components/Gallery";
 import AddPiece from "../../components/AddPiece";
 import AskPiece from "../../components/AskPiece";
+import InfoTabs from "../../components/InfoTabs";
+import MiniBuyBar from "../../components/MiniBuyBar";
 import Certificate from "../../components/Certificate.astro";
+import ProductTile from "../../components/ProductTile.astro";
 import { bruffles, pad } from "../../data/products";
+import { pieceImages } from "../../data/media";
+import { toPic } from "../../lib/pic";
 import { formatPrice } from "../../lib/price";
 
 export function getStaticPaths() {
@@ -13,33 +20,77 @@ export function getStaticPaths() {
 }
 const { p } = Astro.props;
 const n = pad(p.pieceNo);
+const imgs = pieceImages(p.id, p.name);
+const shots: Shot[] = await Promise.all(imgs.map(async (x) => {
+  const pic = await toPic(x, [640, 1080, 1600]);
+  const full = await toPic(x, [2000]);
+  return { label: x.label, alt: x.alt, src: pic?.src, srcset: pic?.srcset, full: full?.src, w: pic?.w, h: pic?.h };
+}));
+const thumb = (await toPic(imgs[0], [160]))?.src;
+const share = (await toPic(imgs[0], [1200]))?.src;
+const more = bruffles.filter((x) => !x.sold && x.id !== p.id).slice(0, 4);
+const site = "https://bruffles-apparelxptp.neikoliaugustine.workers.dev";
+const jsonLd = {
+  "@context": "https://schema.org", "@type": "Product", name: p.name, sku: p.id,
+  brand: { "@type": "Brand", name: p.maker }, description: p.description,
+  ...(share ? { image: new URL(share, site).href } : {}),
+  offers: { "@type": "Offer", priceCurrency: "USD", price: (p.priceUsd / 100).toFixed(2),
+    availability: p.sold ? "https://schema.org/SoldOut" : "https://schema.org/InStock", itemCondition: "https://schema.org/NewCondition" },
+};
 ---
-<Base title={`${p.name} · Piece ${n} · Bruffles Apparel`} description={p.description} world="bf">
+<Base title={`${p.name} · Piece ${n} · Bruffles Apparel`} description={p.description} world="bf" image={share}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  {!p.sold && <MiniBuyBar client:idle id={p.id} name={p.name} num={n} priceUsd={p.priceUsd} thumb={thumb} />}
   <div class="bf pb-24 md:pb-0">
-    <article class="wrap pt-20 md:pt-28 md:grid md:grid-cols-12 md:gap-12">
-      <div class="md:col-span-7 lg:col-span-8"><Gallery client:visible sold={p.sold} num={n} /></div>
+    <article class="wrap pt-20 md:pt-24 md:grid md:grid-cols-12 md:gap-12">
+      <div class="md:col-span-7 lg:col-span-8"><Gallery client:visible shots={shots} sold={p.sold} num={n} /></div>
 
       <div class="md:col-span-5 lg:col-span-4 mt-8 md:mt-0">
         <div class="md:sticky md:top-24 pb-8">
-          <nav class="label-bf text-ink-soft" aria-label="Breadcrumb"><a href="/bruffles" class="hover:text-ink">Bruffles</a> <span aria-hidden>/</span> Piece {n}</nav>
+          <nav class="ui text-[12px] text-ink-soft" aria-label="Breadcrumb"><a href="/" class="hover:text-ink">Home</a> <span aria-hidden>/</span> <a href="/bruffles" class="hover:text-ink">Bruffles</a> <span aria-hidden>/</span> <span aria-current="page">Piece {n}</span></nav>
           <div class="mt-6 flex items-end justify-between gap-4">
             <span class="num-bf text-[72px] md:text-[96px]" aria-hidden>{n}</span>
-            {p.sold ? <span class="label-bf text-ink-soft mb-2">Gone</span> : <span class="label-bf text-gold-text border border-gold-deep/60 px-2 py-1 mb-2">1 of 1</span>}
+            {p.sold ? <span class="ui text-[12px] text-bone bg-ink-soft px-3 py-1 rounded-full mb-2">Found its owner</span> : <span class="label-bf text-gold-text border border-gold-deep/60 px-2 py-1 mb-2">1 of 1</span>}
           </div>
-          <p class="label-bf text-ink-soft mt-6">{p.maker} · Size {p.size}</p>
+          <p class="ui text-[13px] text-ink-soft mt-6">{p.maker} · {p.condition}</p>
           <h1 class="h-bf text-[32px] md:text-[40px] mt-2">{p.name}</h1>
-          {!p.sold && <p class="mt-4 text-[20px] tabular-nums">{formatPrice(p.priceUsd)}</p>}
+          {!p.sold && <p class="ui mt-4 text-[20px] tabular-nums">{formatPrice(p.priceUsd)}</p>}
 
-          <div class="mt-8 space-y-3">
-            <AddPiece client:load id={p.id} name={p.name} priceUsd={p.priceUsd} sold={p.sold} />
-            {p.sold ? <a href="/#drop-alerts" class="btn-bf-ghost w-full label-bf">Get the next drop first</a> : <AskPiece client:idle num={n} />}
+          <div class="mt-8">
+            <p class="ui text-[13px]">Size: <span class="text-ink-soft">{p.size}</span></p>
+            <div class="mt-3 flex">
+              <span class:list={["ui text-[13px] min-h-12 px-5 grid place-items-center border", p.sold ? "border-hair text-ink-soft line-through" : "border-ink bg-ink text-bone"]}>{p.size} · the only one</span>
+            </div>
           </div>
-          <div class="mt-8"><SizeDrawer client:idle size={p.size} measurements={p.measurements} /></div>
-          <p class="mt-8 text-ink-soft">{p.description}</p>
+
+          <div id="buy-main" class="mt-6 space-y-3">
+            <AddPiece client:load id={p.id} name={p.name} priceUsd={p.priceUsd} sold={p.sold} />
+            {p.sold ? <a href="#drop-alerts" class="btn-bf-ghost w-full label-bf">Get the next drop first</a> : <AskPiece client:idle num={n} />}
+          </div>
+
+          <div class="mt-8">
+            <p class="text-ink-soft">{p.description}</p>
+            <div class="mt-4 border border-dashed border-gold-deep/60 p-4">
+              <p class="label-bf text-gold-text">[CLIENT TO WRITE] · Piece story</p>
+              <p class="mt-2 text-ink-soft italic">Two or three sentences on where this piece came from and why it was picked. Then two short lines, set in bold, that land the feeling.</p>
+            </div>
+          </div>
           <p class="mt-6 label-bf text-gold-text"><a href="#cert" class="hover:underline underline-offset-4">Purchased from official brand stores — receipt on file ↓</a></p>
+          <div class="mt-8"><InfoTabs client:visible size={p.size} measurements={p.measurements} /></div>
         </div>
       </div>
     </article>
     <div class="wrap py-[var(--spacing-section)]"><Certificate p={p} /></div>
+    {more.length > 0 && (
+      <section class="wrap pb-[var(--spacing-section)]" aria-labelledby="more">
+        <div class="flex items-end justify-between gap-4">
+          <h2 id="more" class="h-koi text-[28px] md:text-[40px]">More 1 of 1s</h2>
+          <a href="/bruffles" class="ui underline underline-offset-4 decoration-hair hover:decoration-ink">Shop Bruffles</a>
+        </div>
+        <div class:list={["mt-8 grid grid-cols-2 gap-2 md:gap-4", more.length === 3 ? "md:grid-cols-3" : "md:grid-cols-4"]}>
+          {more.map((x, i) => <ProductTile p={x} i={i} sizes="(min-width: 768px) 25vw, 50vw" />)}
+        </div>
+      </section>
+    )}
   </div>
 </Base>

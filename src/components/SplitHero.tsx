@@ -3,7 +3,9 @@ import { motion, useReducedMotion } from "framer-motion";
 import Monogram from "./Monogram";
 import PlaneFlight from "./PlaneFlight";
 import FlipPrice from "./FlipPrice";
-import { heroMedia } from "../data/media";
+import type { Pic } from "../lib/pic";
+
+export type PanelMedia = { desktop?: Pic; mobile?: Pic; video?: string };
 
 type Side = "bf" | "pp";
 const EXPO = [0.16, 1, 0.3, 1] as const;
@@ -14,13 +16,18 @@ const GRACE_MS = 1200;     // let the 50/50 split be seen before hover can open 
 // Desktop: two overlapping panels moved only with transform (no layout work per frame), so the
 // open/close stays smooth on slow phones. The monogram rides the seam like a hinge.
 // Mobile: two stacked full-width panels, each with its own button; the monogram joins them.
-export default function SplitHero() {
+export default function SplitHero({ media = {} }: { media?: { bf?: PanelMedia; pp?: PanelMedia } }) {
   const [active, setActive] = useState<Side | null>(null);
   const [ready, setReady] = useState(false);
   const reduce = useReducedMotion();
   const root = useRef<HTMLDivElement>(null);
 
+  const [playOk, setPlayOk] = useState(false);
   useEffect(() => { const t = setTimeout(() => setReady(true), GRACE_MS); return () => clearTimeout(t); }, []);
+  // Films only when motion is welcome and the visitor isn't saving data.
+  useEffect(() => { setPlayOk(!reduce && !(navigator as any).connection?.saveData); }, [reduce]);
+  const bf = media.bf ?? {}, pp = media.pp ?? {};
+  const bfHas = !!(bf.desktop || bf.mobile), ppHas = !!(pp.desktop || pp.mobile);
 
   const shift = active === "bf" ? OPEN : active === "pp" ? -OPEN : 0;   // seam movement, share of hero width
   const t = { duration: reduce ? 0 : 0.8, ease: EXPO };
@@ -39,24 +46,25 @@ export default function SplitHero() {
 
       {/* ---------- Bruffles panel ---------- */}
       <section aria-labelledby="hero-bf" className="bf relative min-h-[70svh] md:min-h-0 md:absolute md:inset-y-0 md:left-0 md:w-[70%] overflow-hidden">
-        {heroMedia.bf.poster && <img src={heroMedia.bf.poster} alt="" className="absolute inset-0 w-full h-full object-cover" />}
-        {/* Featured piece frame: sits in the middle band, visible unless Passport is open */}
-        <div className="absolute hidden md:block left-[44%] right-[31%] top-[18%] bottom-[16%]">
+        <HeroMedia m={bf} eager scrim="from-ink/75" playOk={playOk} />
+        {/* Featured piece frame (only until campaign photos arrive): sits in the middle band */}
+        {!bfHas && <div className="absolute hidden md:block left-[44%] right-[31%] top-[18%] bottom-[16%]">
           <div className="wipe relative h-full"><div className="absolute inset-0 ph-bf">
             <span className="absolute right-4 bottom-3 num-bf text-[96px] text-ink/10" aria-hidden>047</span>
             <span className="absolute left-4 top-4 label-bf text-ink-soft">Photo · piece 047</span></div>
           </div>
           <p className="mt-3 label-bf text-ink-soft">Piece 047 · Tech Fleece Windrunner</p>
-        </div>
+        </div>}
         <div className="relative md:absolute md:left-0 md:bottom-0 md:w-[42.857%] flex flex-col justify-end min-h-[70svh] md:min-h-0 px-[var(--spacing-gutter)] md:pr-16 pt-24 pb-16 md:pb-16">
-          <div className="md:hidden relative w-[62%] aspect-[4/5] ph-bf self-end mb-auto mt-4">
+          {!bfHas && <div className="md:hidden relative w-[62%] aspect-[4/5] ph-bf self-end mb-auto mt-4">
             <span className="absolute left-3 top-3 label-bf text-ink-soft">Photo · 047</span>
             <span className="absolute right-3 bottom-1 num-bf text-[64px] text-ink/10" aria-hidden>047</span>
-          </div>
-          <p className="mt-8 md:mt-0 label-bf text-gold-text rise">1 of 1 · Restocked twice a month</p>
-          <h2 id="hero-bf" style={{ ["--i" as string]: 1 }} className="rise h-bf text-[48px] md:text-[clamp(48px,5vw,80px)] mt-4">Bruffles<br />Apparel</h2>
-          <p style={{ ["--i" as string]: 2 }} className="rise mt-4 max-w-[28ch] text-ink-soft">Authentic pieces, one of each. When it's gone, it's gone.</p>
-          <a href="/bruffles" className="btn-bf mt-8 self-start label-bf">Shop Bruffles</a>
+          </div>}
+          {bfHas && <span aria-hidden className="hidden md:block num-bf text-[clamp(120px,12vw,200px)] -mb-10 text-bone/20">047</span>}
+          <p className={`relative label-bf rise ${bfHas ? "text-gold" : "text-gold-text mt-8 md:mt-0"}`}>1 of 1 · Restocked twice a month</p>
+          <h2 id="hero-bf" style={{ ["--i" as string]: 1 }} className={`relative rise h-koi text-[56px] md:text-[clamp(56px,6vw,112px)] mt-3 ${bfHas ? "text-bone" : ""}`}>Bruffles<br />Apparel</h2>
+          <p style={{ ["--i" as string]: 2 }} className={`rise mt-4 max-w-[28ch] ${bfHas ? "text-bone/85" : "text-ink-soft"}`}>Authentic pieces, one of each. When it's gone, it's gone.</p>
+          <a href="/bruffles" className={`mt-8 self-start label-bf ${bfHas ? "btn-bf !bg-bone !text-ink hover:!bg-gold" : "btn-bf"}`}>Shop Bruffles</a>
         </div>
       </section>
 
@@ -70,18 +78,18 @@ export default function SplitHero() {
         className="pp relative min-h-[70svh] md:min-h-0 md:absolute md:inset-y-0 md:left-1/2 md:w-[70%] overflow-hidden z-10"
         initial={false} animate={{ x: `${(shift / PANEL) * 100}%` }} transition={t}
         style={{ willChange: "transform" }}>
-        {heroMedia.pp.poster && <img src={heroMedia.pp.poster} alt="" className="absolute inset-0 w-full h-full object-cover" />}
+        <HeroMedia m={pp} scrim="from-char/85" playOk={playOk} />
         <PlaneFlight />
         {/* Runway dash pointing into Passport, starting at the seam */}
         <div aria-hidden className="hidden md:block absolute inset-y-0 left-2 border-l-2 border-dashed border-signal/40" />
         <img src="/brand/passport-badge.webp" alt="" aria-hidden width="594" height="505"
           className="hidden md:block absolute left-[46%] top-[20%] w-[22%] max-w-[300px] opacity-95" />
         <div className="relative md:absolute md:left-0 md:bottom-0 md:w-[42.857%] flex flex-col justify-end min-h-[70svh] md:min-h-0 px-[var(--spacing-gutter)] pt-24 pb-16 md:pl-16">
-          <img src="/brand/passport-badge.webp" alt="" aria-hidden width="594" height="505" className="md:hidden w-40 mb-auto mt-4 self-end" />
-          <p className="label-pp text-signal"><FlipPrice text="GATE 02 · NOW BOARDING" /></p>
-          <h2 id="hero-pp" className="h-pp text-[48px] md:text-[clamp(48px,4.4vw,72px)] mt-4">Passport<br />to Paradise</h2>
-          <p className="mt-4 max-w-[30ch] text-muted">Papers, filters and tools, by the pack and by the box.</p>
-          <a href="/passport" className="btn-pp mt-8 self-start label-pp">Board Passport <span aria-hidden>→</span></a>
+          <img src="/brand/passport-badge.webp" alt="" aria-hidden width="594" height="505" className="relative md:hidden w-40 mb-auto mt-4 self-end" />
+          <p className="relative label-pp text-signal"><FlipPrice text="GATE 02 · NOW BOARDING" /></p>
+          <h2 id="hero-pp" className="relative h-koi text-[56px] md:text-[clamp(56px,5.4vw,104px)] mt-4">Passport<br />to Paradise</h2>
+          <p className={`relative mt-4 max-w-[30ch] ${ppHas ? "text-paper/85" : "text-muted"}`}>Papers, filters and tools, by the pack and by the box.</p>
+          <a href="/passport" className="relative btn-pp mt-8 self-start label-pp">Board Passport <span aria-hidden>→</span></a>
         </div>
       </motion.section>
 
@@ -91,6 +99,32 @@ export default function SplitHero() {
         <div className="absolute inset-y-0 left-1/2 w-px bg-gold/70" />
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"><Monogram disc size={104} /></div>
       </motion.div>
+    </div>
+  );
+}
+
+// Campaign photo (separate phone and computer crops) + optional looping film + a bottom scrim so the
+// headline stays readable. Renders nothing until photos are added, so today's design shows instead.
+function HeroMedia({ m, eager = false, scrim, playOk }: { m: PanelMedia; eager?: boolean; scrim: string; playOk: boolean }) {
+  const [vidIn, setVidIn] = useState(false);
+  const d = m.desktop ?? m.mobile, mob = m.mobile ?? m.desktop;
+  if (!d || !mob) return null;
+  return (
+    <div className="absolute inset-0" aria-hidden={!d.alt}>
+      <picture>
+        <source media="(max-width: 767px)" srcSet={mob.srcset} sizes="100vw" />
+        <img src={d.src} srcSet={d.srcset} sizes="70vw" alt={d.alt} width={d.w} height={d.h}
+          loading={eager ? "eager" : "lazy"} fetchPriority={eager ? "high" : undefined} decoding="async"
+          className="absolute inset-0 w-full h-full object-cover" style={{ objectPosition: d.focal }} />
+      </picture>
+      {m.video && playOk && (
+        <video src={m.video} muted loop playsInline autoPlay preload="metadata" aria-hidden onCanPlay={() => setVidIn(true)}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${vidIn ? "opacity-100" : "opacity-0"}`}
+          style={{ objectPosition: d.focal }} />
+      )}
+      <div className={`absolute inset-x-0 bottom-0 h-[60%] bg-gradient-to-t ${scrim} to-transparent`} />
+      {/* Light top shade so the header reads over any photo */}
+      <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-ink/45 to-transparent" />
     </div>
   );
 }

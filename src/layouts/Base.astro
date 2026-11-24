@@ -4,8 +4,9 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import AgeGate from "../components/AgeGate.astro";
 type World = "home" | "bf" | "pp";
-const { title = "Bruffles Apparel × Passport to Paradise", description = "Authentic one-of-one menswear from Bruffles Apparel, and accessories from Passport to Paradise.", world = "home" } =
-  Astro.props as { title?: string; description?: string; world?: World };
+const { title = "Bruffles Apparel × Passport to Paradise", description = "Authentic one-of-one menswear from Bruffles Apparel, and accessories from Passport to Paradise.", world = "home", image } =
+  Astro.props as { title?: string; description?: string; world?: World; image?: string };
+const ogImage = image ? new URL(image, Astro.site ?? "https://bruffles-apparelxptp.neikoliaugustine.workers.dev").href : undefined;
 ---
 <!doctype html>
 <html lang="en">
@@ -14,13 +15,15 @@ const { title = "Bruffles Apparel × Passport to Paradise", description = "Authe
   <title>{title}</title><meta name="description" content={description} />
   <meta property="og:type" content="website" /><meta property="og:site_name" content="Bruffles Apparel × Passport to Paradise" />
   <meta property="og:title" content={title} /><meta property="og:description" content={description} />
-  <meta name="twitter:card" content="summary" /><meta name="twitter:title" content={title} /><meta name="twitter:description" content={description} />
+  {ogImage && <meta property="og:image" content={ogImage} />}
+  <meta name="twitter:card" content={ogImage ? "summary_large_image" : "summary"} /><meta name="twitter:title" content={title} /><meta name="twitter:description" content={description} />
   <link rel="icon" href="/brand/bruffles-monogram-gold-deep.webp" />
+  <slot name="head" />
 </head>
 <body class:list={["min-h-svh", world === "pp" ? "pp" : "bf"]}>
   <Header world={world} />
   <main><slot /></main>
-  <Footer alerts={world !== "home"} />
+  <Footer world={world} />
   {world === "pp" && <AgeGate />}
   <script>
     // Reveal on scroll. A wipe starts fully clipped, so we watch its parent (clipped boxes can read as hidden).

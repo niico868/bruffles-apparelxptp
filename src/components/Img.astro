@@ -1,0 +1,13 @@
+---
+// One photo slot. Shows the photo if it exists, otherwise a labelled placeholder (never a broken image).
+import type { Pic } from "../lib/pic";
+const { pic, label = "Photo", sizes = "100vw", class: cls = "", world = "bf", eager = false } =
+  Astro.props as { pic?: Pic; label?: string; sizes?: string; class?: string; world?: "bf" | "pp"; eager?: boolean };
+---
+{pic
+  ? <img src={pic.src} srcset={pic.srcset} sizes={sizes} alt={pic.alt} width={pic.w} height={pic.h}
+      loading={eager ? "eager" : "lazy"} decoding="async" fetchpriority={eager ? "high" : undefined}
+      class:list={["absolute inset-0 w-full h-full object-cover", cls]} style={`object-position:${pic.focal}`} />
+  : <div class:list={["absolute inset-0", world === "pp" ? "ph-pp" : "ph-bf", cls]}>
+      <span class:list={["absolute left-3 top-3 md:left-4 md:top-4", world === "pp" ? "label-pp text-muted" : "label-bf text-ink-soft"]}>{label}</span>
+    </div>}
