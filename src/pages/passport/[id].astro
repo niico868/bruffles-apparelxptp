@@ -20,7 +20,7 @@ const { item } = Astro.props;
           <nav class="label-pp text-muted" aria-label="Breadcrumb"><a href="/passport" class="hover:text-signal">Departures</a> / {item.id}</nav>
           <p class="label-pp text-signal mt-6">Item {String(item.itemNo).padStart(2, "0")} · {item.qty === 0 ? "Booked out" : `${item.qty} in stock`}{item.packOf > 1 ? ` · Pack of ${item.packOf}` : ""}</p>
           <h1 class="h-pp text-[40px] md:text-[56px] mt-3">{item.name}</h1>
-          <p class="mt-4 text-[20px]"><FlipPrice client:visible text={formatPrice(item.priceUsd)} tiles /></p>
+          <p class="mt-4 text-[20px]"><FlipPrice text={formatPrice(item.priceUsd)} tiles /></p>
           <p class="mt-6 text-muted">{item.description}</p>
           <div class="mt-8"><BoardItem client:load id={item.id} name={item.name} priceUsd={item.priceUsd} qty={item.qty} /></div>
         </div>

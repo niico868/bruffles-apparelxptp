@@ -29,7 +29,7 @@ const { title = "Bruffles Apparel × Passport to Paradise", description = "Authe
       const el = (e.target as HTMLElement & { _rv?: Element })._rv ?? e.target;
       el.classList.add("is-in"); io.unobserve(e.target);
     }), { threshold: 0.15 });
-    document.querySelectorAll(".rise").forEach((el) => io.observe(el));
+    document.querySelectorAll(".rise, [data-flip]").forEach((el) => io.observe(el));
     document.querySelectorAll(".wipe").forEach((el) => { const host = el.parentElement!; (host as any)._rv = el; io.observe(host); });
   </script>
 </body>

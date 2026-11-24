@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { useRef } from "react";
 import FlipPrice from "./FlipPrice";
 import { addToCart } from "../lib/cart";
 import { formatPrice } from "../lib/price";
@@ -7,15 +6,15 @@ import type { PassportItem } from "../data/products";
 
 // Passport card on charcoal. "Add to bag" fires the passport stamp (see Stamp below).
 export default function PassportCard({ item }: { item: PassportItem }) {
-  const [stamps, setStamps] = useState(0);
+  const stamp = useRef<HTMLDivElement>(null);
   const out = item.qty === 0;
-  const add = () => { addToCart({ id: item.id, name: item.name, priceUsd: item.priceUsd }); setStamps((n) => n + 1); nudge(); };
+  const add = () => { slam(stamp.current); nudge(); addToCart({ id: item.id, name: item.name, priceUsd: item.priceUsd }); };
   return (
     <article className="group/pp relative bg-char-2">
       <a href={`/passport/${item.id}`} className="block relative aspect-[4/5] ph-pp overflow-hidden" aria-label={item.name}>
         <span className="absolute left-3 top-3 label-pp text-muted">Photo</span>
         <span className="absolute right-3 top-3 label-pp bg-char text-signal px-2 py-1">{item.id}</span>
-        <AnimatePresence>{stamps > 0 && <Stamp key={stamps} />}</AnimatePresence>
+        <Stamp ref={stamp} />
       </a>
       <div className="p-4 flex flex-col gap-3">
         <p className="label-pp text-muted">{out ? "Booked out" : `${item.qty} in stock`}{item.packOf > 1 ? ` · Pack of ${item.packOf}` : ""}</p>
@@ -37,19 +36,28 @@ export function nudge() {
     { duration: 160, delay: 170, easing: "ease-out" });
 }
 
-// Stamp slams in from 1.4x at -8°, lands in 180ms, then the ink fades over 1.2s.
-export function Stamp() {
-  const reduce = useReducedMotion();
-  return (
-    <motion.div aria-hidden className="absolute inset-0 grid place-items-center pointer-events-none"
-      initial={{ opacity: 1 }} animate={{ opacity: 0 }} exit={{ opacity: 0 }} transition={{ delay: 0.5, duration: 1.2, ease: "easeIn" }}>
-      <motion.div className="grid place-items-center w-36 h-36 rounded-full border-[3px] border-stamp text-stamp text-center"
-        initial={reduce ? { scale: 1, rotate: -8, opacity: 1 } : { scale: 1.4, rotate: -8, opacity: 0 }}
-        animate={{ scale: 1, rotate: -8, opacity: 1 }} transition={{ duration: reduce ? 0 : 0.18, ease: [0.5, 0, 0.1, 1] }}>
-        <div className="w-[86%] h-[86%] rounded-full border border-stamp grid place-items-center">
-          <span className="h-pp text-[22px] leading-none">Cleared<br /><span className="label-pp text-[12px]">for departure</span></span>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
+// The stamp is always in the page, invisible. slam() replays it with the Web Animations API:
+// it slams in from 1.4x at -8° and lands in 180ms, then the ink fades over 1.2s.
+// No React re-render on click, so the tap stays instant on slow phones.
+export function slam(el: HTMLElement | null) {
+  if (!el) return;
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  el.getAnimations().forEach((a) => a.cancel());
+  el.animate(reduce
+    ? [{ opacity: 1 }, { opacity: 1, offset: 0.3 }, { opacity: 0 }]
+    : [{ opacity: 0, transform: "scale(1.4) rotate(-8deg)" },
+       { opacity: 1, transform: "scale(1) rotate(-8deg)", offset: 0.13, easing: "ease-in" },
+       { opacity: 1, transform: "scale(1) rotate(-8deg)", offset: 0.27 },
+       { opacity: 0, transform: "scale(1) rotate(-8deg)" }],
+    { duration: 1380, easing: "cubic-bezier(.5,0,.1,1)" });
 }
+
+export const Stamp = ({ ref }: { ref: React.Ref<HTMLDivElement> }) => (
+  <div aria-hidden className="absolute inset-0 grid place-items-center pointer-events-none">
+    <div ref={ref} style={{ opacity: 0 }} className="grid place-items-center w-36 h-36 rounded-full border-[3px] border-stamp text-stamp text-center">
+      <div className="w-[86%] h-[86%] rounded-full border border-stamp grid place-items-center">
+        <span className="h-pp text-[22px] leading-none">Cleared<br /><span className="label-pp text-[12px]">for departure</span></span>
+      </div>
+    </div>
+  </div>
+);

@@ -8,7 +8,7 @@ const { alerts = true } = Astro.props as { alerts?: boolean };
       {alerts ? <>
         <p class="label-bf text-gold-text">Drop alerts</p>
         <p class="h-bf text-[32px] mt-2">Get the next drop first.</p>
-        <div class="mt-6"><DropAlerts client:visible compact /></div>
+        <div class="mt-6"><DropAlerts client:idle compact /></div>
       </> : <p class="h-bf text-[32px]">Real recognize real.</p>}
     </div>
     <div class="md:col-span-3 md:col-start-7">

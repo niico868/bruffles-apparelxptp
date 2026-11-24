@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import Monogram from "./Monogram";
 import PlaneFlight from "./PlaneFlight";
+import FlipPrice from "./FlipPrice";
 import { heroMedia } from "../data/media";
 
 type Side = "bf" | "pp";
@@ -41,9 +42,9 @@ export default function SplitHero() {
         {heroMedia.bf.poster && <img src={heroMedia.bf.poster} alt="" className="absolute inset-0 w-full h-full object-cover" />}
         {/* Featured piece frame: sits in the middle band, visible unless Passport is open */}
         <div className="absolute hidden md:block left-[44%] right-[31%] top-[18%] bottom-[16%]">
-          <div className="relative h-full ph-bf">
+          <div className="wipe relative h-full"><div className="absolute inset-0 ph-bf">
             <span className="absolute right-4 bottom-3 num-bf text-[96px] text-ink/10" aria-hidden>047</span>
-            <span className="absolute left-4 top-4 label-bf text-ink-soft">Photo · piece 047</span>
+            <span className="absolute left-4 top-4 label-bf text-ink-soft">Photo · piece 047</span></div>
           </div>
           <p className="mt-3 label-bf text-ink-soft">Piece 047 · Tech Fleece Windrunner</p>
         </div>
@@ -52,10 +53,10 @@ export default function SplitHero() {
             <span className="absolute left-3 top-3 label-bf text-ink-soft">Photo · 047</span>
             <span className="absolute right-3 bottom-1 num-bf text-[64px] text-ink/10" aria-hidden>047</span>
           </div>
-          <p className="mt-8 md:mt-0 label-bf text-gold-text">1 of 1 · Restocked twice a month</p>
-          <h2 id="hero-bf" className="h-bf text-[48px] md:text-[clamp(48px,5vw,80px)] mt-4">Bruffles<br />Apparel</h2>
-          <p className="mt-4 max-w-[28ch] text-ink-soft">Authentic pieces, one of each. When it's gone, it's gone.</p>
-          <a href="/bruffles" className="btn-bf mt-8 self-start">Shop Bruffles</a>
+          <p className="mt-8 md:mt-0 label-bf text-gold-text rise">1 of 1 · Restocked twice a month</p>
+          <h2 id="hero-bf" style={{ ["--i" as string]: 1 }} className="rise h-bf text-[48px] md:text-[clamp(48px,5vw,80px)] mt-4">Bruffles<br />Apparel</h2>
+          <p style={{ ["--i" as string]: 2 }} className="rise mt-4 max-w-[28ch] text-ink-soft">Authentic pieces, one of each. When it's gone, it's gone.</p>
+          <a href="/bruffles" className="btn-bf mt-8 self-start label-bf">Shop Bruffles</a>
         </div>
       </section>
 
@@ -77,8 +78,8 @@ export default function SplitHero() {
           className="hidden md:block absolute left-[46%] top-[20%] w-[22%] max-w-[300px] opacity-95" />
         <div className="relative md:absolute md:left-0 md:bottom-0 md:w-[42.857%] flex flex-col justify-end min-h-[78svh] md:min-h-0 px-[var(--spacing-gutter)] pt-24 pb-16 md:pl-16">
           <img src="/brand/passport-badge.webp" alt="" aria-hidden width="594" height="505" className="md:hidden w-40 mb-auto mt-4 self-end" />
-          <p className="label-pp text-signal">Gate 02 · Now boarding</p>
-          <h2 id="hero-pp" className="h-pp text-[48px] md:text-[clamp(48px,5vw,80px)] mt-4">Passport<br />to Paradise</h2>
+          <p className="label-pp text-signal"><FlipPrice text="GATE 02 · NOW BOARDING" /></p>
+          <h2 id="hero-pp" className="h-pp text-[48px] md:text-[clamp(48px,4.4vw,72px)] mt-4">Passport<br />to Paradise</h2>
           <p className="mt-4 max-w-[30ch] text-muted">Papers, filters and tools, by the pack and by the box.</p>
           <a href="/passport" className="btn-pp mt-8 self-start label-pp">Board Passport <span aria-hidden>→</span></a>
         </div>

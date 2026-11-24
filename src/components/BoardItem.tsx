@@ -7,7 +7,7 @@ export default function BoardItem({ id, name, priceUsd, qty }: { id: string; nam
   const [n, setN] = useState(1);
   const [stamps, setStamps] = useState(0);
   const out = qty === 0;
-  const add = () => { addToCart({ id, name, priceUsd }, n); setStamps((s) => s + 1); window.dispatchEvent(new CustomEvent("pp:stamp")); nudge(); };
+  const add = () => { addToCart({ id, name, priceUsd }, n); window.dispatchEvent(new CustomEvent("pp:stamp")); nudge(); setStamps((s) => s + 1); };
   return (
     <div className="relative space-y-3">
       {!out && (
