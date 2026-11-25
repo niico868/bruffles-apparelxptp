@@ -12,6 +12,7 @@
 export type Signals = { bags: number; saves: number; requests: number };
 
 const signals: Record<number, Signals> = {
+  48: { bags: 2, saves: 17, requests: 0 },
   47: { bags: 3, saves: 21, requests: 0 },
   45: { bags: 0, saves: 9, requests: 0 },
   44: { bags: 1, saves: 14, requests: 0 },

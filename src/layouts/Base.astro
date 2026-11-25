@@ -6,8 +6,8 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import AgeGate from "../components/AgeGate.astro";
 type World = "home" | "bf" | "pp";
-const { title = "Bruffles Apparel × Passport to Paradise", description = "Authentic one-of-one menswear from Bruffles Apparel, and accessories from Passport to Paradise.", world = "home", image, shop = false } =
-  Astro.props as { title?: string; description?: string; world?: World; image?: string; shop?: boolean };
+const { title = "Bruffles Apparel × Passport to Paradise", description = "Authentic one-of-one menswear from Bruffles Apparel, and accessories from Passport to Paradise.", world = "home", image, shop = false, white = false } =
+  Astro.props as { title?: string; description?: string; world?: World; image?: string; shop?: boolean; white?: boolean };
 const ogImage = image ? new URL(image, Astro.site ?? "https://bruffles-apparelxptp.neikoliaugustine.workers.dev").href : undefined;
 ---
 <!doctype html>
@@ -23,7 +23,7 @@ const ogImage = image ? new URL(image, Astro.site ?? "https://bruffles-apparelxp
   <link rel="icon" href="/brand/bruffles-monogram-gold-deep.webp" />
   <slot name="head" />
 </head>
-<body class:list={["min-h-svh", world === "pp" ? "pp" : "bf", shop && "shop"]}>
+<body class:list={["min-h-svh", world === "pp" ? "pp" : "bf", shop && "shop", white && "page-white"]}>
   <Header world={world} shop={shop} />
   <main><slot /></main>
   <Footer world={world} />
@@ -37,6 +37,25 @@ const ogImage = image ? new URL(image, Astro.site ?? "https://bruffles-apparelxp
     }), { threshold: 0.15 });
     document.querySelectorAll(".rise, [data-flip], .wall-card").forEach((el) => io.observe(el));
     document.querySelectorAll(".wipe").forEach((el) => { const host = el.parentElement!; (host as any)._rv = el; io.observe(host); });
+
+    // Looping reveal (homepage Latest pieces, Divine 2026-11-25): every time a card comes up into view
+    // it rises and fades in; when it drops back below the screen (scrolling up) it sinks and fades out.
+    // A card that scrolls off the top stays put. The photo is fetched as the card nears the screen
+    // (300px ahead) and decoded off the main thread first, so the card never rises as an empty box.
+    const near = new IntersectionObserver((es) => es.forEach((e) => {
+      if (!e.isIntersecting) return;
+      const img = e.target.querySelector("img");
+      if (img) { img.loading = "eager"; (e.target as any)._ready = img.decode().catch(() => {}); }
+      near.unobserve(e.target);
+    }), { rootMargin: "300px 0px" });
+    const loop = new IntersectionObserver((es) => es.forEach((e) => {
+      const el = e.target as HTMLElement & { _ready?: Promise<void>; _t?: number };
+      if (e.isIntersecting) {
+        const show = () => el.classList.add("is-in");
+        Promise.race([el._ready ?? Promise.resolve(), new Promise((r) => setTimeout(r, 700))]).then(show);
+      } else if (e.boundingClientRect.top > 0) el.classList.remove("is-in");
+    }), { threshold: 0.12 });
+    document.querySelectorAll(".reveal-loop").forEach((el) => { near.observe(el); loop.observe(el); });
   </script>
 </body>
 </html>

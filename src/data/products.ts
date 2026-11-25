@@ -14,6 +14,9 @@ export type PassportItem = {
 };
 
 export const bruffles: BrufflesPiece[] = [
+  { brand: "bruffles", id: "BA-048", pieceNo: 48, name: "Camo Pullover Hoodie", maker: "BAPE × adidas", condition: "New with tags", size: "L", priceUsd: 26000, sold: false,
+    description: "Black hoodie with BAPE's outlined camo all over, a blue Ape Head and adidas trefoil on the chest, and iridescent three stripes down both sleeves. New with tags.",
+    measurements: { Chest: "62 cm", Length: "74 cm", Sleeve: "64 cm" }, receiptRef: "Restock 2026-11 · Order #2" },
   { brand: "bruffles", id: "BA-047", pieceNo: 47, name: "Mesh Cropped Fit L/S", maker: "BAPE", condition: "New with tags", size: "M", priceUsd: 18500, sold: false,
     description: "A mesh hockey-style top in a cropped, boxy fit. BAPE chest crest, 93 on the front, back and sleeve, a striped V-neck and a lightning print across the body. New with tags.",
     measurements: { Chest: "64 cm", Length: "62 cm", Sleeve: "60 cm", Shoulder: "58 cm" }, receiptRef: "Restock 2026-11 · Order #1",

@@ -113,13 +113,13 @@ export default function SplitHero({ media = {} }: { media?: { bf?: PanelMedia; p
         initial={false} animate={{ flexGrow: grow("bf") }} transition={t}>
         <HeroMedia m={bf} eager scrim="from-ink/75" playOk={playOk} open={active === "bf"} videoRef={videos.bf} desktop={desktop} />
 
-        <div data-size={sizeOf("bf")} className={`${COPY} md:pr-[max(var(--spacing-gutter),calc(64px*var(--k)))]`}>
+        <div data-size={sizeOf("bf")} className={`${COPY} ${bfHas ? "on-media" : ""} md:pr-[max(var(--spacing-gutter),calc(64px*var(--k)))]`}>
           <Monogram tone={bfHas ? "bright" : "deep"} className="relative rise w-auto self-start" style={markStyle} />
           <h2 id="hero-bf" className={`relative rise h-bf ${bfHas ? "text-bone" : ""}`} style={{ ["--i" as string]: 1, ...headStyle }}>
             Bruffles<br className="hero-br" /> Apparel</h2>
           <p className={`hero-body relative rise ${bfHas ? "text-bone/85" : "text-ink-soft"}`} style={{ ["--i" as string]: 2, ...bodyStyle }}>
             Authentic pieces, one of each. When it's gone, it's gone.</p>
-          <a href="/bruffles" className={`self-start label-bf ${bfHas ? "btn-bf !bg-bone !text-ink hover:!bg-gold" : "btn-bf"}`}
+          <a href="/bruffles" className={`relative self-start label-bf ${bfHas ? "btn-bf !bg-bone !text-ink hover:!bg-gold" : "btn-bf"}`}
             style={btnStyle}>Enter Bruffles</a>
         </div>
       </motion.section>
@@ -139,7 +139,7 @@ export default function SplitHero({ media = {} }: { media?: { bf?: PanelMedia; p
           className="hidden md:block absolute left-[46%] top-[20%] w-[22%] max-w-[300px]"
           initial={false} animate={{ opacity: active === "pp" ? 0.95 : 0, scale: active === "pp" ? 1 : 1.04 }}
           transition={{ ...t, delay: active === "pp" && !reduce ? 0.15 : 0 }} />}
-        <div data-size={sizeOf("pp")} className={`${COPY} md:pl-[max(var(--spacing-gutter),calc(64px*var(--k)))]`}>
+        <div data-size={sizeOf("pp")} className={`${COPY} ${ppHas ? "on-media" : ""} md:pl-[max(var(--spacing-gutter),calc(64px*var(--k)))]`}>
           <p className="relative label-pp text-signal" style={labelStyle}><FlipPrice text="Papers · Filters · Tools" /></p>
           <h2 id="hero-pp" className="relative h-koi normal-case" style={headStyle}>
             Passport<br className="hero-br" /> to Paradise</h2>

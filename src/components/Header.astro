@@ -125,7 +125,7 @@ const seg = (w: "bf" | "pp") => world === w ? "bg-current/0 underline underline-
   .site-header[data-transparent="true"]:not(.is-solid) { background: transparent; border-color: transparent; color: #fff; mix-blend-mode: difference; }
   /* KOI-style: once you scroll, the bar gets slightly shorter (one change, not per frame) */
   .site-header.is-compact:not([data-shop]) { height: 56px; }
-  .site-header[data-shop] { background: #fff; }
+  .site-header[data-shop], :global(body.page-white) .site-header[data-world="bf"] { background: #fff; }
   .dd > summary::-webkit-details-marker { display: none; }
   .dd-panel { position: absolute; top: calc(100% + 6px); z-index: 60; background: #fff; color: var(--color-ink); border: 1px solid var(--color-hair);
     box-shadow: 0 8px 24px rgb(28 26 23 / .08); padding: 14px 16px; text-transform: uppercase; letter-spacing: .04em; font-size: 12px; }

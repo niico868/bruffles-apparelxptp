@@ -35,3 +35,6 @@ Speed: Lighthouse 12 mobile preset against `dist/` served with Brotli (what Clou
 - Seam: centre = Passport edge at 375 (vertical), 768, 1280, 1920 and mid-switch (427.95 = 427.95).
 - Touch tests: Save toggles, rolls 21 to 22, survives reload; Request it back by tap: Requested, 18 to 19, toast; signature by CDP touch and by mouse, card renders; consent unchecked by default; reduced motion: wall animation none.
 - Remaining below 10 and why: 1, Passport film is stock baggage footage until real clips arrive; 5, signatures are font-made; 9, measured locally, not on the live CDN.
+
+## Round 3 (2026-11-25)
+- Hero contrast checked on the brightest film frame at 1280 and 375. Drop Log poster checked at 1280 and 375. Looping reveal: classes toggle in, out on scroll back, in again. Screens: /mnt/project-files/round3/screens/.

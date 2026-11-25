@@ -13,7 +13,7 @@ import CustomerWall from "../components/CustomerWall.astro";
 import { bruffles, passport } from "../data/products";
 import { media, pieceImages } from "../data/media";
 import { toPic } from "../lib/pic";
-const latest = bruffles.filter((p) => !p.sold).slice(0, 2);
+const latest = bruffles.filter((p) => !p.sold).slice(0, 4);
 const hero = {
   bf: { desktop: await toPic(media.hero.bf.desktop), mobile: await toPic(media.hero.bf.mobile, [640, 1080]), video: media.hero.bf.video },
   pp: { desktop: await toPic(media.hero.pp.desktop), mobile: await toPic(media.hero.pp.mobile, [640, 1080]), video: media.hero.pp.video },
@@ -30,7 +30,7 @@ const shareImage = hero.bf.desktop ? (await toPic(media.hero.bf.desktop, [1200])
       <a href="/bruffles" class="ui inline-block mt-3 text-gold-text underline underline-offset-4 decoration-gold-deep/50 hover:decoration-gold-deep rise" style="--i:2">Shop Bruffles</a>
     </div>
     <div class="wrap grid grid-cols-2 gap-2 md:gap-6 mt-10 md:mt-12">
-      {latest.map((p, i) => <ProductTile p={p} i={i} />)}
+      {latest.map((p, i) => <ProductTile p={p} i={i % 2} loop />)}
     </div>
   </section>
 

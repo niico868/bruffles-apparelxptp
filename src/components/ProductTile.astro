@@ -7,12 +7,12 @@ import { formatPrice } from "../lib/price";
 import { pad, type BrufflesPiece } from "../data/products";
 import { getSignals } from "../data/demo-signals";
 import DemandLine from "./DemandLine";
-const { p, sizes = "(min-width: 768px) 45vw, 50vw", i = 0 } = Astro.props as { p: BrufflesPiece; sizes?: string; i?: number };
+const { p, sizes = "(min-width: 768px) 45vw, 50vw", i = 0, loop = false } = Astro.props as { p: BrufflesPiece; sizes?: string; i?: number; loop?: boolean };
 const pic = await toPic(pieceImages(p.id, p.name)[0], [480, 800, 1200]);
 const n = pad(p.pieceNo);
 const sig = getSignals(p.pieceNo);
 ---
-<article class="group/card rise" style={`--i:${i}`}>
+<article class:list={["group/card", loop ? "reveal-loop" : "rise"]} style={`--i:${i}`}>
   <a href={`/bruffles/${p.id}`} class="block" aria-label={`${p.name}, piece ${n}, ${p.sold ? "found its owner" : formatPrice(p.priceUsd)}`}>
     <div class="relative">
       <div class:list={["relative aspect-[4/5] overflow-hidden", p.sold && "gone-img"]}>

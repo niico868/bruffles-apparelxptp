@@ -146,6 +146,15 @@
       "licence": "AI-generated sample, demo only",
       "alt": "Polo Ralph Lauren colorblock split T-shirt, navy and cream.",
       "note": "Padded to 4:5 on white."
+    },
+    {
+      "slot": "piece-BA-048",
+      "file": "src/assets/media/pieces/BA-048.webp",
+      "sourceUrl": "Supplied by Divine (bape.webp in Archive (9).zip)",
+      "author": "BAPE × adidas",
+      "licence": "Brand product photo, demo only",
+      "alt": "BAPE × adidas black camo pullover hoodie with iridescent three stripes.",
+      "note": "Padded to 4:5 on white. Price, size and measurements are placeholders."
     }
   ]
 }
