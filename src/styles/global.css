@@ -108,3 +108,15 @@
 .js .flip.is-in .flip-c { animation: flap .24s var(--ease-zip) forwards; }
 @keyframes flap { 0% { opacity: 0; transform: rotateX(-90deg); } 70% { opacity: 1; transform: rotateX(12deg); } 100% { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .js .flip-c { opacity: 1; transform: none; animation: none !important; } }
+
+/* Homepage split hero copy (SplitHero.tsx). --k scales every size in the copy block:
+   1 when its side is 50% or 70% wide, 0.38 when it is 30% wide. Registering --k lets it animate,
+   so the text shrinks and grows smoothly instead of jumping. */
+@property --k { syntax: "<number>"; inherits: true; initial-value: 1; }
+.hero-copy { --k: 1; transition: --k .8s var(--ease-calm); }
+@media (min-width: 768px) {
+  .hero-copy[data-size="shut"] { --k: .38; }
+  /* Shut side: headline and body text run on one line each */
+  .hero-copy[data-size="shut"] .hero-br { display: none; }
+  .hero-copy[data-size="shut"] .hero-body { max-width: none; white-space: nowrap; }
+}
