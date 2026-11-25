@@ -109,3 +109,9 @@ Local dev on the Chromebook is not needed: preview on the .workers.dev link inst
 - Phone motion: the hero is one screen tall with the two panels stacked. Tapping a panel opens it to 70% of the height and shrinks the other to 30% (copy scales the same way as on a computer). Tapping the open panel plays or pauses its film. Removed the phone-only 047 frame and the large phone PTP badge.
 - Equal sizes: both brands now share one set of copy sizes (label 13px, headline clamp(44px, 5.6vw, 108px), body 16px at 30ch, button 48px) and both phone panels start at exactly half the screen.
 - Screens: /mnt/project-files/hero-logos-mobile/.
+
+## Session 13 · Centre circle tap, dark blue placeholders, plain Passport wording (branch `claude/seam-tap-passport-copy`)
+- Hero centre circle is now a button: tapping or clicking it puts both sides back to 50/50.
+- Bruffles photo placeholders are dark blue (`--color-navy` #1B2A41), with light labels.
+- Passport wording is plain shop wording everywhere: "Departures" board is now a price list (Product, Pack, Price, Availability), item numbers removed (cards, list, product page, `itemNo` field), "Booked out" is "Sold out", the stamp says "Added to your bag", the hero says "Papers · Filters · Tools" and "Shop Passport", the age check says "Age check · 18+". Components renamed: DepartureBoard → PassportList, BoardItem → PassportBuy.
+- Screens: /mnt/project-files/seam-tap-passport/.

@@ -6,7 +6,7 @@ export type BrufflesPiece = {
   description: string; measurements: Record<string, string>; receiptRef?: string;
 };
 export type PassportItem = {
-  brand: "passport"; id: string; itemNo: number; name: string; priceUsd: number;
+  brand: "passport"; id: string; name: string; priceUsd: number;
   qty: number; packOf: number; description: string;
 };
 
@@ -29,12 +29,12 @@ export const bruffles: BrufflesPiece[] = [
 ];
 
 export const passport: PassportItem[] = [
-  { brand: "passport", id: "PTP-12", itemNo: 12, name: "Brass Grinder, 4-Piece", priceUsd: 2400, qty: 40, packOf: 1, description: "Machined brass, magnetic lid." },
-  { brand: "passport", id: "PTP-11", itemNo: 11, name: "Rolling Papers, King Slim", priceUsd: 3600, qty: 120, packOf: 50, description: "Unbleached. Box of 50 booklets." },
-  { brand: "passport", id: "PTP-10", itemNo: 10, name: "Glass Tips, Clear", priceUsd: 1800, qty: 0, packOf: 25, description: "Borosilicate. Pack of 25." },
-  { brand: "passport", id: "PTP-09", itemNo: 9, name: "Travel Stash Tin", priceUsd: 1500, qty: 64, packOf: 1, description: "Airtight aluminium tin." },
-  { brand: "passport", id: "PTP-08", itemNo: 8, name: "Filter Tips, Slim", priceUsd: 1200, qty: 200, packOf: 50, description: "Unbleached card tips. Pack of 50 booklets." },
-  { brand: "passport", id: "PTP-07", itemNo: 7, name: "Rolling Tray, Medium", priceUsd: 2200, qty: 30, packOf: 1, description: "Metal tray with raised edges." },
+  { brand: "passport", id: "PTP-12", name: "Brass Grinder, 4-Piece", priceUsd: 2400, qty: 40, packOf: 1, description: "Machined brass, magnetic lid." },
+  { brand: "passport", id: "PTP-11", name: "Rolling Papers, King Slim", priceUsd: 3600, qty: 120, packOf: 50, description: "Unbleached. Box of 50 booklets." },
+  { brand: "passport", id: "PTP-10", name: "Glass Tips, Clear", priceUsd: 1800, qty: 0, packOf: 25, description: "Borosilicate. Pack of 25." },
+  { brand: "passport", id: "PTP-09", name: "Travel Stash Tin", priceUsd: 1500, qty: 64, packOf: 1, description: "Airtight aluminium tin." },
+  { brand: "passport", id: "PTP-08", name: "Filter Tips, Slim", priceUsd: 1200, qty: 200, packOf: 50, description: "Unbleached card tips. Pack of 50 booklets." },
+  { brand: "passport", id: "PTP-07", name: "Rolling Tray, Medium", priceUsd: 2200, qty: 30, packOf: 1, description: "Metal tray with raised edges." },
 ];
 
 export const pad = (n: number, w = 3) => String(n).padStart(w, "0");

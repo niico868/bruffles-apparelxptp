@@ -1,17 +1,17 @@
 ---
 import Base from "../../layouts/Base.astro";
 import PassportCard from "../../components/PassportCard";
-import DepartureBoard from "../../components/DepartureBoard";
+import PassportList from "../../components/PassportList";
 import { passport } from "../../data/products";
 import { passportImage } from "../../data/media";
 import { toPic } from "../../lib/pic";
 const pics = await Promise.all(passport.map((i) => toPic(passportImage(i.id, i.name), [480, 800, 1200])));
 ---
-<Base title="Passport to Paradise · Departures" description="Papers, filters and tools from Passport to Paradise, by the pack and by the box." world="pp">
+<Base title="Passport to Paradise · Shop" description="Papers, filters and tools from Passport to Paradise, by the pack and by the box." world="pp">
   <div class="pp">
     <section class="wrap pt-32 md:pt-40 pb-16 md:grid md:grid-cols-12 md:gap-8 md:items-end">
       <div class="md:col-span-7">
-        <p class="label-pp text-signal">Gate 02 · All departures</p>
+        <p class="label-pp text-signal">Smoking accessories · 18+</p>
         <h1 class="h-pp text-[56px] md:text-[96px] mt-4">Passport<br />to Paradise</h1>
       </div>
       <div class="md:col-span-4 md:col-start-9 mt-6 md:mt-0">
@@ -19,9 +19,9 @@ const pics = await Promise.all(passport.map((i) => toPic(passportImage(i.id, i.n
         <p class="text-muted">Papers, filters and tools, by the pack and by the box.</p>
       </div>
     </section>
-    <section class="wrap pb-16" aria-label="Departures board"><DepartureBoard items={passport} /></section>
-    <section class="wrap pb-[var(--spacing-section)]" aria-label="All items">
-      <div class="flex items-center gap-4 pb-6"><span class="label-pp text-signal">→</span><h2 class="label-pp">All items</h2><span class="flex-1 border-t border-dashed border-char-3"></span></div>
+    <section class="wrap pb-16" aria-label="Price list"><PassportList items={passport} /></section>
+    <section class="wrap pb-[var(--spacing-section)]" aria-label="All products">
+      <div class="flex items-center gap-4 pb-6"><span class="label-pp text-signal">→</span><h2 class="label-pp">All products</h2><span class="flex-1 border-t border-dashed border-char-3"></span></div>
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
         {passport.map((item, n) => <PassportCard client:visible item={item} pic={pics[n]} />)}
       </div>

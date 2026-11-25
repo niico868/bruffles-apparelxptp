@@ -1,6 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
-import BoardItem from "../../components/BoardItem";
+import PassportBuy from "../../components/PassportBuy";
 import FlipPrice from "../../components/FlipPrice";
 import StampTarget from "../../components/StampTarget";
 import { passport } from "../../data/products";
@@ -21,12 +21,12 @@ const pic = await toPic(passportImage(item.id, item.name), [640, 1080, 1600]);
       </div>
       <div class="md:col-span-5 mt-8 md:mt-0">
         <div class="md:sticky md:top-24">
-          <nav class="label-pp text-muted" aria-label="Breadcrumb"><a href="/passport" class="hover:text-signal">Departures</a> / {item.id}</nav>
-          <p class="label-pp text-signal mt-6">Item {String(item.itemNo).padStart(2, "0")} · {item.qty === 0 ? "Booked out" : `${item.qty} in stock`}{item.packOf > 1 ? ` · Pack of ${item.packOf}` : ""}</p>
+          <nav class="label-pp text-muted" aria-label="Breadcrumb"><a href="/passport" class="hover:text-signal">Passport to Paradise</a> / {item.name}</nav>
+          <p class="label-pp text-signal mt-6">{item.qty === 0 ? "Sold out" : `${item.qty} in stock`}{item.packOf > 1 ? ` · Pack of ${item.packOf}` : ""}</p>
           <h1 class="h-pp text-[40px] md:text-[56px] mt-3">{item.name}</h1>
           <p class="mt-4 text-[20px]"><FlipPrice text={formatPrice(item.priceUsd)} tiles /></p>
           <p class="mt-6 text-muted">{item.description}</p>
-          <div class="mt-8"><BoardItem client:load id={item.id} name={item.name} priceUsd={item.priceUsd} qty={item.qty} /></div>
+          <div class="mt-8"><PassportBuy client:load id={item.id} name={item.name} priceUsd={item.priceUsd} qty={item.qty} /></div>
         </div>
       </div>
     </article>

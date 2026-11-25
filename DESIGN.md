@@ -23,7 +23,7 @@ Tokens live in `src/styles/global.css` `@theme`. One job per colour. Ratios are 
 | Token | Hex | Role | Contrast |
 |---|---|---|---|
 | char | #1E2023 | page base | |
-| char-2 | #2A2D31 | cards, departure-board tiles | |
+| char-2 | #2A2D31 | cards, price-list rows | |
 | char-3 | #363A3F | placeholders, borders on charcoal | |
 | paper | #F2F1EC | type on charcoal | 14.4:1 |
 | muted | #A3A8AE | secondary text | 6.8:1 char, 5.8:1 char-2 |
@@ -46,10 +46,10 @@ Tokens live in `src/styles/global.css` `@theme`. One job per colour. Ratios are 
 - Buttons min 48px tall: `.btn-bf` (ink, gold on hover), `.btn-bf-ghost`, `.btn-pp` (signal yellow).
 
 ## Layout
-- Split hero (`SplitHero.tsx`, state table at the top of the file): two 70%-wide panels overlap; hovering moves the Passport panel and the seam layer with transform only (50/50 to 70/30). Hover arms 10s after the first mouse movement or after 20 movements, whichever comes first, on every page load. Open side (70%): corner logo fades, film plays (first time only), Bruffles shows piece 047. Shut side (30%): copy shrinks to 38% via `--k` (legibility floor ~10px), headline and body on one line. Corner logos: one height for both (56px phone, 72px computer), bottom right of each half; BA's rides the seam. Both brands share the same copy sizes (label, headline, body, button). Centre circle: placeholder until the merged BA × PTP logo arrives (`MERGED_LOGO`). Phone: one screen tall, panels stacked; tapping a panel opens it to 70% of the height (same copy scaling and film rules), tapping the open one plays or pauses its film.
+- Split hero (`SplitHero.tsx`, state table at the top of the file): two 70%-wide panels overlap; hovering moves the Passport panel and the seam layer with transform only (50/50 to 70/30). Hover arms 10s after the first mouse movement or after 20 movements, whichever comes first, on every page load. Open side (70%): corner logo fades, film plays (first time only), Bruffles shows piece 047. Shut side (30%): copy shrinks to 38% via `--k` (legibility floor ~10px), headline and body on one line. Corner logos: one height for both (56px phone, 72px computer), bottom right of each half; BA's rides the seam. Both brands share the same copy sizes (label, headline, body, button). Centre circle: a button that resets the split to 50/50; placeholder until the merged BA × PTP logo arrives (`MERGED_LOGO`). Phone: one screen tall, panels stacked; tapping a panel opens it to 70% of the height (same copy scaling and film rules), tapping the open one plays or pauses its film.
 - Bruffles collection: lookbook. One feature piece (7/12 image + giant number), then a 2-column grid with the right column dropped 128px on desktop. Gone pieces stay, greyed, "Found its owner".
 - Product page: gallery grid left (swipe strip on mobile), sticky buy column right, sticky bottom buy bar on mobile, size and measurements tab, one white flat lay per piece (optional numbered detail shots), certificate-style authenticity section.
-- Passport: departures board (flip-in rows) + item cards on charcoal.
+- Passport: price list (Product, Pack, Price, Availability; prices flip in) + product cards on charcoal. Plain shop wording only, no travel or departure terms, no item numbers (Divine, 2026-11-25).
 
 ## Lockups
 "BA × PTP" on the homepage, "BA" on Bruffles pages, "PTP" on Passport pages (Divine, 2026-11-24). Piece IDs: BA-047.
@@ -67,7 +67,7 @@ Tested at 4x CPU slowdown: hero, plane, stamp and reveals hold 60fps once the pa
 
 ## KOI merge (2026-11-24): "flagship store with a street-campaign window"
 Reference: kidsofimmigrants.us, survey in project files `koi-merge/01-site-survey.md`. Photos carry the colour; the interface stays neutral. No text inside images.
-- **Homepage = exactly 8 blocks:** header · split hero (campaign media per half) · Latest pieces (two-up) · authenticity strip · film · Passport (two-up + departures) · community wall mosaic · footer (holds drop alerts, `#drop-alerts`).
+- **Homepage = exactly 8 blocks:** header · split hero (campaign media per half) · Latest pieces (two-up) · authenticity strip · film · Passport (two-up + price list) · community wall mosaic · footer (holds drop alerts, `#drop-alerts`).
 - **Media slots:** listed in `src/data/media.json`; photos in `src/assets/media/` (Astro makes phone-size WebP), films in `public/media/`. Product photos by name: `src/assets/media/pieces/<ID>/01-front … 06-fabric`. Folder READMEs give sizes. `scripts/check-media.mjs` runs before every build: photo > 600 KB, film over cap (hero 4 MB, film 8 MB) or missing alt text = build stops.
 - **Empty slot rule:** every slot falls back to its labelled placeholder (`Img.astro`), so the site always looks finished.
 - **Hero media:** separate phone / computer crops; optional loop over the photo (never with reduced motion or data saver); bottom scrim + light top shade when a photo is present. Homepage Passport media = lifestyle/brand only; product close-ups stay behind the 18+ gate.

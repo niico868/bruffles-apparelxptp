@@ -19,6 +19,7 @@
   --color-gold: #C9A24E;       /* monogram on dark, primary CTA hover fill (7.2:1 with ink) */
   --color-gold-deep: #A7832F;  /* monogram + 1-of-1 marks on bone, graphics only (3.1:1) */
   --color-gold-text: #7A5E22;  /* gold text on bone (5.3:1) */
+  --color-navy: #1B2A41;       /* Bruffles photo placeholders (Divine, 2026-11-25) */
   /* Passport: airport wayfinding */
   --color-char: #1E2023;       /* page base */
   --color-char-2: #2A2D31;     /* cards, departure-board tiles */
@@ -84,7 +85,10 @@
   .btn-pp:active { transform: scale(.97); }
 
   /* Image placeholders until the shoot */
-  .ph-bf { background: var(--color-bone-2); }
+  /* Bruffles placeholder: dark blue. Its labels and watermark numbers switch to bone so they stay readable. */
+  .ph-bf { background: var(--color-navy); }
+  .ph-bf .text-ink-soft { color: rgb(244 239 230 / .75); }
+  .ph-bf [class~="text-ink/10"] { color: rgb(244 239 230 / .12); }
   .ph-pp { background: var(--color-char-3); }
 }
 
