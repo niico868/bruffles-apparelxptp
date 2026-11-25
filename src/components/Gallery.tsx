@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 export type Shot = { label: string; alt: string; src?: string; srcset?: string; full?: string; w?: number; h?: number };
 
-// KOI-style gallery. Desktop: first photo full width, then a two-column grid, scrolled past the
+// KOI-style gallery (today each piece has one flat lay; it still handles several if that changes). Desktop: first photo full width, then a two-column grid, scrolled past the
 // sticky buy column. Phone: a swipe strip with a counter. Any photo opens a full-screen viewer
 // (arrow keys, Esc, swipe). Missing photos show labelled placeholders in the same order.
 export default function Gallery({ shots, sold = false, num }: { shots: Shot[]; sold?: boolean; num: string }) {
@@ -45,7 +45,7 @@ export default function Gallery({ shots, sold = false, num }: { shots: Shot[]; s
         <div ref={strip} onScroll={onScroll} className="flex overflow-x-auto snap-x snap-mandatory [scrollbar-width:none]" aria-label="Photos, swipe for more">
           {shots.map((s, n) => <div key={s.label} className="snap-center shrink-0 w-full">{shot(s, n, "100vw")}</div>)}
         </div>
-        <p className="absolute right-4 top-4 ui text-[12px] bg-bone/90 px-2 py-1 tabular-nums" aria-live="polite">{i + 1} / {shots.length}</p>
+        {shots.length > 1 && <p className="absolute right-4 top-4 ui text-[12px] bg-bone/90 px-2 py-1 tabular-nums" aria-live="polite">{i + 1} / {shots.length}</p>}
       </div>
 
       <dialog ref={dlg} onClose={() => setOpen(null)} onClick={(e) => { if (e.target === dlg.current) dlg.current?.close(); }}
@@ -55,7 +55,7 @@ export default function Gallery({ shots, sold = false, num }: { shots: Shot[]; s
             onTouchStart={(e) => ((dlg.current as any)._x = e.touches[0].clientX)}
             onTouchEnd={(e) => { const dx = e.changedTouches[0].clientX - (dlg.current as any)._x; if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1); }}>
             <img src={shots[open].full ?? shots[open].src} alt={shots[open].alt} className="max-w-full max-h-full object-contain" />
-            <p className="absolute left-4 top-4 ui text-[13px]">{shots[open].label} · {real.indexOf(open) + 1} / {real.length}</p>
+            <p className="absolute left-4 top-4 ui text-[13px]">{shots[open].label}{real.length > 1 && ` · ${real.indexOf(open) + 1} / ${real.length}`}</p>
             <button type="button" onClick={() => dlg.current?.close()} className="absolute right-2 top-2 ui min-h-12 px-4">Close</button>
             {real.length > 1 && <>
               <button type="button" onClick={() => step(-1)} className="absolute left-2 top-1/2 -translate-y-1/2 w-12 h-12 grid place-items-center ui bg-bone/80" aria-label="Previous photo">←</button>

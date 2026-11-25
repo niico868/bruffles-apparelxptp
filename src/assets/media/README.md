@@ -19,17 +19,9 @@ The build stops if a photo is over **600 KB**. Export at the size listed, qualit
 
 **Passport rule:** homepage Passport photos show lifestyle or brand (beach, travel, packaging, logo). Product close-ups stay on the Passport pages behind the 18+ check.
 
-## pieces/BA-047/ (one folder per piece, named by its piece ID)
+## pieces/ (one photo per piece, named by its piece ID)
 
-All 2000 × 2500 (tall, 4:5). Flat lay on a light ground, contact shadow only, garment ironed and straight.
-
-| File name | Photo |
-|---|---|
-| 01-front | Front (also the card photo) |
-| 02-back | Back |
-| 03-onbody | Worn (the photo that appears on hover) |
-| 04-detail | Close detail (zip, logo, stitching) |
-| 05-tag | Brand tag |
-| 06-fabric | Fabric texture |
+One studio flat lay per piece, e.g. `pieces/BA-047.jpg`. It is the shop card photo, the product page photo and the link preview.
+2000 × 2500 (tall, 4:5), under 600 KB. Warm bone ground (#F4EFE6), soft daylight from the top left, contact shadow only (1 to 2 mm), garment ironed, straight and centred with even margins. Every piece shot the same way so the grid reads as one set.
 
 Missing photos show a labelled placeholder in the same spot.

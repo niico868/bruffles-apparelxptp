@@ -27,14 +27,9 @@ export const media = {
   wall: raw.wall.map(fill),
 };
 
-// Product photos follow a naming rule instead of a list: src/assets/media/pieces/BA-047/01-front.jpg
-export const ROLES = ["front", "back", "onbody", "detail", "tag", "fabric"] as const;
-export type Role = (typeof ROLES)[number];
-export const ROLE_LABEL: Record<Role, string> = { front: "Front", back: "Back", onbody: "On body", detail: "Detail", tag: "Brand tag", fabric: "Fabric" };
-export function pieceImages(id: string, name: string) {
-  return ROLES.map((role, i) => ({
-    role, label: ROLE_LABEL[role],
-    image: findImage(`pieces/${id}/${String(i + 1).padStart(2, "0")}-${role}`),
-    alt: `${name}, ${ROLE_LABEL[role].toLowerCase()} view`,
-  }));
+// Product photos: ONE studio flat lay per piece (Divine, 2026-11-25), named by piece ID:
+// src/assets/media/pieces/BA-047.jpg. Used for the shop card, the product page and the share image.
+// A missing photo returns no image and the page shows its labelled placeholder.
+export function pieceImage(id: string, name: string) {
+  return { label: "Flat lay", image: findImage(`pieces/${id}`), alt: `${name}, studio flat lay` };
 }
