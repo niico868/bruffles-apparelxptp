@@ -10,20 +10,26 @@ export type PanelMedia = { desktop?: Pic; mobile?: Pic; video?: string };
 /*
  * Homepage split hero: Bruffles Apparel (BA, left) and Passport to Paradise (PTP, right).
  *
- * Desktop states, per side:  "even" = 50/50 (nothing hovered)
- *                            "open" = this side is 70% wide (mouse is over it)
- *                            "shut" = this side is 30% wide (mouse is over the other side)
+ * States, per side:  "even" = 50/50 (nothing chosen)
+ *                     "open"  = this side takes 70% (computer: mouse over it; phone: tapped)
+ *                     "shut"  = this side gets 30% (the other side is open)
  *
  *            corner logo   copy size            featured piece / hero film
  *   even     shown         full                 hidden / paused
  *   open     fades out     full                 shown  / plays (first time only, see videos)
  *   shut     shown         SHUT_K (about 38%)   hidden / paused
  *
- * Geometry: two overlapping panels, each 70% of the hero wide. Only the Passport panel and the
- * seam layer move, and only with transform, so the open/close never triggers page layout.
- * The copy block in each panel is 30% of the hero wide, so it is fully visible in every state.
+ * Computer (768px+): side by side. Two overlapping panels, each 70% of the hero wide. Only the
+ * Passport panel and the seam layer move, and only with transform, so opening never triggers page
+ * layout. The copy block in each panel is 30% of the hero wide, so it is fully visible in every state.
  *
- * Mobile (< 768px): two stacked full-width panels with their own buttons. No hover, no scaling.
+ * Phone (< 768px): stacked, one screen tall. Tapping a panel opens it to 70% of the height (the
+ * panels' flex-grow animates); tapping the open panel again plays or pauses its film. No arming on
+ * phones: a tap is always deliberate.
+ *
+ * Corner logos (Divine, 2026-11-25): same height for both brands, bottom right of each half. They
+ * live on the hero, not in the panels: BA's rides the seam layer, so it stays at the right edge of
+ * the Bruffles half as the seam moves; PTP's sits at the hero's bottom right.
  */
 
 type Side = "bf" | "pp";
@@ -65,11 +71,15 @@ export default function SplitHero({ media = {}, featured }: { media?: { bf?: Pan
   const bf = media.bf ?? {}, pp = media.pp ?? {};
   const bfHas = !!(bf.desktop || bf.mobile), ppHas = !!(pp.desktop || pp.mobile);
 
-  // Leaving desktop width (window resized) closes any open side, so the stacked layout never moves.
-  useEffect(() => { if (!desktop) setActive(null); }, [desktop]);
+  // Switching between phone and computer layout (window resized) starts again at 50/50.
+  useEffect(() => setActive(null), [desktop]);
 
-  const shift = active === "bf" ? OPEN : active === "pp" ? -OPEN : 0;   // seam movement, share of hero width
+  const shift = active === "bf" ? OPEN : active === "pp" ? -OPEN : 0;   // seam movement, share of the hero
   const t = { duration: reduce ? 0 : DURATION, ease: EXPO };
+  // Seam movement: sideways on a computer, downwards on a phone (percent of the hero, via the inset-0 layer).
+  const seamMove = desktop ? { x: `${shift * 100}%`, y: 0 } : { x: 0, y: `${shift * 100}%` };
+  // Phone panel heights (flex-grow shares of the hero). Ignored on a computer, where panels are absolute.
+  const grow = (s: Side) => 0.5 + (s === "bf" ? shift : -shift);
 
   const onMove = (e: React.PointerEvent) => {
     if (e.pointerType !== "mouse" || !armed || !desktop || !root.current) return;
@@ -79,18 +89,24 @@ export default function SplitHero({ media = {}, featured }: { media?: { bf?: Pan
     if (next !== active) setActive(next);
   };
 
-  // Clicking the open side (anywhere but a link) plays or pauses its film.
+  // Click or tap on a panel (anywhere but a link). Phone: a tap on a closed panel opens it.
+  // Both: a click on the open panel plays or pauses its film.
   const onClick = (e: React.MouseEvent) => {
-    if (!active || (e.target as HTMLElement).closest("a, button")) return;
-    toggleVideo(videos[active].current);
+    const el = e.target as HTMLElement;
+    if (el.closest("a, button")) return;
+    const side = el.closest<HTMLElement>("[data-side]")?.dataset.side as Side | undefined;
+    if (!desktop && side && side !== active) setActive(side);
+    else if (active) toggleVideo(videos[active].current);
   };
 
   return (
-    <div ref={root} className="relative md:h-[100svh] md:min-h-[640px] md:overflow-hidden"
-      onPointerMove={onMove} onPointerLeave={() => setActive(null)} onClick={onClick}>
+    <div ref={root} className="relative flex flex-col h-[100svh] min-h-[560px] overflow-hidden md:block md:min-h-[640px]"
+      onPointerMove={onMove} onPointerLeave={(e) => { if (e.pointerType === "mouse") setActive(null); }} onClick={onClick}>
 
       {/* ---------- Bruffles panel ---------- */}
-      <section aria-labelledby="hero-bf" className="bf relative min-h-[70svh] md:min-h-0 md:absolute md:inset-y-0 md:left-0 md:w-[70%] overflow-hidden">
+      <motion.section data-side="bf" aria-labelledby="hero-bf"
+        className="bf relative basis-0 min-h-0 md:absolute md:inset-y-0 md:left-0 md:w-[70%] overflow-hidden"
+        initial={false} animate={{ flexGrow: grow("bf") }} transition={t}>
         <HeroMedia m={bf} eager scrim="from-ink/75" playOk={playOk} open={active === "bf"} videoRef={videos.bf} />
 
         {/* Featured piece 047 (desktop): only while Bruffles is open at 70% */}
@@ -107,85 +123,69 @@ export default function SplitHero({ media = {}, featured }: { media?: { bf?: Pan
           <p className={`mt-3 label-bf ${bfHas ? "text-bone/85" : "text-ink-soft"}`}>Piece 047 · Tech Fleece Windrunner</p>
         </motion.div>
 
-        <div data-size={sizeOf("bf")}
-          className="hero-copy relative md:absolute md:left-0 md:bottom-0 md:w-[42.857%] flex flex-col justify-end min-h-[70svh] md:min-h-0 px-[var(--spacing-gutter)] md:pr-[max(var(--spacing-gutter),calc(64px*var(--k)))] pt-24 pb-16">
-          {/* Phone: featured piece 047 (until campaign photos arrive) */}
-          {!bfHas && <div className="md:hidden relative w-[62%] aspect-[4/5] ph-bf self-end mb-auto mt-4 overflow-hidden">
-            {featured
-              ? <img src={featured.src} srcSet={featured.srcset} sizes="62vw" alt={featured.alt} width={featured.w} height={featured.h}
-                  decoding="async" className="absolute inset-0 w-full h-full object-cover" />
-              : <><span className="absolute left-3 top-3 label-bf text-ink-soft">Photo · 047</span>
-                  <span className="absolute right-3 bottom-1 num-bf text-[64px] text-ink/10" aria-hidden>047</span></>}
-          </div>}
-          <p className={`relative label-bf rise ${bfHas ? "text-gold" : "text-gold-text mt-8 md:mt-0"}`}
-            style={{ fontSize: scaled("13px", "10px") }}>1 of 1 · Restocked twice a month</p>
-          <h2 id="hero-bf" className={`relative rise h-koi ${bfHas ? "text-bone" : ""}`}
-            style={{ ["--i" as string]: 1, fontSize: scaled("clamp(56px, 6vw, 112px)"), marginTop: scaled("12px") }}>
+        <div data-size={sizeOf("bf")} className={`${COPY} md:pr-[max(var(--spacing-gutter),calc(64px*var(--k)))]`}>
+          <p className={`relative label-bf rise ${bfHas ? "text-gold" : "text-gold-text"}`} style={labelStyle}>1 of 1 · Restocked twice a month</p>
+          <h2 id="hero-bf" className={`relative rise h-koi ${bfHas ? "text-bone" : ""}`} style={{ ["--i" as string]: 1, ...headStyle }}>
             Bruffles<br className="hero-br" /> Apparel</h2>
-          <p className={`hero-body rise max-w-[28ch] ${bfHas ? "text-bone/85" : "text-ink-soft"}`}
-            style={{ ["--i" as string]: 2, fontSize: scaled("16px", "11px"), marginTop: scaled("16px") }}>
+          <p className={`hero-body relative rise ${bfHas ? "text-bone/85" : "text-ink-soft"}`} style={{ ["--i" as string]: 2, ...bodyStyle }}>
             Authentic pieces, one of each. When it's gone, it's gone.</p>
           <a href="/bruffles" className={`self-start label-bf ${bfHas ? "btn-bf !bg-bone !text-ink hover:!bg-gold" : "btn-bf"}`}
             style={btnStyle}>Shop Bruffles</a>
         </div>
-      </section>
-
-      {/* ---------- Centre circle: mobile hinge between the stacked panels ---------- */}
-      <div className="md:hidden relative z-20 h-0 flex justify-center">
-        <SeamMark size={72} className="-translate-y-1/2" />
-      </div>
+      </motion.section>
 
       {/* ---------- Passport panel ---------- */}
-      <motion.section aria-labelledby="hero-pp"
-        className="pp relative min-h-[70svh] md:min-h-0 md:absolute md:inset-y-0 md:left-1/2 md:w-[70%] overflow-hidden z-10"
-        initial={false} animate={{ x: `${(shift / PANEL) * 100}%` }} transition={t}
+      <motion.section data-side="pp" aria-labelledby="hero-pp"
+        className="pp relative basis-0 min-h-0 md:absolute md:inset-y-0 md:left-1/2 md:w-[70%] overflow-hidden z-10"
+        initial={false} animate={{ x: desktop ? `${(shift / PANEL) * 100}%` : 0, flexGrow: grow("pp") }} transition={t}
         style={{ willChange: "transform" }}>
         <HeroMedia m={pp} scrim="from-char/85" playOk={playOk} open={active === "pp"} videoRef={videos.pp} />
         <PlaneFlight />
         {/* Runway dash pointing into Passport, starting at the seam */}
         <div aria-hidden className="hidden md:block absolute inset-y-0 left-2 border-l-2 border-dashed border-signal/40" />
-        {/* Passport's stage piece (desktop, placeholder until campaign media): only while open at 70%,
+        {/* Passport's stage piece (computer, until campaign media arrives): only while open at 70%,
             mirroring Bruffles' featured piece. The corner badge fades out as this fades in. */}
         {!ppHas && <motion.img src="/brand/passport-badge.webp" alt="" aria-hidden width="594" height="505"
           className="hidden md:block absolute left-[46%] top-[20%] w-[22%] max-w-[300px]"
           initial={false} animate={{ opacity: active === "pp" ? 0.95 : 0, scale: active === "pp" ? 1 : 1.04 }}
           transition={{ ...t, delay: active === "pp" && !reduce ? 0.15 : 0 }} />}
-        <div data-size={sizeOf("pp")}
-          className="hero-copy relative md:absolute md:left-0 md:bottom-0 md:w-[42.857%] flex flex-col justify-end min-h-[70svh] md:min-h-0 px-[var(--spacing-gutter)] md:pl-[max(var(--spacing-gutter),calc(64px*var(--k)))] pt-24 pb-16">
-          <img src="/brand/passport-badge.webp" alt="" aria-hidden width="594" height="505" className="relative md:hidden w-40 mb-auto mt-4 self-end" />
-          <p className="relative label-pp text-signal" style={{ fontSize: scaled("12px", "10px") }}><FlipPrice text="GATE 02 · NOW BOARDING" /></p>
-          <h2 id="hero-pp" className="relative h-koi"
-            style={{ fontSize: scaled("clamp(56px, 5.4vw, 104px)"), marginTop: scaled("16px") }}>
+        <div data-size={sizeOf("pp")} className={`${COPY} md:pl-[max(var(--spacing-gutter),calc(64px*var(--k)))]`}>
+          <p className="relative label-pp text-signal" style={labelStyle}><FlipPrice text="GATE 02 · NOW BOARDING" /></p>
+          <h2 id="hero-pp" className="relative h-koi" style={headStyle}>
             Passport<br className="hero-br" /> to Paradise</h2>
-          <p className={`hero-body relative max-w-[30ch] ${ppHas ? "text-paper/85" : "text-muted"}`}
-            style={{ fontSize: scaled("16px", "11px"), marginTop: scaled("16px") }}>
+          <p className={`hero-body relative ${ppHas ? "text-paper/85" : "text-muted"}`} style={bodyStyle}>
             Papers, filters and tools, by the pack and by the box.</p>
           <a href="/passport" className="relative btn-pp self-start label-pp" style={btnStyle}>Board Passport <span aria-hidden>→</span></a>
         </div>
       </motion.section>
 
-      {/* ---------- Corner logos (desktop: BA top-left, PTP top-right; phone: BA only) ----------
-          Shown while their side is 50% or 30%; fade out when their side opens to 70%,
-          so the film or photo has the stage. Sit just under the 64px header. */}
-      <motion.div aria-hidden className="absolute z-30 left-[var(--spacing-gutter)] top-[88px] pointer-events-none"
-        initial={false} animate={{ opacity: active === "bf" ? 0 : 1 }} transition={t}>
-        <Monogram size={64} tone={bfHas ? "bright" : "deep"} />
+      {/* ---------- Seam layer: gold hairline, centre circle and the BA corner logo, moved by transform.
+          Vertical seam on a computer, horizontal on a phone. ---------- */}
+      <motion.div aria-hidden className="absolute inset-0 z-20 pointer-events-none"
+        initial={false} animate={seamMove} transition={t} style={{ willChange: "transform" }}>
+        <div className="absolute inset-x-0 top-1/2 h-px md:inset-x-auto md:inset-y-0 md:left-1/2 md:h-auto md:w-px bg-gold/70" />
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"><SeamMark /></div>
+        {/* BA logo: bottom right of the Bruffles half, just inside the seam */}
+        <CornerLogo show={active !== "bf"} t={t}
+          className="right-[var(--spacing-gutter)] bottom-[calc(50%+24px)] md:right-[calc(50%+var(--spacing-gutter))] md:bottom-8">
+          <Monogram tone={bfHas ? "bright" : "deep"} className={LOGO} />
+        </CornerLogo>
       </motion.div>
-      <motion.img src="/brand/passport-badge.webp" alt="" aria-hidden width="594" height="505"
-        className="hidden md:block absolute z-30 right-[var(--spacing-gutter)] top-[88px] w-[96px] pointer-events-none"
-        initial={false} animate={{ opacity: active === "pp" ? 0 : 1 }} transition={t} />
-
-      {/* ---------- Seam (desktop): gold hairline + centre circle, moved by transform ---------- */}
-      <motion.div aria-hidden className="hidden md:block absolute inset-0 z-20 pointer-events-none"
-        initial={false} animate={{ x: `${shift * 100}%` }} transition={t} style={{ willChange: "transform" }}>
-        <div className="absolute inset-y-0 left-1/2 w-px bg-gold/70" />
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"><SeamMark size={104} /></div>
-      </motion.div>
+      {/* PTP logo: bottom right of the Passport half (the hero's bottom right corner) */}
+      <CornerLogo show={active !== "pp"} t={t} className="z-30 right-[var(--spacing-gutter)] bottom-6 md:bottom-8">
+        <img src="/brand/passport-badge.webp" alt="" width="594" height="505" decoding="async" className={LOGO} />
+      </CornerLogo>
     </div>
   );
 }
 
-// Shared button sizing for both brands: 48px tall at full size, never under 32px when shut.
+// ---------- Shared copy sizing: both brands use exactly the same sizes ----------
+// Copy block: phone = bottom of its panel; computer = bottom left, 30% of the hero wide (42.857% of a 70% panel).
+const COPY = "hero-copy relative h-full md:h-auto md:absolute md:left-0 md:bottom-0 md:w-[42.857%] flex flex-col justify-end px-[var(--spacing-gutter)] pt-20 pb-8 md:pt-24 md:pb-16";
+const labelStyle = { fontSize: scaled("13px", "10px") };
+const headStyle = { fontSize: scaled("clamp(44px, 5.6vw, 108px)"), marginTop: scaled("12px") };
+const bodyStyle = { fontSize: scaled("16px", "11px"), marginTop: scaled("16px"), maxWidth: "30ch" };
+// Button: 48px tall at full size, never under 32px when shut.
 const btnStyle = {
   marginTop: scaled("32px"),
   fontSize: scaled("13px", "10px"),
@@ -193,14 +193,25 @@ const btnStyle = {
   paddingInline: scaled("24px", "12px"),
 };
 
-// Centre circle on the seam. Holds the merged BA × PTP logo once Divine supplies it:
-// save it as public/brand/ba-x-ptp.webp and set MERGED_LOGO to "/brand/ba-x-ptp.webp".
-const MERGED_LOGO: string | null = null;
-function SeamMark({ size, className = "" }: { size: number; className?: string }) {
+// Corner logos: one height for both brands (56px phone, 72px computer); width follows each logo's shape.
+const LOGO = "h-14 md:h-[72px] w-auto";
+// Shown while its side is 50% or 30%; fades out when its side opens to 70%, so the film has the stage.
+function CornerLogo({ show, t, className, children }:
+  { show: boolean; t: object; className: string; children: React.ReactNode }) {
   return (
-    <span className={`grid place-items-center rounded-full bg-ink ring-1 ring-gold/60 ${className}`} style={{ width: size, height: size }}>
+    <motion.div aria-hidden className={`absolute pointer-events-none ${className}`}
+      initial={false} animate={{ opacity: show ? 1 : 0 }} transition={t}>{children}</motion.div>
+  );
+}
+
+// Centre circle on the seam (72px phone, 104px computer). Holds the merged BA × PTP logo once Divine
+// supplies it: save it as public/brand/ba-x-ptp.webp and set MERGED_LOGO to "/brand/ba-x-ptp.webp".
+const MERGED_LOGO: string | null = null;
+function SeamMark() {
+  return (
+    <span className="grid place-items-center rounded-full bg-ink ring-1 ring-gold/60 size-[72px] md:size-[104px]">
       {MERGED_LOGO
-        ? <img src={MERGED_LOGO} alt="" width={Math.round(size * 0.72)} height={Math.round(size * 0.72)} decoding="async" />
+        ? <img src={MERGED_LOGO} alt="" width="75" height="75" decoding="async" className="w-[72%] h-auto" />
         : <span className="label-pp text-gold text-[10px] tracking-[0.12em]">BA × PTP</span>}
     </span>
   );
@@ -229,7 +240,7 @@ function HeroMedia({ m, eager = false, scrim, playOk, open, videoRef }:
           style={{ objectPosition: d.focal }} />
       )}
       <div className={`absolute inset-x-0 bottom-0 h-[60%] bg-gradient-to-t ${scrim} to-transparent`} />
-      {/* Light top shade so the header and corner logo read over any photo */}
+      {/* Light top shade so the header reads over any photo */}
       <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-ink/45 to-transparent" />
     </div>
   );
@@ -238,6 +249,7 @@ function HeroMedia({ m, eager = false, scrim, playOk, open, videoRef }:
 // ---------- Hooks ----------
 
 // True at 768px and wider (Tailwind's md), where the side-by-side split and hover apply.
+// Starts false, so the server-rendered page is the phone layout until the browser says otherwise.
 function useDesktop() {
   const [desktop, setDesktop] = useState(false);
   useEffect(() => {

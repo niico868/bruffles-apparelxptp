@@ -103,3 +103,9 @@ Local dev on the Chromebook is not needed: preview on the .workers.dev link inst
 - Passport: one photo per item on walnut (`src/assets/media/passport/<ID>.jpg`), flat items top-down, standing items front view; homepage two-up `home/pp-1`, `home/pp-2`.
 - Code: `pieceImages()` / `passportImage()` in `src/data/media.ts`; BrufflesCard, ProductTile, Gallery, PassportCard, Passport page and the hero's featured 047 now use them. Removed `SwapImage.astro` (no second photo to swap to).
 - These are AI placeholders for the demo catalogue. Real stock: owner's phone photo of the actual piece goes in as the reference image.
+
+## Session 12 · Hero logos, phone motion, equal sizes (branch `claude/hero-logos-mobile`)
+- Corner logos: BA monogram and PTP badge now the same height (56px phone, 72px computer), bottom right of each half. BA's logo rides the seam so it stays in the Bruffles half as it opens and closes.
+- Phone motion: the hero is one screen tall with the two panels stacked. Tapping a panel opens it to 70% of the height and shrinks the other to 30% (copy scales the same way as on a computer). Tapping the open panel plays or pauses its film. Removed the phone-only 047 frame and the large phone PTP badge.
+- Equal sizes: both brands now share one set of copy sizes (label 13px, headline clamp(44px, 5.6vw, 108px), body 16px at 30ch, button 48px) and both phone panels start at exactly half the screen.
+- Screens: /mnt/project-files/hero-logos-mobile/.
