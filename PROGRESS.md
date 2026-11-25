@@ -87,3 +87,12 @@ Local dev on the Chromebook is not needed: preview on the .workers.dev link inst
 - Header: Archivo labels, "Shop Bruffles / Shop Passport", compact after 40px scroll, menu button + home link labels fixed. CSS inlined into each page.
 - Lighthouse mobile (local, compressed like Cloudflare): home 100/100/100/100, BA-047 100/100/100/100; LCP 1.3 s / 1.5 s.
 - Client gaps: piece story, delivery, care, Passport two-up button labels, restock rhythm wording, Instagram links, all photos and the film.
+
+## Session 10 · Hero motion rework (branch `claude/hero-motion`, PR for Divine's approval)
+- Hover arming back: the split stays 50/50 until 10s after the first mouse movement or 20 movements (counted at most every 250ms), whichever comes first. Fresh on every page load.
+- Copy scales per side: full at 50% and 70%, 38% at 30% (animated `--k`, floor ~10px for small text), headline/body to one line when shut.
+- Corner logos: BA monogram top-left, PTP badge top-right; visible at 50% and 30%, fade out at 70%. Centre circle now a placeholder for the merged logo (`MERGED_LOGO` in SplitHero.tsx).
+- Featured piece 047 (BA) and the Passport stage badge only show at 70%.
+- Films: no autoplay on load. First open plays, other side pauses, re-opening stays paused until click or Space. Off under reduced motion / data saver.
+- Fixes: hover could move the Passport panel in the stacked (narrow) layout; old 1.2s grace timer replaced by arming.
+- Removed dead code: `GoneStrip.astro` and `SizeDrawer.tsx` (no longer imported since the KOI merge), Monogram `disc` option.
