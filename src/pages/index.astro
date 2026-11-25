@@ -11,17 +11,18 @@ import PassportTwoUp from "../components/PassportTwoUp.astro";
 import DepartureBoard from "../components/DepartureBoard";
 import WallMosaic from "../components/WallMosaic.astro";
 import { bruffles, passport } from "../data/products";
-import { media } from "../data/media";
+import { media, pieceImages } from "../data/media";
 import { toPic } from "../lib/pic";
 const latest = bruffles.filter((p) => !p.sold).slice(0, 2);
 const hero = {
   bf: { desktop: await toPic(media.hero.bf.desktop), mobile: await toPic(media.hero.bf.mobile, [640, 1080]), video: media.hero.bf.video },
   pp: { desktop: await toPic(media.hero.pp.desktop), mobile: await toPic(media.hero.pp.mobile, [640, 1080]), video: media.hero.pp.video },
 };
+const featured = await toPic(pieceImages("BA-047", "Tech Fleece Windrunner")[0], [480, 800, 1200]);
 const shareImage = hero.bf.desktop ? (await toPic(media.hero.bf.desktop, [1200]))?.src : undefined;
 ---
 <Base image={shareImage}>
-  <SplitHero client:load media={hero} />
+  <SplitHero client:load media={hero} featured={featured} />
 
   <section class="bf pt-[var(--spacing-section)] pb-16 md:pb-24" aria-labelledby="latest">
     <div class="wrap text-center">

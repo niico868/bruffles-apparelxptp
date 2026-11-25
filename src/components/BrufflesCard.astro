@@ -3,14 +3,18 @@
 // Gone pieces stay in the grid, greyed, as proof the pieces move.
 import { formatPrice } from "../lib/price";
 import { pad, type BrufflesPiece } from "../data/products";
+import Img from "./Img.astro";
+import { pieceImages } from "../data/media";
+import { toPic } from "../lib/pic";
 const { p, feature = false, i = 0 } = Astro.props as { p: BrufflesPiece; feature?: boolean; i?: number };
+const pic = await toPic(pieceImages(p.id, p.name)[0], [480, 800, 1200, 1600]);
 const n = pad(p.pieceNo);
 ---
 <article class:list={["group/card", feature && "md:grid md:grid-cols-12 md:gap-8 md:items-end"]}>
   <a href={`/bruffles/${p.id}`} class:list={["block", feature && "md:col-span-7"]} aria-label={`${p.name}, piece ${n}`}>
     <div class="wipe relative aspect-[4/5] overflow-hidden" style={`--i:${i}`}>
       <div class:list={["absolute inset-0 ph-bf transition-transform duration-[900ms] ease-[var(--ease-calm)] group-hover/card:scale-[1.03]", p.sold && "grayscale opacity-60"]}>
-        <span class="absolute left-3 top-3 md:left-4 md:top-4 label-bf text-ink-soft">Photo</span>
+        <Img pic={pic} sizes={feature ? "(min-width: 768px) 58vw, 100vw" : "(min-width: 768px) 45vw, 100vw"} />
       </div>
       {!p.sold && <span class="absolute left-3 bottom-3 md:left-4 md:bottom-4 label-bf text-gold-text bg-bone/90 px-2 py-1">1 of 1</span>}
     </div>

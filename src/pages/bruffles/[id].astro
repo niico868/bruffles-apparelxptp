@@ -20,7 +20,7 @@ export function getStaticPaths() {
 }
 const { p } = Astro.props;
 const n = pad(p.pieceNo);
-const imgs = pieceImages(p.id, p.name);
+const imgs = pieceImages(p.id, p.name);   // main flat lay first, then any detail shots
 const shots: Shot[] = await Promise.all(imgs.map(async (x) => {
   const pic = await toPic(x, [640, 1080, 1600]);
   const full = await toPic(x, [2000]);

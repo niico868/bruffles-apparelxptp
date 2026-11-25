@@ -27,14 +27,22 @@ export const media = {
   wall: raw.wall.map(fill),
 };
 
-// Product photos follow a naming rule instead of a list: src/assets/media/pieces/BA-047/01-front.jpg
-export const ROLES = ["front", "back", "onbody", "detail", "tag", "fabric"] as const;
-export type Role = (typeof ROLES)[number];
-export const ROLE_LABEL: Record<Role, string> = { front: "Front", back: "Back", onbody: "On body", detail: "Detail", tag: "Brand tag", fabric: "Fabric" };
+// Bruffles product photos (Divine, 2026-11-25): one white-ground studio flat lay per piece, named by
+// piece ID: src/assets/media/pieces/BA-047.jpg. It is the shop card, the first gallery photo and the
+// share image. Optional detail shots for a piece's page go in a folder of the same name, numbered in
+// gallery order with the label after the number: pieces/BA-047/02-back.jpg, 03-zip.jpg ...
+// A missing main photo returns no image and the page shows its labelled placeholder.
+const label = (slug: string) => slug.replace(/-/g, " ").replace(/^./, (c) => c.toUpperCase());
 export function pieceImages(id: string, name: string) {
-  return ROLES.map((role, i) => ({
-    role, label: ROLE_LABEL[role],
-    image: findImage(`pieces/${id}/${String(i + 1).padStart(2, "0")}-${role}`),
-    alt: `${name}, ${ROLE_LABEL[role].toLowerCase()} view`,
-  }));
+  const main = { label: "Flat lay", image: findImage(`pieces/${id}`), alt: `${name}, studio flat lay on white` };
+  const prefix = `../assets/media/pieces/${id}/`;
+  const details = Object.keys(files).filter((k) => k.startsWith(prefix)).sort().map((k) => {
+    const slug = k.slice(prefix.length).replace(/\.\w+$/, "").replace(/^\d+-/, "");
+    return { label: label(slug), image: files[k].default, alt: `${name}, ${label(slug).toLowerCase()} detail` };
+  });
+  return [main, ...details];
 }
+
+// Passport product photos: one per item, named by item ID: src/assets/media/passport/PTP-12.jpg.
+// Styled on warm wood; flat items shot from above, standing items from the front.
+export const passportImage = (id: string, name: string) => ({ image: findImage(`passport/${id}`), alt: `${name}, product photo on wood` });

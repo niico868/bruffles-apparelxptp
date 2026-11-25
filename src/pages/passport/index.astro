@@ -3,6 +3,9 @@ import Base from "../../layouts/Base.astro";
 import PassportCard from "../../components/PassportCard";
 import DepartureBoard from "../../components/DepartureBoard";
 import { passport } from "../../data/products";
+import { passportImage } from "../../data/media";
+import { toPic } from "../../lib/pic";
+const pics = await Promise.all(passport.map((i) => toPic(passportImage(i.id, i.name), [480, 800, 1200])));
 ---
 <Base title="Passport to Paradise · Departures" description="Papers, filters and tools from Passport to Paradise, by the pack and by the box." world="pp">
   <div class="pp">
@@ -20,7 +23,7 @@ import { passport } from "../../data/products";
     <section class="wrap pb-[var(--spacing-section)]" aria-label="All items">
       <div class="flex items-center gap-4 pb-6"><span class="label-pp text-signal">→</span><h2 class="label-pp">All items</h2><span class="flex-1 border-t border-dashed border-char-3"></span></div>
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-        {passport.map((item) => <PassportCard client:visible item={item} />)}
+        {passport.map((item, n) => <PassportCard client:visible item={item} pic={pics[n]} />)}
       </div>
     </section>
   </div>

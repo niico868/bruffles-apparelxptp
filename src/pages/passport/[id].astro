@@ -5,14 +5,18 @@ import FlipPrice from "../../components/FlipPrice";
 import StampTarget from "../../components/StampTarget";
 import { passport } from "../../data/products";
 import { formatPrice } from "../../lib/price";
+import Img from "../../components/Img.astro";
+import { passportImage } from "../../data/media";
+import { toPic } from "../../lib/pic";
 export function getStaticPaths() { return passport.map((item) => ({ params: { id: item.id }, props: { item } })); }
 const { item } = Astro.props;
+const pic = await toPic(passportImage(item.id, item.name), [640, 1080, 1600]);
 ---
 <Base title={`${item.name} · Passport to Paradise`} description={item.description} world="pp">
   <div class="pp">
     <article class="wrap pt-20 md:pt-28 pb-[var(--spacing-section)] md:grid md:grid-cols-12 md:gap-12">
       <div class="md:col-span-7 relative aspect-[4/5] ph-pp overflow-hidden">
-        <span class="absolute left-4 top-4 label-pp text-muted">Photo · {item.name}</span>
+        <Img pic={pic} world="pp" eager sizes="(min-width: 768px) 58vw, 100vw" label={`Photo · ${item.name}`} />
         <StampTarget client:idle />
       </div>
       <div class="md:col-span-5 mt-8 md:mt-0">

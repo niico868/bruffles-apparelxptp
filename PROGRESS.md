@@ -96,3 +96,10 @@ Local dev on the Chromebook is not needed: preview on the .workers.dev link inst
 - Films: no autoplay on load. First open plays, other side pauses, re-opening stays paused until click or Space. Off under reduced motion / data saver.
 - Fixes: hover could move the Passport panel in the stacked (narrow) layout; old 1.2s grace timer replaced by arming.
 - Removed dead code: `GoneStrip.astro` and `SizeDrawer.tsx` (no longer imported since the KOI merge), Monogram `disc` option.
+
+## Session 11 · AI product photos (branch `claude/one-photo-flatlays`)
+- Divine 2026-11-25: one photo per product. Generated with Higgsfield Seedream 5.0 Flash 2K (0.5 credits each, 22 images incl. 2 redos = 11 credits). Prompts: project files `flatlays/flatlay-prompt.md`.
+- Bruffles: white-ground studio flat lay per piece (`src/assets/media/pieces/<ID>.jpg`); BA-047 also has 6 detail shots (`pieces/BA-047/02-back … 07-fabric`, number = gallery order, rest of the name = label).
+- Passport: one photo per item on walnut (`src/assets/media/passport/<ID>.jpg`), flat items top-down, standing items front view; homepage two-up `home/pp-1`, `home/pp-2`.
+- Code: `pieceImages()` / `passportImage()` in `src/data/media.ts`; BrufflesCard, ProductTile, Gallery, PassportCard, Passport page and the hero's featured 047 now use them. Removed `SwapImage.astro` (no second photo to swap to).
+- These are AI placeholders for the demo catalogue. Real stock: owner's phone photo of the actual piece goes in as the reference image.

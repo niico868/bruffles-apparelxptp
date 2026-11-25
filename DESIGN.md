@@ -48,7 +48,7 @@ Tokens live in `src/styles/global.css` `@theme`. One job per colour. Ratios are 
 ## Layout
 - Split hero (`SplitHero.tsx`, state table at the top of the file): two 70%-wide panels overlap; hovering moves the Passport panel and the seam layer with transform only (50/50 to 70/30). Hover arms 10s after the first mouse movement or after 20 movements, whichever comes first, on every page load. Open side (70%): corner logo fades, film plays (first time only), Bruffles shows piece 047. Shut side (30%): copy shrinks to 38% via `--k` (legibility floor ~10px), headline and body on one line. Corner logos: BA monogram top-left, PTP badge top-right. Centre circle: placeholder until the merged BA × PTP logo arrives (`MERGED_LOGO`). Mobile: stacked panels, centre circle joins them, no hover.
 - Bruffles collection: lookbook. One feature piece (7/12 image + giant number), then a 2-column grid with the right column dropped 128px on desktop. Gone pieces stay, greyed, "Found its owner".
-- Product page: gallery grid left (swipe strip on mobile), sticky buy column right, sticky bottom buy bar on mobile, size and measurements tab, certificate-style authenticity section.
+- Product page: gallery grid left (swipe strip on mobile), sticky buy column right, sticky bottom buy bar on mobile, size and measurements tab, one white flat lay per piece (optional numbered detail shots), certificate-style authenticity section.
 - Passport: departures board (flip-in rows) + item cards on charcoal.
 
 ## Lockups
