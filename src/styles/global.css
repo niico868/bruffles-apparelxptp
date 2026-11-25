@@ -154,3 +154,9 @@
 @keyframes toast-in { from { opacity: 0; translate: -50% 12px; } }
 /* Receipts: every line of print is unreadable on the page (Phase 7/8) */
 .receipt-blur { filter: blur(3px) saturate(.9); transform: scale(1.04); }
+
+/* Product pages (Divine 2026-11-25): white page instead of bone. Sections inside that use .bf go white too. */
+body.shop, body.shop .bf { background: #fff; }
+.anim-fade { animation: anim-fade .6s var(--ease-calm) both; }
+@keyframes anim-fade { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .anim-fade { animation: none; } }

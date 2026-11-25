@@ -115,7 +115,7 @@ export default function SplitHero({ media = {} }: { media?: { bf?: PanelMedia; p
 
         <div data-size={sizeOf("bf")} className={`${COPY} md:pr-[max(var(--spacing-gutter),calc(64px*var(--k)))]`}>
           <Monogram tone={bfHas ? "bright" : "deep"} className="relative rise w-auto self-start" style={markStyle} />
-          <h2 id="hero-bf" className={`relative rise h-koi ${bfHas ? "text-bone" : ""}`} style={{ ["--i" as string]: 1, ...headStyle }}>
+          <h2 id="hero-bf" className={`relative rise h-koi normal-case ${bfHas ? "text-bone" : ""}`} style={{ ["--i" as string]: 1, ...headStyle }}>
             Bruffles<br className="hero-br" /> Apparel</h2>
           <p className={`hero-body relative rise ${bfHas ? "text-bone/85" : "text-ink-soft"}`} style={{ ["--i" as string]: 2, ...bodyStyle }}>
             Authentic pieces, one of each. When it's gone, it's gone.</p>
@@ -141,7 +141,7 @@ export default function SplitHero({ media = {} }: { media?: { bf?: PanelMedia; p
           transition={{ ...t, delay: active === "pp" && !reduce ? 0.15 : 0 }} />}
         <div data-size={sizeOf("pp")} className={`${COPY} md:pl-[max(var(--spacing-gutter),calc(64px*var(--k)))]`}>
           <p className="relative label-pp text-signal" style={labelStyle}><FlipPrice text="Papers · Filters · Tools" /></p>
-          <h2 id="hero-pp" className="relative h-koi" style={headStyle}>
+          <h2 id="hero-pp" className="relative h-koi normal-case" style={headStyle}>
             Passport<br className="hero-br" /> to Paradise</h2>
           <p className={`hero-body relative ${ppHas ? "text-paper/85" : "text-muted"}`} style={bodyStyle}>
             Papers, filters and tools, by the pack and by the box.</p>

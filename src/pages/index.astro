@@ -25,14 +25,21 @@ const shareImage = hero.bf.desktop ? (await toPic(media.hero.bf.desktop, [1200])
 
   <section class="bf pt-[var(--spacing-section)] pb-16 md:pb-24" aria-labelledby="latest">
     <div class="wrap text-center">
-      <h2 id="latest" class="h-koi text-[32px] md:text-[48px] rise">Latest pieces</h2>
-      <a href="/bruffles" class="ui inline-block mt-3 underline underline-offset-4 decoration-hair hover:decoration-ink rise" style="--i:1">Shop Bruffles</a>
+      <p class="label-bf text-gold-text rise">Bruffles Apparel · 1 of 1</p>
+      <h2 id="latest" class="h-koi text-[32px] md:text-[48px] mt-2 rise" style="--i:1">Latest pieces</h2>
+      <a href="/bruffles" class="ui inline-block mt-3 text-gold-text underline underline-offset-4 decoration-gold-deep/50 hover:decoration-gold-deep rise" style="--i:2">Shop Bruffles</a>
     </div>
     <div class="wrap grid grid-cols-2 gap-2 md:gap-6 mt-10 md:mt-12">
       {latest.map((p, i) => <ProductTile p={p} i={i} />)}
     </div>
   </section>
 
+  <section class="bf" aria-labelledby="auth-matters">
+    <div class="wrap pt-4 pb-10 md:pb-12 text-center">
+      <p class="label-bf text-gold-text rise">Bought, kept, checked</p>
+      <h2 id="auth-matters" class="h-bf text-[36px] md:text-[56px] mt-2 rise" style="--i:1">Authenticity <span class="text-gold-text italic">matters</span></h2>
+    </div>
+  </section>
   <AuthSteps strip />
   <HuntTeaser />
 

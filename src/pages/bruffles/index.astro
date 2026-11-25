@@ -17,13 +17,26 @@ const [feature, ...rest] = available;
       <h2 id="collection" class="label-bf text-gold-text">The collection · {available.length} available</h2>
       <a href="/bruffles/archive" class="ui text-[13px] underline underline-offset-4 decoration-hair hover:decoration-ink">The archive</a>
     </div>
-    <div class="wrap pt-10 md:pt-12">
+    <p id="brand-filter" class="wrap pt-6 ui text-[13px]" hidden>Showing <span class="brand-name text-gold-text"></span> · <a href="/bruffles" class="underline underline-offset-4 decoration-hair hover:decoration-ink">Show all brands</a></p>
+    <div class="wrap pt-10 md:pt-12" data-maker={feature.maker}>
       <BrufflesCard p={feature} feature />
     </div>
     <div class="wrap grid grid-cols-2 gap-x-4 md:gap-x-8 gap-y-16 md:gap-y-24 pt-24 pb-8">
-      {rest.map((p, i) => <div class:list={[i % 2 === 1 && "md:mt-32"]}><BrufflesCard p={p} i={i % 2} /></div>)}
+      {rest.map((p, i) => <div data-maker={p.maker} class:list={[i % 2 === 1 && "md:mt-32"]}><BrufflesCard p={p} i={i % 2} /></div>)}
     </div>
   </section>
+  <script>
+    // "Brand" menu in the product-page header links here with ?brand=Name: show only that brand's pieces.
+    const brand = new URLSearchParams(location.search).get("brand");
+    if (brand) {
+      const note = document.getElementById("brand-filter")!;
+      note.hidden = false; note.querySelector(".brand-name")!.textContent = brand;
+      document.querySelectorAll<HTMLElement>("[data-maker]").forEach((el) => {
+        const hit = el.dataset.maker === brand;
+        el.hidden = !hit; el.classList.remove("md:mt-32");
+      });
+    }
+  </script>
   <CustomerWall compact />
   <ArchiveStrip />
 </Base>

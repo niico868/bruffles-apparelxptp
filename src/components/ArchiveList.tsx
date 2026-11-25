@@ -30,8 +30,7 @@ export default function ArchiveList({ items }: { items: ArchiveItem[] }) {
                 {p.pic
                   ? <img src={p.pic.src} srcSet={p.pic.srcset} sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw" alt={p.pic.alt}
                       width={p.pic.w} height={p.pic.h} loading={n < 3 ? "eager" : "lazy"} fetchPriority={n === 0 ? "high" : undefined} decoding="async" className="absolute inset-0 w-full h-full object-cover gone-img" />
-                  : <><span className="absolute left-3 top-3 label-bf text-ink-soft">Photo · {p.num}</span>
-                      <span aria-hidden className="absolute right-4 bottom-2 num-bf text-[96px] text-ink/10">{p.num}</span></>}
+                  : <><span className="absolute left-3 top-3 label-bf text-ink-soft">Photo · {p.num}</span></>}
                 <span aria-hidden className="gone-stamp right-3 top-3">Gone</span>
               </div>
             </a>

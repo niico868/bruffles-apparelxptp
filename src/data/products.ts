@@ -4,6 +4,9 @@ export type BrufflesPiece = {
   brand: "bruffles"; id: string; pieceNo: number; name: string; maker: string;
   condition: string; size: string; priceUsd: number; sold: boolean;
   description: string; measurements: Record<string, string>; receiptRef?: string;
+  // Colourways of the same piece (Divine 2026-11-25): each swatch is its own single piece in its own
+  // size. Photos: the first colourway uses pieces/<ID>.webp + pieces/<ID>/, others pieces/<ID>-<key>/.
+  variants?: { key: string; colour: string; size: string; measurements?: Record<string, string> }[];
 };
 export type PassportItem = {
   brand: "passport"; id: string; name: string; priceUsd: number;
@@ -11,13 +14,17 @@ export type PassportItem = {
 };
 
 export const bruffles: BrufflesPiece[] = [
-  { brand: "bruffles", id: "BA-047", pieceNo: 47, name: "Tech Fleece Windrunner", maker: "Nike", condition: "New with tags", size: "M", priceUsd: 18500, sold: false,
-    description: "Heather grey tech fleece with a full-length zip and a chevron yoke. Tags intact.",
-    measurements: { Chest: "58 cm", Length: "71 cm", Sleeve: "64 cm", Shoulder: "47 cm" }, receiptRef: "Restock 2026-11 · Order #1" },
+  { brand: "bruffles", id: "BA-047", pieceNo: 47, name: "Mesh Cropped Fit L/S", maker: "BAPE", condition: "New with tags", size: "M", priceUsd: 18500, sold: false,
+    description: "A mesh hockey-style top in a cropped, boxy fit. BAPE chest crest, 93 on the front, back and sleeve, a striped V-neck and a lightning print across the body. New with tags.",
+    measurements: { Chest: "64 cm", Length: "62 cm", Sleeve: "60 cm", Shoulder: "58 cm" }, receiptRef: "Restock 2026-11 · Order #1",
+    variants: [
+      { key: "red", colour: "Red / black", size: "M", measurements: { Chest: "64 cm", Length: "62 cm", Sleeve: "60 cm", Shoulder: "58 cm" } },
+      { key: "blue", colour: "Blue / white", size: "L", measurements: { Chest: "67 cm", Length: "64 cm", Sleeve: "61 cm", Shoulder: "60 cm" } },
+    ] },
   { brand: "bruffles", id: "BA-046", pieceNo: 46, name: "Club Fleece Cargo Pant", maker: "Nike", condition: "New with tags", size: "L", priceUsd: 9500, sold: true,
     description: "Washed black cargo jogger in brushed-back fleece.", measurements: { Waist: "84 cm", Inseam: "76 cm" } },
-  { brand: "bruffles", id: "BA-045", pieceNo: 45, name: "Oversized Logo Tee", maker: "Stüssy", condition: "New with tags", size: "L", priceUsd: 7000, sold: false,
-    description: "Pigment-dyed heavyweight tee.", measurements: { Chest: "60 cm", Length: "74 cm" } },
+  { brand: "bruffles", id: "BA-045", pieceNo: 45, name: "Colorblock Split T-Shirt", maker: "Polo Ralph Lauren", condition: "New with tags", size: "L", priceUsd: 7000, sold: false,
+    description: "Cotton jersey tee split down the middle in navy and cream, with an old-English P on the chest. New with tags.", measurements: { Chest: "58 cm", Length: "74 cm" } },
   { brand: "bruffles", id: "BA-044", pieceNo: 44, name: "Coach Jacket", maker: "Carhartt WIP", condition: "New with tags", size: "M", priceUsd: 16000, sold: false,
     description: "Water-repellent nylon coach jacket.", measurements: { Chest: "59 cm", Length: "70 cm" } },
   { brand: "bruffles", id: "BA-043", pieceNo: 43, name: "Essentials Hoodie", maker: "Fear of God", condition: "New with tags", size: "M", priceUsd: 14000, sold: true,

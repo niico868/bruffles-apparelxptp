@@ -6,8 +6,8 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import AgeGate from "../components/AgeGate.astro";
 type World = "home" | "bf" | "pp";
-const { title = "Bruffles Apparel × Passport to Paradise", description = "Authentic one-of-one menswear from Bruffles Apparel, and accessories from Passport to Paradise.", world = "home", image } =
-  Astro.props as { title?: string; description?: string; world?: World; image?: string };
+const { title = "Bruffles Apparel × Passport to Paradise", description = "Authentic one-of-one menswear from Bruffles Apparel, and accessories from Passport to Paradise.", world = "home", image, shop = false } =
+  Astro.props as { title?: string; description?: string; world?: World; image?: string; shop?: boolean };
 const ogImage = image ? new URL(image, Astro.site ?? "https://bruffles-apparelxptp.neikoliaugustine.workers.dev").href : undefined;
 ---
 <!doctype html>
@@ -23,8 +23,8 @@ const ogImage = image ? new URL(image, Astro.site ?? "https://bruffles-apparelxp
   <link rel="icon" href="/brand/bruffles-monogram-gold-deep.webp" />
   <slot name="head" />
 </head>
-<body class:list={["min-h-svh", world === "pp" ? "pp" : "bf"]}>
-  <Header world={world} />
+<body class:list={["min-h-svh", world === "pp" ? "pp" : "bf", shop && "shop"]}>
+  <Header world={world} shop={shop} />
   <main><slot /></main>
   <Footer world={world} />
   {world === "pp" && <AgeGate />}

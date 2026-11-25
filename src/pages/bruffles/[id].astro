@@ -3,7 +3,9 @@
 // sticky buy column on the right, story that lands on two bold lines, tabs, sticky mini bar,
 // certificate, then "More 1 of 1s".
 import Base from "../../layouts/Base.astro";
-import Gallery, { type Shot } from "../../components/Gallery";
+import type { Shot } from "../../components/Gallery";
+import PieceGallery, { type ShotSet } from "../../components/PieceGallery";
+import VariantPicker, { type Swatch } from "../../components/VariantPicker";
 import AddPiece from "../../components/AddPiece";
 import AskPiece from "../../components/AskPiece";
 import InfoTabs from "../../components/InfoTabs";
@@ -19,7 +21,7 @@ import { wallCardFor } from "../../data/wall";
 import { sourceSite, pickNote, batch } from "../../data/hunt";
 import { asset } from "../../data/assets";
 import { bruffles, pad } from "../../data/products";
-import { pieceImages } from "../../data/media";
+import { pieceImages, variantImages } from "../../data/media";
 import { toPic } from "../../lib/pic";
 import { formatPrice } from "../../lib/price";
 
@@ -29,11 +31,18 @@ export function getStaticPaths() {
 const { p } = Astro.props;
 const n = pad(p.pieceNo);
 const imgs = pieceImages(p.id, p.name);   // main flat lay first, then any detail shots
-const shots: Shot[] = await Promise.all(imgs.map(async (x) => {
+type Src = ReturnType<typeof pieceImages>[number];
+const toShots = (list: Src[]): Promise<Shot[]> => Promise.all(list.map(async (x) => {
   const pic = await toPic(x, [480, 800, 1080, 1600]);
   const full = await toPic(x, [2000]);
-  return { label: x.label, alt: x.alt, src: pic?.src, srcset: pic?.srcset, full: full?.src, w: pic?.w, h: pic?.h };
+  const th = await toPic(x, [160]);
+  return { label: x.label, alt: x.alt, src: pic?.src, srcset: pic?.srcset, full: full?.src, thumb: th?.src, w: pic?.w, h: pic?.h };
 }));
+// One photo set per colourway; a piece without colourways has a single set.
+const sets: ShotSet[] = p.variants
+  ? await Promise.all(p.variants.map(async (v, k) => ({ key: v.key, colour: v.colour, shots: await toShots(variantImages(p.id, p.name, v.key, k === 0, v.colour)) })))
+  : [{ key: "main", colour: "", shots: await toShots(imgs) }];
+const swatches: Swatch[] | undefined = p.variants?.map((v, k) => ({ key: v.key, colour: v.colour, size: v.size, thumb: sets[k].shots[0]?.thumb }));
 const thumb = (await toPic(imgs[0], [160]))?.src;
 const share = (await toPic(imgs[0], [1200]))?.src;
 const sig = getSignals(p.pieceNo);
@@ -50,40 +59,44 @@ const jsonLd = {
     availability: p.sold ? "https://schema.org/SoldOut" : "https://schema.org/InStock", itemCondition: "https://schema.org/NewCondition" },
 };
 ---
-<Base title={`${p.name} · Piece ${n} · Bruffles Apparel`} description={p.description} world="bf" image={share}>
+<Base title={`${p.maker} ${p.name} · Bruffles Apparel`} description={p.description} world="bf" image={share} shop>
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
-  {!p.sold && <MiniBuyBar client:idle id={p.id} name={p.name} num={n} priceUsd={p.priceUsd} thumb={thumb} />}
+  {!p.sold && !swatches && <MiniBuyBar client:idle id={p.id} name={p.name} num={n} priceUsd={p.priceUsd} thumb={thumb} />}
   <div class="bf pb-24 md:pb-0">
-    <article class="wrap pt-20 md:pt-24 md:grid md:grid-cols-12 md:gap-12">
-      <div class="md:col-span-7 lg:col-span-8"><Gallery client:visible shots={shots} sold={p.sold} num={n} /></div>
+    <article class="wrap pt-[160px] md:pt-[176px] md:grid md:grid-cols-12 md:gap-12">
+      <div class="md:col-span-7 lg:col-span-7"><div class="md:sticky md:top-[168px]"><PieceGallery client:load sets={sets} sold={p.sold} /></div></div>
 
-      <div class="md:col-span-5 lg:col-span-4 mt-8 md:mt-0">
-        <div class="md:sticky md:top-24 pb-8">
-          <nav class="ui text-[12px] text-ink-soft" aria-label="Breadcrumb"><a href="/" class="hover:text-ink">Home</a> <span aria-hidden>/</span> <a href="/bruffles" class="hover:text-ink">Bruffles</a> <span aria-hidden>/</span> <span aria-current="page">Piece {n}</span></nav>
-          <div class="mt-6 flex items-end justify-between gap-4">
-            <span class="num-bf text-[72px] md:text-[96px]" aria-hidden>{n}</span>
-            {p.sold ? <span class="ui text-[12px] text-gold-text border border-gold-deep/60 px-3 py-1 rounded-full mb-2">Gone · Found its owner</span> : <span class="label-bf text-gold-text border border-gold-deep/60 px-2 py-1 mb-2">1 of 1</span>}
+      <div class="md:col-span-5 lg:col-span-4 lg:col-start-9 mt-8 md:mt-0">
+        <div class="pb-8">
+          <nav class="ui text-[12px] text-ink-soft" aria-label="Breadcrumb"><a href="/" class="hover:text-ink">Home</a> <span aria-hidden>/</span> <a href="/bruffles" class="hover:text-ink">Bruffles</a> <span aria-hidden>/</span> <span aria-current="page">{p.name}</span></nav>
+          <div class="mt-6 flex items-start justify-between gap-4">
+            <p class="ui text-[13px] text-gold-text">{p.maker} · {p.condition}</p>
+            {p.sold ? <span class="ui text-[12px] text-gold-text border border-gold-deep/60 px-3 py-1 rounded-full shrink-0">Gone · Found its owner</span> : <span class="label-bf text-gold-text border border-gold-deep/60 px-2 py-1 shrink-0">1 of 1</span>}
           </div>
-          <p class="ui text-[13px] text-ink-soft mt-6">{p.maker} · {p.condition}</p>
-          <h1 class="h-bf text-[32px] md:text-[40px] mt-2">{p.name}</h1>
-          {!p.sold && <p class="ui mt-4 text-[20px] tabular-nums">{formatPrice(p.priceUsd)}</p>}
+          <h1 class="h-bf text-[32px] md:text-[40px] mt-2"><span class="sr-only">{p.maker} </span>{p.name}</h1>
+          {!p.sold && <p class="ui mt-4 text-[20px] tabular-nums" data-usd={p.priceUsd}>{formatPrice(p.priceUsd)}</p>}
           {!p.sold && <div class="mt-2"><DemandLine client:idle id={p.id} bags={sig.bags} saves={sig.saves} /></div>}
 
-          <div class="mt-8">
-            <p class="ui text-[13px]">Size: <span class="text-ink-soft">{p.size}</span></p>
-            <div class="mt-3 flex">
-              <span class:list={["ui text-[13px] min-h-12 px-5 grid place-items-center border", p.sold ? "border-hair text-ink-soft line-through" : "border-ink bg-ink text-bone"]}>{p.size} · the only one</span>
-            </div>
-          </div>
-
-          <div id="buy-main" class="mt-6 space-y-3">
-            {p.sold
-              ? <RequestBack client:idle id={p.id} requests={sig.requests} size={p.size} />
-              : <><AddPiece client:load id={p.id} name={p.name} priceUsd={p.priceUsd} sold={p.sold} />
-                  <p class="text-[13px] text-ink-soft">One piece. First to check out gets it.</p>
-                  <AskPiece client:idle num={n} /></>}
-            {p.sold && <a href="#drop-alerts" class="ui text-[13px] inline-block underline underline-offset-4 decoration-hair hover:decoration-ink">Get the next drop first</a>}
-          </div>
+          {!p.sold && swatches ? (
+            <div class="mt-8"><VariantPicker client:load id={p.id} name={p.name} priceUsd={p.priceUsd} swatches={swatches} /></div>
+          ) : (
+            <>
+              <div class="mt-8">
+                <p class="ui text-[13px]">Size: <span class="text-ink-soft">{p.size}</span></p>
+                <div class="mt-3 flex">
+                  <span class:list={["ui text-[13px] min-h-12 px-5 grid place-items-center border", p.sold ? "border-hair text-ink-soft line-through" : "border-ink bg-ink text-bone"]}>{p.size} · the only one</span>
+                </div>
+              </div>
+              <div id="buy-main" class="mt-6 space-y-3">
+                {p.sold
+                  ? <RequestBack client:idle id={p.id} requests={sig.requests} size={p.size} />
+                  : <><AddPiece client:load id={p.id} name={p.name} priceUsd={p.priceUsd} sold={p.sold} />
+                      <p class="text-[13px] text-ink-soft">One piece. First to check out gets it.</p></>}
+                {p.sold && <a href="#drop-alerts" class="ui text-[13px] inline-block underline underline-offset-4 decoration-hair hover:decoration-ink">Get the next drop first</a>}
+              </div>
+            </>
+          )}
+          {!p.sold && <div class="mt-3"><AskPiece client:idle num={n} /></div>}
 
           <div class="mt-8">
             <p class="text-ink-soft">{p.description}</p>

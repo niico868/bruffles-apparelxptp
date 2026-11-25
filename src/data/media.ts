@@ -62,6 +62,17 @@ export function pieceImages(id: string, name: string) {
   return [main, ...details];
 }
 
+// Photos for one colourway of a piece. The first colourway is the piece's own photos; others
+// live in pieces/<ID>-<key>/, numbered in gallery order with the label after the number.
+export function variantImages(id: string, name: string, key: string, first: boolean, colour: string) {
+  if (first) return pieceImages(id, name).map((x) => ({ ...x, alt: `${x.alt}, ${colour.toLowerCase()}` }));
+  const prefix = `../assets/media/pieces/${id}-${key}/`;
+  return Object.keys(files).filter((k) => k.startsWith(prefix)).sort().map((k) => {
+    const slug = k.slice(prefix.length).replace(/\.\w+$/, "").replace(/^\d+-/, "");
+    return { label: label(slug), image: files[k].default, alt: `${name}, ${colour.toLowerCase()}, ${label(slug).toLowerCase()}` };
+  });
+}
+
 // Passport product photos: one per item, named by item ID: src/assets/media/passport/PTP-12.jpg.
 // Styled on warm wood; flat items shot from above, standing items from the front.
 export const passportImage = (id: string, name: string) => ({ image: findImage(`passport/${id}`), alt: `${name}, product photo on wood` });

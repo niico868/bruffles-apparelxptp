@@ -2,13 +2,40 @@
 // Sticky header. Transparent over the homepage hero (text uses difference blending so it reads on
 // both bone and charcoal), solid once you scroll. Brand switch, bag count and a menu drawer.
 import CartCount from "./CartCount";
-const { world = "home" } = Astro.props as { world?: "home" | "bf" | "pp" };
+import ShopSearch, { type SearchItem } from "./ShopSearch";
+import { bruffles, passport } from "../data/products";
+import { getDemo } from "../data/demo-signals";
+// shop: the product-page header (Divine's reference, 2026-11-25): navy promo bar with gold text,
+// Bruffles monogram top centre, search / account / language / currency / bag on the right, and a
+// second row with Featured and Brand menus.
+const { world = "home", shop = false } = Astro.props as { world?: "home" | "bf" | "pp"; shop?: boolean };
+const brands = [...new Set(bruffles.filter((p) => !p.sold).map((p) => p.maker))].sort();
+const searchItems: SearchItem[] = [
+  ...bruffles.map((p) => ({ name: p.name, maker: p.maker, href: `/bruffles/${p.id}`, tag: p.sold ? "Bruffles · gone" : "Bruffles · 1 of 1" })),
+  ...passport.map((p) => ({ name: p.name, maker: "Passport", href: `/passport/${p.id}`, tag: "Passport · 18+" })),
+];
+const { currentDrop } = getDemo();
+const promos = [
+  `Next drop: ${currentDrop.next}`,
+  "Every piece bought from the brand's official store",
+  "One of one. When it's gone, it's gone",
+];
 const lockup = world === "bf" ? "BA" : world === "pp" ? "PTP" : "BA × PTP";
 const seg = (w: "bf" | "pp") => world === w ? "bg-current/0 underline underline-offset-[6px] decoration-1" : "opacity-70 hover:opacity-100";
 ---
-<header id="site-header" data-world={world} data-transparent={world === "home" ? "true" : "false"}
-  class="site-header fixed top-0 inset-x-0 z-40 h-16 transition-[background-color,border-color,height] duration-500">
-  <nav class="wrap h-full grid grid-cols-[1fr_auto_1fr] items-center" aria-label="Main">
+{shop && (
+  <div id="promo" class="fixed top-0 inset-x-0 z-50 h-9 bg-navy text-gold" role="region" aria-label="Announcements">
+    <div class="wrap h-full flex items-center justify-between gap-4">
+      <button type="button" class="promo-prev w-8 h-8 grid place-items-center" aria-label="Previous announcement">‹</button>
+      <p class="promo-text ui text-[12px] md:text-[13px] tracking-[0.08em] uppercase text-center truncate" aria-live="polite">{promos[0]}</p>
+      <button type="button" class="promo-next w-8 h-8 grid place-items-center" aria-label="Next announcement">›</button>
+    </div>
+    <script type="application/json" id="promo-data" set:html={JSON.stringify(promos)} />
+  </div>
+)}
+<header id="site-header" data-world={world} data-transparent={world === "home" && !shop ? "true" : "false"} data-shop={shop ? "true" : undefined}
+  class:list={["site-header fixed inset-x-0 z-40 transition-[background-color,border-color,height] duration-500", shop ? "top-9" : "top-0 h-16"]}>
+  <nav class:list={["wrap grid grid-cols-[1fr_auto_1fr] items-center", shop ? "h-16" : "h-full"]} aria-label="Main">
     <div class="flex items-center gap-6">
       <button type="button" class="menu-open ui min-h-12 -ml-2 px-2 flex items-center gap-2" aria-haspopup="dialog" aria-controls="menu" aria-label="Menu">
         <span aria-hidden class="grid gap-[5px]"><span class="block w-5 h-px bg-current"></span><span class="block w-5 h-px bg-current"></span></span>
@@ -20,9 +47,53 @@ const seg = (w: "bf" | "pp") => world === w ? "bg-current/0 underline underline-
         <a href="/passport" class:list={["px-3 py-2", seg("pp")]} aria-current={world === "pp" ? "page" : undefined}>Shop Passport</a>
       </div>
     </div>
-    <a href="/" class:list={["text-[20px] whitespace-nowrap", world === "pp" ? "h-pp" : "h-bf"]} aria-label={`${lockup}, home`}>{lockup}</a>
-    <div class="flex justify-end ui"><CartCount client:load /></div>
+    {shop
+      ? <a href="/" aria-label="Bruffles Apparel, home"><img src="/brand/bruffles-monogram-gold-deep.webp" alt="" width="44" height="44" class="w-11 h-11" /></a>
+      : <a href="/" class:list={["text-[20px] whitespace-nowrap", world === "pp" ? "h-pp" : "h-bf"]} aria-label={`${lockup}, home`}>{lockup}</a>}
+    {shop ? (
+      <div class="flex justify-end items-center gap-0.5 md:gap-2 ui text-[13px]">
+        <ShopSearch client:idle items={searchItems} />
+        <details class="dd relative hidden sm:block">
+          <summary class="w-10 h-10 grid place-items-center cursor-pointer list-none" aria-label="Account">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>
+          </summary>
+          <div class="dd-panel right-0 w-60"><p class="font-semibold">Accounts open at launch</p><p class="text-ink-soft mt-1 normal-case tracking-normal">Saves, order history and your signed pieces will live here.</p></div>
+        </details>
+        <details class="dd relative hidden md:block">
+          <summary class="h-10 px-2 grid place-items-center cursor-pointer list-none" aria-label="Language: English">ENG</summary>
+          <div class="dd-panel right-0 w-44"><p aria-current="true">English ✓</p><p class="text-ink-soft mt-1 normal-case tracking-normal">More languages at launch.</p></div>
+        </details>
+        <details class="dd relative">
+          <summary class="h-10 px-2 grid place-items-center cursor-pointer list-none" aria-label="Currency"><span class="cur-label">US$</span></summary>
+          <div class="dd-panel right-0 w-44">
+            <button type="button" data-cur="USD" class="cur-opt block w-full text-left py-2 hover:text-gold-text">US$ · US dollar</button>
+            <button type="button" data-cur="TTD" class="cur-opt block w-full text-left py-2 hover:text-gold-text">TT$ · TT dollar</button>
+          </div>
+        </details>
+        <CartCount client:load icon />
+      </div>
+    ) : <div class="flex justify-end ui"><CartCount client:load /></div>}
   </nav>
+  {shop && (
+    <div class="wrap h-11 flex items-center gap-6 ui text-[13px] border-t border-hair">
+      <details class="dd relative">
+        <summary class="cursor-pointer list-none flex items-center gap-1 font-semibold">Featured <span aria-hidden>▾</span></summary>
+        <ul class="dd-panel left-0 w-56 space-y-2">
+          <li><a href="/bruffles" class="hover:text-gold-text">Latest pieces</a></li>
+          <li><a href="/bruffles#drop-log" class="hover:text-gold-text">Drop Log</a></li>
+          <li><a href="/bruffles/archive" class="hover:text-gold-text">The archive</a></li>
+          <li><a href="/#wall" class="hover:text-gold-text">Customer Verified wall</a></li>
+        </ul>
+      </details>
+      <details class="dd relative">
+        <summary class="cursor-pointer list-none flex items-center gap-1 font-semibold">Brand <span aria-hidden>▾</span></summary>
+        <ul class="dd-panel left-0 w-56 space-y-2">
+          {brands.map((b) => <li><a href={`/bruffles?brand=${encodeURIComponent(b)}`} class="hover:text-gold-text">{b}</a></li>)}
+          <li class="pt-2 border-t border-hair"><a href="/bruffles" class="hover:text-gold-text">All brands</a></li>
+        </ul>
+      </details>
+    </div>
+  )}
 </header>
 
 <dialog id="menu" class="menu m-0 h-full max-h-none w-full max-w-[420px] bg-bone text-ink p-0 backdrop:bg-ink/40">
@@ -53,7 +124,11 @@ const seg = (w: "bf" | "pp") => world === w ? "bg-current/0 underline underline-
   /* Over the hero: no fill, white text with difference blending = dark on bone, light on charcoal */
   .site-header[data-transparent="true"]:not(.is-solid) { background: transparent; border-color: transparent; color: #fff; mix-blend-mode: difference; }
   /* KOI-style: once you scroll, the bar gets slightly shorter (one change, not per frame) */
-  .site-header.is-compact { height: 56px; }
+  .site-header.is-compact:not([data-shop]) { height: 56px; }
+  .site-header[data-shop] { background: #fff; }
+  .dd > summary::-webkit-details-marker { display: none; }
+  .dd-panel { position: absolute; top: calc(100% + 6px); z-index: 60; background: #fff; color: var(--color-ink); border: 1px solid var(--color-hair);
+    box-shadow: 0 8px 24px rgb(28 26 23 / .08); padding: 14px 16px; text-transform: uppercase; letter-spacing: .04em; font-size: 12px; }
   .menu[open] { animation: menu-in .6s var(--ease-calm); }
   @keyframes menu-in { from { transform: translateX(-100%); } to { transform: none; } }
 </style>
@@ -65,6 +140,33 @@ const seg = (w: "bf" | "pp") => world === w ? "bg-current/0 underline underline-
     const set = () => h.classList.toggle("is-solid", window.scrollY > window.innerHeight * 0.85);
     set(); addEventListener("scroll", set, { passive: true });
   }
+  // Product-page extras: rotating promo bar, one dropdown open at a time, currency switch.
+  const promoData = document.getElementById("promo-data");
+  if (promoData) {
+    const list: string[] = JSON.parse(promoData.textContent || "[]"); let k = 0;
+    const text = document.querySelector(".promo-text")!;
+    const show = (d: number) => { k = (k + d + list.length) % list.length; text.textContent = list[k]; };
+    document.querySelector(".promo-prev")?.addEventListener("click", () => show(-1));
+    document.querySelector(".promo-next")?.addEventListener("click", () => show(1));
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) setInterval(() => show(1), 6000);
+  }
+  const dds = [...document.querySelectorAll<HTMLDetailsElement>("details.dd")];
+  dds.forEach((d) => d.addEventListener("toggle", () => { if (d.open) dds.forEach((o) => o !== d && (o.open = false)); }));
+  document.addEventListener("click", (e) => dds.forEach((d) => { if (d.open && !d.contains(e.target as Node)) d.open = false; }));
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") dds.forEach((d) => (d.open = false)); });
+  // Currency: prices carry data-usd (US cents); TT$ uses the placeholder rate in src/lib/price.ts.
+  const RATE = 6.78;
+  const fmt = (c: number, cur: string) => cur === "TTD"
+    ? "TT$" + Math.round((c / 100) * RATE).toLocaleString("en-US")
+    : "US$" + Math.round(c / 100).toLocaleString("en-US");
+  const setCur = (cur: string) => {
+    try { localStorage.setItem("ba-currency", cur); } catch {}
+    document.querySelectorAll<HTMLElement>("[data-usd]").forEach((el) => (el.textContent = fmt(+el.dataset.usd!, cur)));
+    document.querySelectorAll(".cur-label").forEach((el) => (el.textContent = cur === "TTD" ? "TT$" : "US$"));
+  };
+  let saved = "USD"; try { saved = localStorage.getItem("ba-currency") || "USD"; } catch {}
+  if (saved !== "USD") setCur(saved);
+  document.querySelectorAll<HTMLButtonElement>(".cur-opt").forEach((b) => b.addEventListener("click", () => { setCur(b.dataset.cur!); dds.forEach((d) => (d.open = false)); }));
   const menu = document.getElementById("menu") as HTMLDialogElement;
   document.querySelector(".menu-open")?.addEventListener("click", () => menu.showModal());
   document.querySelector(".menu-close")?.addEventListener("click", () => menu.close());

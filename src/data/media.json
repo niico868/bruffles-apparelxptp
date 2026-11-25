@@ -46,16 +46,16 @@
   "ppTwoUp": [
     {
       "file": "home/pp-1",
-      "alt": "Plain kraft paper booklets, a tan leather travel wallet, rope and a seashell under a dried palm frond on a walnut table.",
+      "alt": "Passport to Paradise pre-rolled tubes spilling across a bamboo tray branded with the Passport to Paradise logo, on a wooden table.",
       "focal": "50% 50%",
-      "button": "Shop papers [CLIENT TO CONFIRM]",
+      "button": "Shop trays",
       "href": "/passport"
     },
     {
       "file": "home/pp-2",
-      "alt": "A brass grinder, an aluminium tin and a black rolling tray with sunglasses on a folded travel map, on a walnut table.",
+      "alt": "A green and white ceramic ashtray shaped like a plane, lettered 'your passport to a stress free zone', on a wooden table.",
       "focal": "50% 50%",
-      "button": "Shop tools [CLIENT TO CONFIRM]",
+      "button": "Shop ornaments",
       "href": "/passport"
     }
   ]

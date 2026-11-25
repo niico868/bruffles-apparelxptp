@@ -1,28 +1,29 @@
 ---
 // Homepage teaser for "The Hunt", under How authenticity works: the tag, the receipt, the check.
-// Each links to /bruffles. The receipt's print is blurred in CSS (no readable text on the page).
+// Each links to /bruffles. Photos supplied by Divine (2026-11-25). Three equal tiles: the outer two
+// sit on the far edges and the gaps grow evenly as the page widens.
 import Img from "./Img.astro";
 import { toPic } from "../lib/pic";
 import { asset } from "../data/assets";
 const tiles = [
   { cap: "The tag", pic: await toPic(asset("hunt-label", "hunt/hunt-label"), [480, 800, 1200]), cls: "" },
-  { cap: "The receipt", pic: await toPic(asset("hunt-receipt", "hunt/hunt-receipt"), [480, 800, 1200]), cls: "receipt-blur" },
+  { cap: "The receipt", pic: await toPic(asset("hunt-receipt", "hunt/hunt-receipt"), [480, 800, 1200]), cls: "" },
   { cap: "The check", pic: await toPic(asset("hunt-stitching", "hunt/hunt-stitching"), [480, 800, 1200]), cls: "" },
 ];
 ---
 <section class="bf pt-10 md:pt-12 pb-16 md:pb-24" aria-labelledby="hunt-teaser">
   <div class="wrap">
     <h2 id="hunt-teaser" class="sr-only">The hunt behind every piece</h2>
-    <ul class="grid grid-cols-3 gap-2 md:gap-6">
+    <ul class="flex justify-between gap-2">
       {tiles.map((t, i) => (
-        <li class="rise" style={`--i:${i}`}>
+        <li class="rise w-[32%] md:w-[min(30%,400px)]" style={`--i:${i}`}>
           <a href="/bruffles" class="group/t block">
             <div class="relative aspect-[4/5] overflow-hidden ph-bf">
               <div class="absolute inset-0 transition-transform duration-[900ms] ease-[var(--ease-calm)] group-hover/t:scale-[1.03]">
-                <Img pic={t.pic} sizes="(min-width: 768px) 30vw, 33vw" class={t.cls} label={t.cap} />
+                <Img pic={t.pic} sizes="(min-width: 1340px) 400px, (min-width: 768px) 30vw, 33vw" class={t.cls} label={t.cap} />
               </div>
             </div>
-            <p class="ui text-[12px] md:text-[13px] mt-3 group-hover/t:underline underline-offset-4 decoration-hair">{t.cap}</p>
+            <p class="label-bf text-gold-text !text-[12px] md:!text-[13px] mt-3 group-hover/t:underline underline-offset-4 decoration-gold-deep/50">{t.cap}</p>
           </a>
         </li>
       ))}

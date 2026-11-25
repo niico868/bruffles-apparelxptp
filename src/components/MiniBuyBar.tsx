@@ -13,11 +13,11 @@ export default function MiniBuyBar({ id, name, num, priceUsd, thumb }: { id: str
     io.observe(target); return () => io.disconnect();
   }, []);
   return (
-    <div aria-hidden={!show} className={`hidden md:block fixed inset-x-0 top-14 z-30 bg-bone/95 backdrop-blur border-b border-hair transition-transform duration-500 ease-[var(--ease-calm)] ${show ? "translate-y-0" : "-translate-y-[200%]"}`}>
+    <div aria-hidden={!show} className={`hidden md:block fixed inset-x-0 top-[144px] z-30 bg-white/95 backdrop-blur border-b border-hair transition-transform duration-500 ease-[var(--ease-calm)] ${show ? "translate-y-0" : "-translate-y-[200%]"}`}>
       <div className="wrap h-16 flex items-center gap-4">
-        <div className="w-10 h-[50px] ph-bf overflow-hidden shrink-0">{thumb && <img src={thumb} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover" />}</div>
-        <p className="ui text-[13px] min-w-0 truncate"><span className="num-bf text-[20px] mr-2 normal-case">{num}</span>{name}</p>
-        <p className="ui ml-auto tabular-nums">{formatPrice(priceUsd)}</p>
+        <div className="w-10 h-[50px] bg-white overflow-hidden shrink-0">{thumb && <img src={thumb} alt="" loading="lazy" decoding="async" className="w-full h-full object-contain" />}</div>
+        <p className="ui text-[13px] min-w-0 truncate">{name}</p>
+        <p className="ui ml-auto tabular-nums" data-usd={priceUsd}>{formatPrice(priceUsd)}</p>
         <button tabIndex={show ? 0 : -1} disabled={added} onClick={() => { addToCart({ id, name, priceUsd }); setAdded(true); }}
           className="btn-bf label-bf !min-h-10 disabled:bg-gold disabled:text-ink">{added ? "In your bag" : "Add to bag"}</button>
       </div>

@@ -123,3 +123,9 @@ Local dev on the Chromebook is not needed: preview on the .workers.dev link inst
 - Customer Verified wall (CustomerWall, WallCard, `src/data/wall.ts`), signatures built at build time from two script fonts (`scripts/make-signatures.mjs`), /verify/[piece] demo sign page (signature_pad).
 - /bruffles order: Drop Log, available pieces, compact wall, archive strip. Product pages: "Where we found it" (`src/data/hunt.ts`). Homepage: hero, Latest, authenticity steps, Hunt teaser, Shop Passport, wall.
 - Stock photos logged in `public/media/manifest.json` and /credits. Review log: `docs/review-log.md`.
+
+## Session 15 · Divine's round 2: hero names, gold, BAPE product page
+- Hero names in normal capitals ("Bruffles Apparel", "Passport to Paradise"). Big piece numbers removed from tiles, cards, gallery and product page.
+- Homepage: gold eyebrows/links/maker lines on Bruffles sections; Latest pieces = BA-047 BAPE Mesh Cropped Fit L/S + BA-045 Polo RL Colorblock Split T-Shirt; new "Authenticity matters" heading; Hunt teaser photos (tag, receipt, check) supplied by Divine, three equal tiles pinned to the outer edges; Passport two-up = tray + ornament ("Shop trays", "Shop ornaments").
+- Wall: H2 "Sign of authenticity", "Real recognize real." as a smaller line, "Authenticated!" stamp under every signature (seeded spot and tilt).
+- Product pages (`shop` flag on Base): white page, navy promo bar with gold rotating messages, monogram top centre, search (ShopSearch), account / ENG / currency (US$ or TT$ via data-usd) / bag icon, Featured and Brand menus (Brand links to /bruffles?brand=). PieceGallery: view list on the left, big photo; VariantPicker: colour swatches, each colourway its own size (BAPE red/black M, blue/white L). Photos from Divine's Archive (9).zip in pieces/BA-047/ and pieces/BA-047-blue/.

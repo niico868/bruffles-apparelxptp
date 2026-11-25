@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-export type Shot = { label: string; alt: string; src?: string; srcset?: string; full?: string; w?: number; h?: number };
+export type Shot = { label: string; alt: string; src?: string; srcset?: string; full?: string; thumb?: string; w?: number; h?: number };
 
 // KOI-style gallery (today each piece has one flat lay; it still handles several if that changes). Desktop: first photo full width, then a two-column grid, scrolled past the
 // sticky buy column. Phone: a swipe strip with a counter. Any photo opens a full-screen viewer
@@ -28,7 +28,6 @@ export default function Gallery({ shots, sold = false, num }: { shots: Shot[]; s
             className={`absolute inset-0 w-full h-full object-cover ${sold ? "gone-img" : ""}`} />
         </button>
       ) : <span className="absolute left-4 top-4 label-bf text-ink-soft">Photo · {s.label}</span>}
-      {n === 0 && !s.src && <span aria-hidden className="absolute right-4 bottom-2 num-bf text-[96px] text-ink/10">{num}</span>}
       {n === 0 && sold && <span aria-hidden className="gone-stamp right-4 top-4 !w-20 !h-20 !text-[14px]">Gone</span>}
     </div>
   );

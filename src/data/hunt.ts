@@ -2,6 +2,7 @@
 // Pick notes are placeholders in the owners' voice: [CLIENT TO CONFIRM] before launch.
 export const sourceSite: Record<string, string> = {
   "Nike": "nike.com",
+  "BAPE": "bape.com",
   "Stüssy": "stussy.com",
   "Carhartt WIP": "carhartt-wip.com",
   "Fear of God": "fearofgod.com",
@@ -14,8 +15,8 @@ export const sourceSite: Record<string, string> = {
 export const batch = "11/2026";
 
 export const pickNote: Record<string, string> = {
-  "BA-047": "Tech fleece in heather grey, tags on, in a medium. That never sits on a shelf long.",
-  "BA-045": "Heavyweight pigment dye. It already looks broken in, and it isn't.",
+  "BA-047": "Mesh BAPE jersey in two colourways, one of each. Cropped and loud, made for a hot day out.",
+  "BA-045": "Navy and cream, split down the middle. A Polo tee that doesn't look like every other Polo tee.",
   "BA-044": "A clean coach jacket for rainy season. Plain, sharp, done.",
   "BA-042": "Black on black Yankees fitted, 7 3/8. Somebody's size is out there.",
   "BA-046": "Washed black cargos that sit right. We knew it wouldn't last a day.",
