@@ -27,9 +27,22 @@ export const media = {
   wall: raw.wall.map(fill),
 };
 
-// Product photos: ONE studio flat lay per piece (Divine, 2026-11-25), named by piece ID:
-// src/assets/media/pieces/BA-047.jpg. Used for the shop card, the product page and the share image.
-// A missing photo returns no image and the page shows its labelled placeholder.
-export function pieceImage(id: string, name: string) {
-  return { label: "Flat lay", image: findImage(`pieces/${id}`), alt: `${name}, studio flat lay` };
+// Bruffles product photos (Divine, 2026-11-25): one white-ground studio flat lay per piece, named by
+// piece ID: src/assets/media/pieces/BA-047.jpg. It is the shop card, the first gallery photo and the
+// share image. Optional detail shots for a piece's page go in a folder of the same name, numbered in
+// gallery order with the label after the number: pieces/BA-047/02-back.jpg, 03-zip.jpg ...
+// A missing main photo returns no image and the page shows its labelled placeholder.
+const label = (slug: string) => slug.replace(/-/g, " ").replace(/^./, (c) => c.toUpperCase());
+export function pieceImages(id: string, name: string) {
+  const main = { label: "Flat lay", image: findImage(`pieces/${id}`), alt: `${name}, studio flat lay on white` };
+  const prefix = `../assets/media/pieces/${id}/`;
+  const details = Object.keys(files).filter((k) => k.startsWith(prefix)).sort().map((k) => {
+    const slug = k.slice(prefix.length).replace(/\.\w+$/, "").replace(/^\d+-/, "");
+    return { label: label(slug), image: files[k].default, alt: `${name}, ${label(slug).toLowerCase()} detail` };
+  });
+  return [main, ...details];
 }
+
+// Passport product photos: one per item, named by item ID: src/assets/media/passport/PTP-12.jpg.
+// Styled on warm wood; flat items shot from above, standing items from the front.
+export const passportImage = (id: string, name: string) => ({ image: findImage(`passport/${id}`), alt: `${name}, product photo on wood` });

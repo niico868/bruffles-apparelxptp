@@ -3,16 +3,21 @@ import FlipPrice from "./FlipPrice";
 import { addToCart } from "../lib/cart";
 import { formatPrice } from "../lib/price";
 import type { PassportItem } from "../data/products";
+import type { Pic } from "../lib/pic";
 
 // Passport card on charcoal. "Add to bag" fires the passport stamp (see Stamp below).
-export default function PassportCard({ item }: { item: PassportItem }) {
+export default function PassportCard({ item, pic }: { item: PassportItem; pic?: Pic }) {
   const stamp = useRef<HTMLDivElement>(null);
   const out = item.qty === 0;
   const add = () => { slam(stamp.current); nudge(); addToCart({ id: item.id, name: item.name, priceUsd: item.priceUsd }); };
   return (
     <article className="group/pp relative bg-char-2">
       <a href={`/passport/${item.id}`} className="block relative aspect-[4/5] ph-pp overflow-hidden" aria-label={item.name}>
-        <span className="absolute left-3 top-3 label-pp text-muted">Photo</span>
+        {pic
+          ? <img src={pic.src} srcSet={pic.srcset} sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw" alt={pic.alt}
+              width={pic.w} height={pic.h} loading="lazy" decoding="async"
+              className={`absolute inset-0 w-full h-full object-cover ${out ? "grayscale opacity-60" : ""}`} style={{ objectPosition: pic.focal }} />
+          : <span className="absolute left-3 top-3 label-pp text-muted">Photo</span>}
         <span className="absolute right-3 top-3 label-pp bg-char text-signal px-2 py-1">{item.id}</span>
         <Stamp ref={stamp} />
       </a>

@@ -11,7 +11,7 @@ import MiniBuyBar from "../../components/MiniBuyBar";
 import Certificate from "../../components/Certificate.astro";
 import ProductTile from "../../components/ProductTile.astro";
 import { bruffles, pad } from "../../data/products";
-import { pieceImage } from "../../data/media";
+import { pieceImages } from "../../data/media";
 import { toPic } from "../../lib/pic";
 import { formatPrice } from "../../lib/price";
 
@@ -20,12 +20,14 @@ export function getStaticPaths() {
 }
 const { p } = Astro.props;
 const n = pad(p.pieceNo);
-const img = pieceImage(p.id, p.name);
-const pic = await toPic(img, [640, 1080, 1600]);
-const full = await toPic(img, [2000]);
-const shots: Shot[] = [{ label: img.label, alt: img.alt, src: pic?.src, srcset: pic?.srcset, full: full?.src, w: pic?.w, h: pic?.h }];
-const thumb = (await toPic(img, [160]))?.src;
-const share = (await toPic(img, [1200]))?.src;
+const imgs = pieceImages(p.id, p.name);   // main flat lay first, then any detail shots
+const shots: Shot[] = await Promise.all(imgs.map(async (x) => {
+  const pic = await toPic(x, [640, 1080, 1600]);
+  const full = await toPic(x, [2000]);
+  return { label: x.label, alt: x.alt, src: pic?.src, srcset: pic?.srcset, full: full?.src, w: pic?.w, h: pic?.h };
+}));
+const thumb = (await toPic(imgs[0], [160]))?.src;
+const share = (await toPic(imgs[0], [1200]))?.src;
 const more = bruffles.filter((x) => !x.sold && x.id !== p.id).slice(0, 4);
 const site = "https://bruffles-apparelxptp.neikoliaugustine.workers.dev";
 const jsonLd = {

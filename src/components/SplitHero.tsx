@@ -47,7 +47,8 @@ const MOVE_GAP_MS = 250;
 // Small text keeps a legibility floor so it never drops below ~10px.
 const scaled = (full: string, floor = "0px") => `max(${floor}, calc(${full} * var(--k)))`;
 
-export default function SplitHero({ media = {} }: { media?: { bf?: PanelMedia; pp?: PanelMedia } }) {
+// `featured` = the BA-047 flat lay shown in the open Bruffles panel (placeholder until it exists).
+export default function SplitHero({ media = {}, featured }: { media?: { bf?: PanelMedia; pp?: PanelMedia }; featured?: Pic }) {
   const reduce = useReducedMotion();
   const root = useRef<HTMLDivElement>(null);
   const desktop = useDesktop();
@@ -96,19 +97,25 @@ export default function SplitHero({ media = {} }: { media?: { bf?: PanelMedia; p
         <motion.div aria-hidden={active !== "bf"} className="absolute hidden md:block left-[44%] right-[31%] top-[18%] bottom-[16%]"
           initial={false} animate={{ opacity: active === "bf" ? 1 : 0, scale: active === "bf" ? 1 : 1.04 }}
           transition={{ ...t, delay: active === "bf" && !reduce ? 0.15 : 0 }}>
-          <div className="relative h-full ph-bf">
-            <span className="absolute right-4 bottom-3 num-bf text-[96px] text-ink/10" aria-hidden>047</span>
-            <span className="absolute left-4 top-4 label-bf text-ink-soft">Photo · piece 047</span>
-          </div>
+          <a href="/bruffles/BA-047" tabIndex={active === "bf" ? 0 : -1} className="relative block h-full ph-bf overflow-hidden">
+            {featured
+              ? <img src={featured.src} srcSet={featured.srcset} sizes="25vw" alt={featured.alt} width={featured.w} height={featured.h}
+                  loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover" />
+              : <><span className="absolute right-4 bottom-3 num-bf text-[96px] text-ink/10" aria-hidden>047</span>
+                  <span className="absolute left-4 top-4 label-bf text-ink-soft">Photo · piece 047</span></>}
+          </a>
           <p className={`mt-3 label-bf ${bfHas ? "text-bone/85" : "text-ink-soft"}`}>Piece 047 · Tech Fleece Windrunner</p>
         </motion.div>
 
         <div data-size={sizeOf("bf")}
           className="hero-copy relative md:absolute md:left-0 md:bottom-0 md:w-[42.857%] flex flex-col justify-end min-h-[70svh] md:min-h-0 px-[var(--spacing-gutter)] md:pr-[max(var(--spacing-gutter),calc(64px*var(--k)))] pt-24 pb-16">
-          {/* Phone: piece 047 placeholder until campaign photos arrive */}
-          {!bfHas && <div className="md:hidden relative w-[62%] aspect-[4/5] ph-bf self-end mb-auto mt-4">
-            <span className="absolute left-3 top-3 label-bf text-ink-soft">Photo · 047</span>
-            <span className="absolute right-3 bottom-1 num-bf text-[64px] text-ink/10" aria-hidden>047</span>
+          {/* Phone: featured piece 047 (until campaign photos arrive) */}
+          {!bfHas && <div className="md:hidden relative w-[62%] aspect-[4/5] ph-bf self-end mb-auto mt-4 overflow-hidden">
+            {featured
+              ? <img src={featured.src} srcSet={featured.srcset} sizes="62vw" alt={featured.alt} width={featured.w} height={featured.h}
+                  decoding="async" className="absolute inset-0 w-full h-full object-cover" />
+              : <><span className="absolute left-3 top-3 label-bf text-ink-soft">Photo · 047</span>
+                  <span className="absolute right-3 bottom-1 num-bf text-[64px] text-ink/10" aria-hidden>047</span></>}
           </div>}
           <p className={`relative label-bf rise ${bfHas ? "text-gold" : "text-gold-text mt-8 md:mt-0"}`}
             style={{ fontSize: scaled("13px", "10px") }}>1 of 1 · Restocked twice a month</p>
