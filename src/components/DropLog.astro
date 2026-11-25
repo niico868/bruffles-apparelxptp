@@ -1,0 +1,35 @@
+---
+// Drop Log (top of /bruffles): the current drop, a static next-drop date (no countdown), past drops,
+// and the alert sign-up. Every number comes from getDemo() in src/data/demo-signals.ts.
+// Next-drop date/time and the "1 hour early" promise: [CLIENT TO CONFIRM].
+import Img from "./Img.astro";
+import DropAlerts from "./DropAlerts";
+import { toPic } from "../lib/pic";
+import { asset } from "../data/assets";
+import { getDemo } from "../data/demo-signals";
+import { pad } from "../data/products";
+const { currentDrop: d, pastDrops } = getDemo();
+const pic = await toPic(asset("drop-log", "drop/drop-packing"), [640, 1080, 1600]);
+---
+<section class="bf" aria-labelledby="drop-log">
+  <div class="wrap pt-28 md:pt-36 pb-16 md:pb-24 md:grid md:grid-cols-12 md:gap-8 md:items-end">
+    <div class="md:col-span-6">
+      <p class="label-bf text-gold-text rise">Drop Log</p>
+      <h1 id="drop-log" class="h-bf text-[64px] md:text-[clamp(72px,9vw,128px)] mt-3 rise" style="--i:1">Drop <span class="num-bf">{pad(d.number)}</span></h1>
+      <p class="ui text-[14px] mt-5 rise" style="--i:2"><span class="tabular-nums">{d.pieces}</span> pieces <span aria-hidden="true">·</span> next drop <time>{d.next}</time></p>
+      <p class="sr-only">Bruffles Apparel: authentic menswear purchased from official brand stores. Every piece is one of one.</p>
+      <ul class="mt-8 flex flex-wrap gap-x-6 gap-y-2 demand !text-[12px] rise" style="--i:3" aria-label="Past drops">
+        {pastDrops.map((p) => <li class="tabular-nums">Drop {pad(p.number)} · {p.pieces} pieces · {p.gone} gone</li>)}
+      </ul>
+      <div class="mt-10 max-w-md rise" style="--i:4">
+        <p class="text-[15px]">Alert list gets in 1 hour early.</p>
+        <div class="mt-4"><DropAlerts client:visible /></div>
+      </div>
+    </div>
+    <div class="md:col-span-5 md:col-start-8 mt-12 md:mt-0">
+      <div class="wipe relative aspect-[4/5] md:aspect-[4/5] overflow-hidden">
+        <div class="absolute inset-0"><Img pic={pic} sizes="(min-width: 768px) 40vw, 100vw" label="Photo · packing a drop" eager /></div>
+      </div>
+    </div>
+  </div>
+</section>

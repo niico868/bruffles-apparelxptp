@@ -4,8 +4,9 @@ import Monogram from "./Monogram";
 import PlaneFlight from "./PlaneFlight";
 import FlipPrice from "./FlipPrice";
 import type { Pic } from "../lib/pic";
+import type { HeroVideo } from "../data/media";
 
-export type PanelMedia = { desktop?: Pic; mobile?: Pic; video?: string };
+export type PanelMedia = { desktop?: Pic; mobile?: Pic; video?: HeroVideo };
 
 /*
  * Homepage split hero: Bruffles Apparel (BA, left) and Passport to Paradise (PTP, right).
@@ -14,10 +15,13 @@ export type PanelMedia = { desktop?: Pic; mobile?: Pic; video?: string };
  *                     "open"  = this side takes 70% (computer: mouse over it; phone: tapped)
  *                     "shut"  = this side gets 30% (the other side is open)
  *
- *            corner logo   copy size            featured piece / hero film
- *   even     shown         full                 hidden / paused
- *   open     fades out     full                 shown  / plays (first time only, see videos)
- *   shut     shown         SHUT_K (about 38%)   hidden / paused
+ *            corner logo   copy size            hero film
+ *   even     shown         full                 paused
+ *   open     fades out     full                 plays (first time only, see videos)
+ *   shut     shown         SHUT_K (about 38%)   paused
+ *
+ * Bruffles panel = campaign film or still, monogram, headline, sub-line and one CTA ("Enter Bruffles").
+ * No product card in the hero (Divine, 2026-11-25): campaign imagery leads, products follow below.
  *
  * Computer (768px+): side by side. Two overlapping panels, each 70% of the hero wide. Only the
  * Passport panel and the seam layer move, and only with transform, so opening never triggers page
@@ -53,8 +57,7 @@ const MOVE_GAP_MS = 250;
 // Small text keeps a legibility floor so it never drops below ~10px.
 const scaled = (full: string, floor = "0px") => `max(${floor}, calc(${full} * var(--k)))`;
 
-// `featured` = the BA-047 flat lay shown in the open Bruffles panel (placeholder until it exists).
-export default function SplitHero({ media = {}, featured }: { media?: { bf?: PanelMedia; pp?: PanelMedia }; featured?: Pic }) {
+export default function SplitHero({ media = {} }: { media?: { bf?: PanelMedia; pp?: PanelMedia } }) {
   const reduce = useReducedMotion();
   const root = useRef<HTMLDivElement>(null);
   const desktop = useDesktop();
@@ -108,30 +111,16 @@ export default function SplitHero({ media = {}, featured }: { media?: { bf?: Pan
       <motion.section data-side="bf" aria-labelledby="hero-bf"
         className="bf relative basis-0 min-h-0 md:absolute md:inset-y-0 md:left-0 md:w-[70%] overflow-hidden"
         initial={false} animate={{ flexGrow: grow("bf") }} transition={t}>
-        <HeroMedia m={bf} eager scrim="from-ink/75" playOk={playOk} open={active === "bf"} videoRef={videos.bf} />
-
-        {/* Featured piece 047 (desktop): only while Bruffles is open at 70% */}
-        <motion.div aria-hidden={active !== "bf"} className="absolute hidden md:block left-[44%] right-[31%] top-[18%] bottom-[16%]"
-          initial={false} animate={{ opacity: active === "bf" ? 1 : 0, scale: active === "bf" ? 1 : 1.04 }}
-          transition={{ ...t, delay: active === "bf" && !reduce ? 0.15 : 0 }}>
-          <a href="/bruffles/BA-047" tabIndex={active === "bf" ? 0 : -1} className="relative block h-full ph-bf overflow-hidden">
-            {featured
-              ? <img src={featured.src} srcSet={featured.srcset} sizes="25vw" alt={featured.alt} width={featured.w} height={featured.h}
-                  loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover" />
-              : <><span className="absolute right-4 bottom-3 num-bf text-[96px] text-ink/10" aria-hidden>047</span>
-                  <span className="absolute left-4 top-4 label-bf text-ink-soft">Photo · piece 047</span></>}
-          </a>
-          <p className={`mt-3 label-bf ${bfHas ? "text-bone/85" : "text-ink-soft"}`}>Piece 047 · Tech Fleece Windrunner</p>
-        </motion.div>
+        <HeroMedia m={bf} eager scrim="from-ink/75" playOk={playOk} open={active === "bf"} videoRef={videos.bf} desktop={desktop} />
 
         <div data-size={sizeOf("bf")} className={`${COPY} md:pr-[max(var(--spacing-gutter),calc(64px*var(--k)))]`}>
-          <p className={`relative label-bf rise ${bfHas ? "text-gold" : "text-gold-text"}`} style={labelStyle}>1 of 1 · Restocked twice a month</p>
+          <Monogram tone={bfHas ? "bright" : "deep"} className="relative rise w-auto self-start" style={markStyle} />
           <h2 id="hero-bf" className={`relative rise h-koi ${bfHas ? "text-bone" : ""}`} style={{ ["--i" as string]: 1, ...headStyle }}>
             Bruffles<br className="hero-br" /> Apparel</h2>
           <p className={`hero-body relative rise ${bfHas ? "text-bone/85" : "text-ink-soft"}`} style={{ ["--i" as string]: 2, ...bodyStyle }}>
             Authentic pieces, one of each. When it's gone, it's gone.</p>
           <a href="/bruffles" className={`self-start label-bf ${bfHas ? "btn-bf !bg-bone !text-ink hover:!bg-gold" : "btn-bf"}`}
-            style={btnStyle}>Shop Bruffles</a>
+            style={btnStyle}>Enter Bruffles</a>
         </div>
       </motion.section>
 
@@ -140,13 +129,13 @@ export default function SplitHero({ media = {}, featured }: { media?: { bf?: Pan
         className="pp relative basis-0 min-h-0 md:absolute md:inset-y-0 md:left-1/2 md:w-[70%] overflow-hidden z-10"
         initial={false} animate={{ x: desktop ? `${(shift / PANEL) * 100}%` : 0, flexGrow: grow("pp") }} transition={t}
         style={{ willChange: "transform" }}>
-        <HeroMedia m={pp} scrim="from-char/85" playOk={playOk} open={active === "pp"} videoRef={videos.pp} />
+        <HeroMedia m={pp} scrim="from-char/85" tint="bg-char/40" playOk={playOk} open={active === "pp"} videoRef={videos.pp} desktop={desktop} />
         <PlaneFlight />
         {/* Runway dash pointing into Passport, starting at the seam */}
         <div aria-hidden className="hidden md:block absolute inset-y-0 left-2 border-l-2 border-dashed border-signal/40" />
         {/* Passport's stage piece (computer, until campaign media arrives): only while open at 70%,
             mirroring Bruffles' featured piece. The corner badge fades out as this fades in. */}
-        {!ppHas && <motion.img src="/brand/passport-badge.webp" alt="" aria-hidden width="594" height="505"
+        {!ppHas && <motion.img src="/brand/passport-badge-sm.webp" alt="" aria-hidden width="200" height="170"
           className="hidden md:block absolute left-[46%] top-[20%] w-[22%] max-w-[300px]"
           initial={false} animate={{ opacity: active === "pp" ? 0.95 : 0, scale: active === "pp" ? 1 : 1.04 }}
           transition={{ ...t, delay: active === "pp" && !reduce ? 0.15 : 0 }} />}
@@ -177,7 +166,7 @@ export default function SplitHero({ media = {}, featured }: { media?: { bf?: Pan
       </motion.div>
       {/* PTP logo: bottom right of the Passport half (the hero's bottom right corner) */}
       <CornerLogo show={active !== "pp"} t={t} className="z-30 right-[var(--spacing-gutter)] bottom-6 md:bottom-8">
-        <img src="/brand/passport-badge.webp" alt="" width="594" height="505" decoding="async" className={LOGO} />
+        <img src="/brand/passport-badge-sm.webp" alt="" width="200" height="170" decoding="async" className={LOGO} />
       </CornerLogo>
     </div>
   );
@@ -187,6 +176,8 @@ export default function SplitHero({ media = {}, featured }: { media?: { bf?: Pan
 // Copy block: phone = bottom of its panel; computer = bottom left, 30% of the hero wide (42.857% of a 70% panel).
 const COPY = "hero-copy relative h-full md:h-auto md:absolute md:left-0 md:bottom-0 md:w-[42.857%] flex flex-col justify-end px-[var(--spacing-gutter)] pt-20 pb-8 md:pt-24 md:pb-16";
 const labelStyle = { fontSize: scaled("13px", "10px") };
+// Bruffles monogram above the headline: same height as the label line it replaced, grown a little.
+const markStyle = { height: scaled("40px", "18px") };
 const headStyle = { fontSize: scaled("clamp(44px, 5.6vw, 108px)"), marginTop: scaled("12px") };
 const bodyStyle = { fontSize: scaled("16px", "11px"), marginTop: scaled("16px"), maxWidth: "30ch" };
 // Button: 48px tall at full size, never under 32px when shut.
@@ -228,8 +219,8 @@ function SeamMark({ onTap }: { onTap: () => void }) {
 // headline stays readable. Renders nothing until photos are added, so the placeholder design shows.
 // The film never autoplays by itself: useHeroVideos starts and stops it. It is only visible while
 // its side is open at 70%; otherwise the photo shows.
-function HeroMedia({ m, eager = false, scrim, playOk, open, videoRef }:
-  { m: PanelMedia; eager?: boolean; scrim: string; playOk: boolean; open: boolean; videoRef: RefObject<HTMLVideoElement | null> }) {
+function HeroMedia({ m, eager = false, scrim, tint, playOk, open, videoRef, desktop }:
+  { m: PanelMedia; eager?: boolean; scrim: string; tint?: string; playOk: boolean; open: boolean; videoRef: RefObject<HTMLVideoElement | null>; desktop: boolean }) {
   const [ready, setReady] = useState(false);
   const d = m.desktop ?? m.mobile, mob = m.mobile ?? m.desktop;
   if (!d || !mob) return null;
@@ -242,10 +233,17 @@ function HeroMedia({ m, eager = false, scrim, playOk, open, videoRef }:
           className="absolute inset-0 w-full h-full object-cover" style={{ objectPosition: d.focal }} />
       </picture>
       {m.video && playOk && (
-        <video ref={videoRef} src={m.video} muted loop playsInline preload="metadata" aria-hidden onCanPlay={() => setReady(true)}
+        // Phone and computer get their own crop; key forces a reload if the layout switches.
+        <video key={desktop ? "d" : "m"} ref={videoRef} muted loop playsInline preload={desktop ? "metadata" : "none"} aria-hidden onCanPlay={() => setReady(true)}
+          poster={desktop ? m.video.poster : undefined}
           className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${open && ready ? "opacity-100" : "opacity-0"}`}
-          style={{ objectPosition: d.focal }} />
+          style={{ objectPosition: d.focal }}>
+          {(desktop ? m.video.webm : m.video.mobileWebm ?? m.video.webm) && <source src={desktop ? m.video.webm : m.video.mobileWebm ?? m.video.webm} type="video/webm" />}
+          <source src={desktop ? m.video.mp4 : m.video.mobileMp4 ?? m.video.mp4} type="video/mp4" />
+        </video>
       )}
+      {/* Passport grade: a flat charcoal layer (40%) over the duotone media keeps white and yellow type at WCAG AA */}
+      {tint && <div className={`absolute inset-0 ${tint}`} />}
       <div className={`absolute inset-x-0 bottom-0 h-[60%] bg-gradient-to-t ${scrim} to-transparent`} />
       {/* Light top shade so the header reads over any photo */}
       <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-ink/45 to-transparent" />

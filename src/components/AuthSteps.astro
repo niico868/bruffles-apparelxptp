@@ -7,6 +7,8 @@ const steps = [
     icon: `<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6M9 16h3"/>` },
   { t: "Tag photo on every piece", d: "Each piece is photographed with its brand tag, so you see exactly what arrives.",
     icon: `<path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.5"/>` },
+  { t: "Sign on delivery", d: "Scan the card in your package, sign for your piece, and add a fit pic if you want.",
+    icon: `<path d="M3 17c3-1 4-6 6-6s1 5 3 5 2-3 4-3 2 2 5 2"/><path d="M3 21h18"/>` },
 ];
 const { heading = true, strip = false } = Astro.props as { heading?: boolean; strip?: boolean };
 ---
@@ -14,7 +16,7 @@ const { heading = true, strip = false } = Astro.props as { heading?: boolean; st
 <section class="bf border-y border-hair" aria-labelledby="auth-how">
   <div class="wrap py-10 md:py-12 md:grid md:grid-cols-12 md:gap-8 md:items-center">
     <h2 id="auth-how" class="label-bf text-gold-text md:col-span-2 rise">How authenticity works</h2>
-    <ol class="mt-6 md:mt-0 md:col-span-8 grid gap-6 md:grid-cols-3">
+    <ol class="mt-6 md:mt-0 md:col-span-8 grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
       {steps.map((s, i) => (
         <li class="flex items-baseline gap-4 rise" style={`--i:${i + 1}`}>
           <span class="num-bf text-[40px] text-gold-deep">0{i + 1}</span>
@@ -33,7 +35,7 @@ const { heading = true, strip = false } = Astro.props as { heading?: boolean; st
       <h2 id="auth-how" class="h-bf text-[40px] md:text-[64px] mt-2 md:col-span-7 rise" style="--i:1">How authenticity works</h2>
       {heading && <a href="/authenticity" class="label-bf md:col-span-5 md:text-right hover:text-gold-text inline-block mt-4 md:mt-0 rise" style="--i:2">Read the full sourcing promise</a>}
     </div>
-    <ol class="mt-16 grid gap-px bg-hair border border-hair md:grid-cols-3">
+    <ol class="mt-16 grid gap-px bg-hair border border-hair md:grid-cols-2 lg:grid-cols-4">
       {steps.map((s, i) => (
         <li class="bg-bone p-8 md:p-12 rise" style={`--i:${i}`}>
           <div class="flex items-center justify-between">

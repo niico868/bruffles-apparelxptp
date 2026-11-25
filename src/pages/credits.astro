@@ -1,0 +1,29 @@
+---
+// Credits: every stock, generated and sample asset, straight from public/media/manifest.json.
+import Base from "../layouts/Base.astro";
+import { assets } from "../data/assets";
+const link = (u: string) => u.startsWith("http") ? u.split(" and ") : [];
+---
+<Base title="Credits · Bruffles Apparel × Passport to Paradise" description="Where every photo and film on this demo came from." world="home">
+  <section class="bf">
+    <div class="wrap pt-32 md:pt-40 pb-[var(--spacing-section)] max-w-5xl">
+      <p class="label-bf text-gold-text">Credits</p>
+      <h1 class="h-bf text-[48px] md:text-[72px] mt-2">Photos, films and fonts</h1>
+      <p class="mt-6 text-ink-soft max-w-[60ch]">This is a demo. Stock photos are used under the Unsplash License; the Passport film is public domain (CC0). Images marked "AI-generated sample (Higgsfield), demo only" are placeholders and will be replaced with the store's own photos before launch.</p>
+      <ul class="mt-12 divide-y divide-hair border-y border-hair">
+        {assets.map((a) => (
+          <li class="py-6 md:grid md:grid-cols-12 md:gap-6">
+            <p class="ui text-[13px] md:col-span-3">{a.slot}</p>
+            <div class="md:col-span-9 mt-2 md:mt-0">
+              <p>{a.alt}</p>
+              <p class="mt-2 text-[14px] text-ink-soft">{a.author} · {a.licence}</p>
+              {link(a.sourceUrl).map((u) => <p class="text-[13px] mt-1 break-all"><a href={u} class="underline underline-offset-4 decoration-hair hover:decoration-ink" rel="noopener">{u}</a></p>)}
+              {!link(a.sourceUrl).length && <p class="text-[13px] mt-1 text-ink-soft">Source: {a.sourceUrl}</p>}
+              {"note" in a && a.note && <p class="text-[13px] mt-1 text-ink-soft">{a.note}</p>}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Base>

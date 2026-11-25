@@ -75,3 +75,9 @@ Reference: kidsofimmigrants.us, survey in project files `koi-merge/01-site-surve
 - **Film** (`Film.astro`): poster first, plays muted only on screen, one Pause/Play button; hidden until a film exists.
 - **Product page:** KOI gallery (first photo full width, 2-col grid, last photo full width when the rest don't pair) + full-screen viewer; single size box ("M · the only one", never a size grid); story box [CLIENT TO WRITE]; tabs (size & measurements / delivery / care); desktop sticky mini bar; certificate; "More 1 of 1s". Product JSON-LD (no ratings).
 - **Footer:** ink band (charcoal on Passport pages), link columns + drop alerts.
+
+## Wall, demand and archive (2026-11-25)
+- Demand line: 12px UI sans, tracking 0.04em, ink-soft, under the price. Hide bags at 0 and saves under 3. No hype words. Numbers only from `demo-signals.ts`.
+- Gone: grayscale + 55% opacity on a neutral ground, round gold "Gone" stamp at -8°.
+- Wall cards: white paper, 8px border, ~22% caption strip, 28px gold stamp at -8°, hang-tags with 8px punch hole. Seeded tilt -2° to +2°, drop 0 to 28px. Enter: fade + 12px rise, 700ms, ease [0.22,1,0.36,1], 80ms stagger; hover straightens and lifts 4px over 400ms. On phones the caption drops the brand to keep piece number and area.
+- Only show an area on the wall, never a full name.

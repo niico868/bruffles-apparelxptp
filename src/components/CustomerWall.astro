@@ -1,0 +1,35 @@
+---
+// Customer Verified wall (replaces the old five-photo "Real recognize real" grid, 2026-11-25).
+// Full version on the homepage (#wall); compact version (4 cards) on /bruffles.
+import WallCard from "./WallCard.astro";
+import { wall } from "../data/wall";
+import { getDemo } from "../data/demo-signals";
+const { compact = false } = Astro.props as { compact?: boolean };
+const cards = compact ? wall.slice(0, 4) : wall;
+const { signedFor } = getDemo();
+---
+<section id={compact ? "wall-compact" : "wall"} class="bf py-[var(--spacing-section)] scroll-mt-16" aria-labelledby={compact ? "wall-h-c" : "wall-h"}>
+  <div class="wrap md:flex md:items-end md:justify-between gap-6">
+    <div>
+      <p class="label-bf text-gold-text rise">Signed on delivery</p>
+      <h2 id={compact ? "wall-h-c" : "wall-h"} class="h-bf text-[32px] md:text-[48px] mt-2 rise" style="--i:1">Real recognize real.</h2>
+    </div>
+    <p class="ui text-[13px] text-ink-soft mt-4 md:mt-0 flex flex-wrap items-center gap-x-2 gap-y-1 md:justify-end rise" style="--i:2">
+      <span class="inline-flex items-center gap-2"><img src="/brand/bruffles-monogram-gold-deep.webp" alt="" aria-hidden="true" width="18" height="18" />Customer Verified</span>
+      <span aria-hidden="true">·</span><span><span class="tabular-nums">{signedFor}</span> pieces signed for</span></p>
+  </div>
+  <div class:list={["wrap mt-12 md:mt-16 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10 md:gap-x-8 md:gap-y-14 items-start", compact && "lg:grid-cols-4"]}>
+    {cards.map((c, i) => <WallCard card={c} i={i} />)}
+  </div>
+  <div class="wrap mt-16 md:mt-20 max-w-[60ch] md:max-w-none md:flex md:items-baseline md:justify-between gap-8">
+    {compact ? (
+      <a href="/#wall" class="ui underline underline-offset-4 decoration-hair hover:decoration-ink">See the full wall</a>
+    ) : (
+      <div>
+        <p class="text-[16px]">Got a piece? Scan the card in your package to sign for it.</p>
+        <a href="/#auth-how" class="ui inline-block mt-3 underline underline-offset-4 decoration-hair hover:decoration-ink">How Customer Verified works</a>
+      </div>
+    )}
+    <p class="mt-6 md:mt-0 text-[11px] text-ink-soft">Sample cards for the demo.</p>
+  </div>
+</section>

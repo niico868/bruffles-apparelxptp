@@ -21,14 +21,15 @@ export default function Gallery({ shots, sold = false, num }: { shots: Shot[]; s
   }, [open]);
 
   const shot = (s: Shot, n: number, sizes: string, tail = false) => (
-    <div className={`relative ${tail ? "aspect-[4/3]" : "aspect-[4/5]"} overflow-hidden ${s.src ? "" : "ph-bf"} ${sold ? "grayscale opacity-60" : ""}`}>
+    <div className={`relative ${tail ? "aspect-[4/3]" : "aspect-[4/5]"} overflow-hidden ${s.src ? "" : "ph-bf"}`}>
       {s.src ? (
         <button type="button" onClick={() => show(n)} className="absolute inset-0 w-full h-full cursor-zoom-in" aria-label={`Open photo: ${s.alt}`}>
-          <img src={s.src} srcSet={s.srcset} sizes={sizes} alt={s.alt} width={s.w} height={s.h} loading={n === 0 ? "eager" : "lazy"}
-            className="absolute inset-0 w-full h-full object-cover" />
+          <img src={s.src} srcSet={s.srcset} sizes={sizes} alt={s.alt} width={s.w} height={s.h} loading={n === 0 ? "eager" : "lazy"} fetchPriority={n === 0 ? "high" : undefined}
+            className={`absolute inset-0 w-full h-full object-cover ${sold ? "gone-img" : ""}`} />
         </button>
       ) : <span className="absolute left-4 top-4 label-bf text-ink-soft">Photo · {s.label}</span>}
       {n === 0 && !s.src && <span aria-hidden className="absolute right-4 bottom-2 num-bf text-[96px] text-ink/10">{num}</span>}
+      {n === 0 && sold && <span aria-hidden className="gone-stamp right-4 top-4 !w-20 !h-20 !text-[14px]">Gone</span>}
     </div>
   );
 

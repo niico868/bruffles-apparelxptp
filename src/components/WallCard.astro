@@ -1,0 +1,45 @@
+---
+// One Customer Verified card. Polaroid when the customer added a fit pic; hang-tag when they didn't.
+// Polaroid: white paper, 8px border on the sides and top, square photo, a bottom strip (about 22% of
+// the card) holding the signature like Sharpie, then the meta line. A 28px gold monogram stamp
+// overlaps the photo's top-right corner at -8°. Hang-tag: same width, shorter, punch hole at the top.
+// The tilt and drop are seeded by the piece number (pin()), so the wall is the same on every visit.
+import { Picture } from "astro:assets";
+import { bruffles } from "../data/products";
+import { pin, signatureFor, type WallCard } from "../data/wall";
+const { card, i = 0 } = Astro.props as { card: WallCard; i?: number };
+const p = bruffles.find((x) => x.id === card.id)!;
+const sig = signatureFor(card.signer)!;
+const { rot, drop } = pin(p.pieceNo);
+// On narrow two-column phones the brand drops out so the piece number and area always show.
+const metaHtml = `${p.id}<span class="max-sm:hidden"> · ${p.maker}</span> · ${card.area}`;
+---
+<a href={`/bruffles/${p.id}#signed`} class:list={["wall-card min-w-0 bg-white text-ink focus-visible:outline-2 focus-visible:outline-gold-deep", card.fit ? "p-2 pb-0" : "px-3 pt-3 pb-3"]}
+  style={`--r:${rot}deg;--oy:${drop}px;--i:${i}`}
+  aria-label={`${p.name}, piece ${p.id}, signed for in ${card.area}. Customer Verified.`}>
+  {card.fit ? (
+    <>
+      <div class="relative aspect-square">
+        <Picture src={card.fit.image} alt={card.fit.alt} formats={["avif", "webp"]} widths={[240, 360, 520]}
+          sizes="(min-width: 1024px) 22vw, (min-width: 768px) 30vw, 46vw" class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+        <img src="/brand/bruffles-monogram-gold.webp" alt="" aria-hidden="true" width="28" height="28"
+          class="absolute -right-2 -top-2 w-7 h-7 -rotate-[8deg] drop-shadow-[0_1px_0_rgb(28_26_23/.25)]" />
+      </div>
+      <div class="aspect-[100/31] flex flex-col justify-center px-1 min-w-0 overflow-hidden">
+        <svg class="sig block h-[58%] w-auto max-w-full self-start" viewBox={`0 0 ${sig.w} ${sig.h}`} aria-hidden="true"><path d={sig.d} /></svg>
+        <p class="wall-meta mt-0.5 truncate" set:html={metaHtml} />
+      </div>
+    </>
+  ) : (
+    <div class="relative flex flex-col items-center text-center">
+      <span aria-hidden="true" class="block w-2 h-2 rounded-full bg-bone ring-1 ring-hair"></span>
+      <img src="/brand/bruffles-monogram-gold-deep.webp" alt="" aria-hidden="true" width="28" height="28" class="mt-3 w-7 h-7 -rotate-[8deg]" />
+      <p class="label-bf text-gold-text !text-[10px] mt-1">Customer Verified</p>
+      <svg class="sig block h-10 md:h-12 w-auto max-w-full mt-3" viewBox={`0 0 ${sig.w} ${sig.h}`} aria-hidden="true"><path d={sig.d} /></svg>
+      <p class="wall-meta mt-2 w-full truncate border-t border-hair pt-2" set:html={metaHtml} />
+    </div>
+  )}
+</a>
+<style>
+  .wall-meta { font-family: var(--font-ui); font-size: 11px; text-transform: uppercase; letter-spacing: .12em; line-height: 1.3; color: var(--color-ink-soft); }
+</style>

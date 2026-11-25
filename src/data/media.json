@@ -18,15 +18,20 @@
       "_rule": "Homepage Passport media = lifestyle or brand only (beach, travel, packaging, logo). Product close-ups stay behind the 18+ gate on /passport.",
       "desktop": {
         "file": "home/hero-pp-desktop",
-        "alt": "",
+        "alt": "Suitcases riding a baggage carousel in an airport arrivals hall, in a charcoal and yellow tint.",
         "focal": "50% 50%"
       },
       "mobile": {
         "file": "home/hero-pp-mobile",
-        "alt": "",
+        "alt": "Suitcases riding a baggage carousel in an airport arrivals hall, in a charcoal and yellow tint.",
         "focal": "50% 50%"
       },
-      "video": "home/hero-pp.mp4"
+      "video": "home/hero-pp.mp4",
+      "videoWebm": "home/hero-pp.webm",
+      "videoMobile": "home/hero-pp-mobile.mp4",
+      "videoMobileWebm": "home/hero-pp-mobile.webm",
+      "poster": "home/hero-pp-poster.avif",
+      "_source": "Stock fallback until Passport's own Instagram clips arrive (see reference/ptp-instagram/README.md). Built by scripts/build-pp-hero.py."
     }
   },
   "film": {
@@ -52,33 +57,6 @@
       "focal": "50% 50%",
       "button": "Shop tools [CLIENT TO CONFIRM]",
       "href": "/passport"
-    }
-  ],
-  "wall": [
-    {
-      "file": "home/wall-1",
-      "alt": "",
-      "focal": "50% 50%"
-    },
-    {
-      "file": "home/wall-2",
-      "alt": "",
-      "focal": "50% 50%"
-    },
-    {
-      "file": "home/wall-3",
-      "alt": "",
-      "focal": "50% 50%"
-    },
-    {
-      "file": "home/wall-4",
-      "alt": "",
-      "focal": "50% 50%"
-    },
-    {
-      "file": "home/wall-5",
-      "alt": "",
-      "focal": "50% 50%"
     }
   ]
 }

@@ -1,24 +1,29 @@
 ---
+// /bruffles (2026-11-25 order): Drop Log → product grid (with demand signals) → Customer Verified
+// (compact, 4 cards + link to the full wall) → Archive strip. Gone pieces live in the archive.
 import Base from "../../layouts/Base.astro";
 import BrufflesCard from "../../components/BrufflesCard.astro";
+import DropLog from "../../components/DropLog.astro";
+import CustomerWall from "../../components/CustomerWall.astro";
+import ArchiveStrip from "../../components/ArchiveStrip.astro";
 import { bruffles } from "../../data/products";
 const available = bruffles.filter((p) => !p.sold);
-const [feature, ...rest] = [...available, ...bruffles.filter((p) => p.sold)];
+const [feature, ...rest] = available;
 ---
 <Base title="Bruffles Apparel · One of one" description="Authentic pieces purchased from official brand stores, receipt on file. Every piece is one of one." world="bf">
-  <section class="bf">
-    <div class="wrap pt-32 md:pt-40 pb-16 md:grid md:grid-cols-12 md:gap-8 md:items-end">
-      <div class="md:col-span-7">
-        <p class="label-bf text-gold-text rise">The collection · {available.length} available</p>
-        <h1 class="h-bf text-[48px] md:text-[96px] mt-4 rise" style="--i:1">Bruffles Apparel</h1>
-      </div>
-      <p class="md:col-span-4 md:col-start-9 mt-6 md:mt-0 text-ink-soft rise" style="--i:2">Authentic menswear purchased from official brand stores, receipt on file. Every piece is one of one. Restocked twice a month.</p>
+  <DropLog />
+  <section class="bf" aria-labelledby="collection">
+    <div class="wrap border-t border-hair pt-12 md:pt-16 flex items-end justify-between gap-4">
+      <h2 id="collection" class="label-bf text-gold-text">The collection · {available.length} available</h2>
+      <a href="/bruffles/archive" class="ui text-[13px] underline underline-offset-4 decoration-hair hover:decoration-ink">The archive</a>
     </div>
-    <div class="wrap border-t border-hair pt-12 md:pt-16">
+    <div class="wrap pt-10 md:pt-12">
       <BrufflesCard p={feature} feature />
     </div>
-    <div class="wrap grid grid-cols-2 gap-x-4 md:gap-x-8 gap-y-16 md:gap-y-24 pt-24 pb-[var(--spacing-section)]">
+    <div class="wrap grid grid-cols-2 gap-x-4 md:gap-x-8 gap-y-16 md:gap-y-24 pt-24 pb-8">
       {rest.map((p, i) => <div class:list={[i % 2 === 1 && "md:mt-32"]}><BrufflesCard p={p} i={i % 2} /></div>)}
     </div>
   </section>
+  <CustomerWall compact />
+  <ArchiveStrip />
 </Base>

@@ -26,6 +26,18 @@ export const bruffles: BrufflesPiece[] = [
     description: "59FIFTY fitted cap in black.", measurements: { Size: "7 3/8" } },
   { brand: "bruffles", id: "BA-041", pieceNo: 41, name: "Nuptse Vest", maker: "The North Face", condition: "New with tags", size: "L", priceUsd: 15500, sold: true,
     description: "700-fill down vest in black.", measurements: { Chest: "61 cm", Length: "68 cm" } },
+  // Older demo pieces that have already sold (2026-11-25): they fill the archive and the Customer
+  // Verified wall. No product photos yet, so they show the labelled placeholder.
+  { brand: "bruffles", id: "BA-040", pieceNo: 40, name: "Tech Fleece Full-Zip Hoodie", maker: "Nike", condition: "New with tags", size: "M", priceUsd: 16500, sold: true,
+    description: "Dark grey heather tech fleece hoodie.", measurements: { Chest: "57 cm", Length: "70 cm" } },
+  { brand: "bruffles", id: "BA-039", pieceNo: 39, name: "Classic Fit Mesh Polo, Navy", maker: "Polo Ralph Lauren", condition: "New with tags", size: "M", priceUsd: 9000, sold: true,
+    description: "Cotton piqué polo in navy.", measurements: { Chest: "56 cm", Length: "74 cm" } },
+  { brand: "bruffles", id: "BA-038", pieceNo: 38, name: "Reverse Weave Crewneck", maker: "Champion", condition: "New with tags", size: "S", priceUsd: 7500, sold: true,
+    description: "Heavyweight crewneck sweatshirt in cream.", measurements: { Chest: "55 cm", Length: "66 cm" } },
+  { brand: "bruffles", id: "BA-036", pieceNo: 36, name: "Cyclone Windbreaker", maker: "The North Face", condition: "New with tags", size: "L", priceUsd: 12000, sold: true,
+    description: "Packable black wind shell with a stowable hood.", measurements: { Chest: "62 cm", Length: "72 cm" } },
+  { brand: "bruffles", id: "BA-035", pieceNo: 35, name: "Custom Slim Fit Polo, Red", maker: "Polo Ralph Lauren", condition: "New with tags", size: "L", priceUsd: 9000, sold: true,
+    description: "Cotton piqué polo in a deep red.", measurements: { Chest: "57 cm", Length: "75 cm" } },
 ];
 
 export const passport: PassportItem[] = [

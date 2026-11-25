@@ -1,0 +1,37 @@
+---
+// Demo sign page: the page the QR card in each package opens (/verify/BA-046). Nothing is saved.
+import Base from "../../layouts/Base.astro";
+import VerifyPad from "../../components/VerifyPad";
+import Img from "../../components/Img.astro";
+import { bruffles } from "../../data/products";
+import { pieceImages } from "../../data/media";
+import { toPic } from "../../lib/pic";
+export function getStaticPaths() {
+  return bruffles.map((p) => ({ params: { piece: p.id }, props: { p } }));
+}
+const { p } = Astro.props;
+const pic = await toPic(pieceImages(p.id, p.name)[0], [480, 800]);
+---
+<Base title={`Sign for ${p.id} · Bruffles Apparel`} description="Sign for your Bruffles piece on delivery." world="bf">
+  <style is:global>body { padding-bottom: 36px; }</style>
+  <div class="fixed bottom-0 inset-x-0 z-[70] bg-gold text-ink text-center ui text-[13px] py-2" role="note">Demo. Nothing is saved.</div>
+  <section class="bf">
+    <div class="wrap pt-32 md:pt-40 pb-[var(--spacing-section)] md:grid md:grid-cols-12 md:gap-12">
+      <div class="md:col-span-5">
+        <div class="relative aspect-[4/5] overflow-hidden ph-bf max-w-[420px]">
+          <Img pic={pic} sizes="(min-width: 768px) 35vw, 100vw" label={`Photo · ${p.id}`} eager />
+        </div>
+        <p class="ui text-[13px] text-ink-soft mt-4">{p.maker} · {p.name} · Size {p.size}</p>
+      </div>
+      <div class="md:col-span-6 md:col-start-7 mt-10 md:mt-0 max-w-xl">
+        <p class="label-bf text-gold-text">Customer Verified</p>
+        <h1 class="h-bf text-[40px] md:text-[64px] mt-2">Sign for {p.id}</h1>
+        <p class="mt-4 text-ink-soft">You've got it in your hands. Sign for it, and it goes on the wall as one of one, found its owner.</p>
+        <div class="mt-10"><VerifyPad client:load id={p.id} maker={p.maker} name={p.name} /></div>
+      </div>
+    </div>
+  </section>
+</Base>
+<style is:global>
+  .wall-meta-r { font-family: var(--font-ui); font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--color-ink-soft); }
+</style>

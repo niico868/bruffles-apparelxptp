@@ -1,0 +1,29 @@
+---
+// Bottom of /bruffles: the latest six Gone pieces, then "See the archive". ADDON: missed-it waitlist.
+import { archiveItems } from "../lib/archive";
+const items = (await archiveItems()).slice(0, 6);
+---
+<section class="bf border-t border-hair py-[var(--spacing-section)]" aria-labelledby="archive-strip">
+  <div class="wrap flex items-end justify-between gap-4">
+    <div>
+      <p class="label-bf text-gold-text rise">Gone, not forgotten</p>
+      <h2 id="archive-strip" class="h-bf text-[32px] md:text-[48px] mt-2 rise" style="--i:1">The archive</h2>
+    </div>
+    <a href="/bruffles/archive" class="ui underline underline-offset-4 decoration-hair hover:decoration-ink rise" style="--i:2">See the archive</a>
+  </div>
+  <ul class="wrap mt-10 grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-4">
+    {items.map((p, i) => (
+      <li class="rise" style={`--i:${i}`}>
+        <a href={`/bruffles/${p.id}`} class="group/s block" aria-label={`${p.name}, piece ${p.id}, gone`}>
+          <div class="relative aspect-[4/5] overflow-hidden ph-bf">
+            {p.pic
+              ? <img src={p.pic.src} srcset={p.pic.srcset} sizes="(min-width: 768px) 16vw, 33vw" alt={p.pic.alt} width={p.pic.w} height={p.pic.h} loading="lazy" decoding="async" class="absolute inset-0 w-full h-full object-cover gone-img" />
+              : <span class="absolute left-2 top-2 label-bf !text-[11px] text-ink-soft">Photo · {p.num}</span>}
+            <span aria-hidden="true" class="gone-stamp right-2 top-2 !w-11 !h-11 !text-[9px]">Gone</span>
+          </div>
+          <p class="ui text-[11px] md:text-[12px] text-ink-soft mt-2 truncate">{p.id} · {p.maker}</p>
+        </a>
+      </li>
+    ))}
+  </ul>
+</section>

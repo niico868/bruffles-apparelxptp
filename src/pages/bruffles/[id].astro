@@ -10,6 +10,14 @@ import InfoTabs from "../../components/InfoTabs";
 import MiniBuyBar from "../../components/MiniBuyBar";
 import Certificate from "../../components/Certificate.astro";
 import ProductTile from "../../components/ProductTile.astro";
+import DemandLine from "../../components/DemandLine";
+import RequestBack from "../../components/RequestBack";
+import WallCard from "../../components/WallCard.astro";
+import Img from "../../components/Img.astro";
+import { getSignals } from "../../data/demo-signals";
+import { wallCardFor } from "../../data/wall";
+import { sourceSite, pickNote, batch } from "../../data/hunt";
+import { asset } from "../../data/assets";
 import { bruffles, pad } from "../../data/products";
 import { pieceImages } from "../../data/media";
 import { toPic } from "../../lib/pic";
@@ -22,18 +30,22 @@ const { p } = Astro.props;
 const n = pad(p.pieceNo);
 const imgs = pieceImages(p.id, p.name);   // main flat lay first, then any detail shots
 const shots: Shot[] = await Promise.all(imgs.map(async (x) => {
-  const pic = await toPic(x, [640, 1080, 1600]);
+  const pic = await toPic(x, [480, 800, 1080, 1600]);
   const full = await toPic(x, [2000]);
   return { label: x.label, alt: x.alt, src: pic?.src, srcset: pic?.srcset, full: full?.src, w: pic?.w, h: pic?.h };
 }));
 const thumb = (await toPic(imgs[0], [160]))?.src;
 const share = (await toPic(imgs[0], [1200]))?.src;
+const sig = getSignals(p.pieceNo);
+const signed = p.sold ? wallCardFor(p.id) : undefined;
+const tagPic = await toPic(asset("hunt-label", "hunt/hunt-label"), [480, 800]);
+const site = sourceSite[p.maker] ?? "the brand's official store";
 const more = bruffles.filter((x) => !x.sold && x.id !== p.id).slice(0, 4);
-const site = "https://bruffles-apparelxptp.neikoliaugustine.workers.dev";
+const origin = "https://bruffles-apparelxptp.neikoliaugustine.workers.dev";
 const jsonLd = {
   "@context": "https://schema.org", "@type": "Product", name: p.name, sku: p.id,
   brand: { "@type": "Brand", name: p.maker }, description: p.description,
-  ...(share ? { image: new URL(share, site).href } : {}),
+  ...(share ? { image: new URL(share, origin).href } : {}),
   offers: { "@type": "Offer", priceCurrency: "USD", price: (p.priceUsd / 100).toFixed(2),
     availability: p.sold ? "https://schema.org/SoldOut" : "https://schema.org/InStock", itemCondition: "https://schema.org/NewCondition" },
 };
@@ -50,11 +62,12 @@ const jsonLd = {
           <nav class="ui text-[12px] text-ink-soft" aria-label="Breadcrumb"><a href="/" class="hover:text-ink">Home</a> <span aria-hidden>/</span> <a href="/bruffles" class="hover:text-ink">Bruffles</a> <span aria-hidden>/</span> <span aria-current="page">Piece {n}</span></nav>
           <div class="mt-6 flex items-end justify-between gap-4">
             <span class="num-bf text-[72px] md:text-[96px]" aria-hidden>{n}</span>
-            {p.sold ? <span class="ui text-[12px] text-bone bg-ink-soft px-3 py-1 rounded-full mb-2">Found its owner</span> : <span class="label-bf text-gold-text border border-gold-deep/60 px-2 py-1 mb-2">1 of 1</span>}
+            {p.sold ? <span class="ui text-[12px] text-gold-text border border-gold-deep/60 px-3 py-1 rounded-full mb-2">Gone · Found its owner</span> : <span class="label-bf text-gold-text border border-gold-deep/60 px-2 py-1 mb-2">1 of 1</span>}
           </div>
           <p class="ui text-[13px] text-ink-soft mt-6">{p.maker} · {p.condition}</p>
           <h1 class="h-bf text-[32px] md:text-[40px] mt-2">{p.name}</h1>
           {!p.sold && <p class="ui mt-4 text-[20px] tabular-nums">{formatPrice(p.priceUsd)}</p>}
+          {!p.sold && <div class="mt-2"><DemandLine client:idle id={p.id} bags={sig.bags} saves={sig.saves} /></div>}
 
           <div class="mt-8">
             <p class="ui text-[13px]">Size: <span class="text-ink-soft">{p.size}</span></p>
@@ -64,8 +77,12 @@ const jsonLd = {
           </div>
 
           <div id="buy-main" class="mt-6 space-y-3">
-            <AddPiece client:load id={p.id} name={p.name} priceUsd={p.priceUsd} sold={p.sold} />
-            {p.sold ? <a href="#drop-alerts" class="btn-bf-ghost w-full label-bf">Get the next drop first</a> : <AskPiece client:idle num={n} />}
+            {p.sold
+              ? <RequestBack client:idle id={p.id} requests={sig.requests} size={p.size} />
+              : <><AddPiece client:load id={p.id} name={p.name} priceUsd={p.priceUsd} sold={p.sold} />
+                  <p class="text-[13px] text-ink-soft">One piece. First to check out gets it.</p>
+                  <AskPiece client:idle num={n} /></>}
+            {p.sold && <a href="#drop-alerts" class="ui text-[13px] inline-block underline underline-offset-4 decoration-hair hover:decoration-ink">Get the next drop first</a>}
           </div>
 
           <div class="mt-8">
@@ -80,6 +97,40 @@ const jsonLd = {
         </div>
       </div>
     </article>
+    {signed && (
+      <section id="signed" class="wrap pt-[var(--spacing-section)] scroll-mt-20 md:grid md:grid-cols-12 md:gap-8 md:items-center" aria-labelledby="signed-h">
+        <div class="md:col-span-4 md:col-start-2 max-w-[300px] mx-auto md:mx-0 w-full"><WallCard card={signed} /></div>
+        <div class="md:col-span-5 md:col-start-7 mt-10 md:mt-0">
+          <p class="label-bf text-gold-text">Customer Verified</p>
+          <h2 id="signed-h" class="h-bf text-[32px] md:text-[48px] mt-2">Signed for in {signed.area}.</h2>
+          <p class="mt-4 text-ink-soft max-w-[44ch]">The owner scanned the card in the package and signed for piece {p.id} on delivery{signed.fit ? ", then added a fit pic" : ""}. Sample card for the demo.</p>
+          <a href="/#wall" class="ui inline-block mt-6 underline underline-offset-4 decoration-hair hover:decoration-ink">See the wall</a>
+        </div>
+      </section>
+    )}
+
+    {/* The Hunt: where this piece came from. Pick notes are placeholders: [CLIENT TO CONFIRM] */}
+    <section class="wrap pt-[var(--spacing-section)] md:grid md:grid-cols-12 md:gap-8 md:items-center" aria-labelledby="hunt-h">
+      <div class="md:col-span-5">
+        <div class="relative aspect-[4/5] overflow-hidden ph-bf">
+          <Img pic={tagPic} sizes="(min-width: 768px) 40vw, 100vw" label={`Tag photo · ${p.id}`} />
+          <span class="absolute left-3 bottom-3 ui text-[11px] bg-bone/90 px-2 py-1">Sample photo · real tag photo per piece</span>
+        </div>
+      </div>
+      <div class="md:col-span-6 md:col-start-7 mt-8 md:mt-0">
+        <p class="label-bf text-gold-text">The hunt</p>
+        <h2 id="hunt-h" class="h-bf text-[32px] md:text-[48px] mt-2">Where we found it</h2>
+        <p class="ui text-[14px] mt-6">Sourced from {site} <span aria-hidden="true">·</span> Receipt on file, batch {batch}</p>
+        {pickNote[p.id] && (
+          <blockquote class="mt-6 border-l border-gold-deep/60 pl-5">
+            <p class="text-[18px] md:text-[20px] leading-snug">Why we pulled it: {pickNote[p.id]}</p>
+            <footer class="mt-3 font-serif italic text-ink-soft">signed — R &amp; M</footer>
+          </blockquote>
+        )}
+        <p class="mt-4 label-bf text-gold-text !text-[11px]">[CLIENT TO CONFIRM] · pick note</p>
+      </div>
+    </section>
+
     <div class="wrap py-[var(--spacing-section)]"><Certificate p={p} /></div>
     {more.length > 0 && (
       <section class="wrap pb-[var(--spacing-section)]" aria-labelledby="more">

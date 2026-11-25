@@ -31,6 +31,7 @@ const link = pp ? "hover:text-signal" : "hover:text-gold";
           <li><a href="/policies/delivery" class={link}>Delivery</a></li>
           <li><a href="/policies/privacy" class={link}>Privacy</a></li>
           <li><a href="/policies/sourcing" class={link}>Sourcing</a></li>
+          <li><a href="/credits" class={link}>Credits</a></li>
         </ul>
       </div>
     </div>
@@ -44,8 +45,11 @@ const link = pp ? "hover:text-signal" : "hover:text-gold";
   <div class:list={["wrap py-8 border-t flex flex-col md:flex-row gap-4 md:items-center md:justify-between", pp ? "border-char-3" : "border-bone/15"]}>
     <div class="flex items-center gap-4">
       <img src="/brand/bruffles-monogram-gold.webp" alt="Bruffles Apparel monogram" width="32" height="32" />
-      <img src="/brand/passport-badge.webp" alt="Passport to Paradise logo" width="38" height="32" class="h-8 w-auto" />
+      <img src="/brand/passport-badge-sm.webp" alt="Passport to Paradise logo" width="38" height="32" class="h-8 w-auto" />
     </div>
-    <p class="ui text-[12px] opacity-60">Bruffles Apparel × Passport to Paradise · Trinidad & Tobago</p>
+    <div class="md:text-right">
+      <p class="ui text-[12px] opacity-60">Bruffles Apparel × Passport to Paradise · Trinidad & Tobago</p>
+      <p class="text-[12px] opacity-60 mt-1">Demo site: sample pieces, photos and numbers. Nothing is for sale yet.</p>
+    </div>
   </div>
 </footer>

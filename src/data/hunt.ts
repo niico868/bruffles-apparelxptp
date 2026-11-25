@@ -1,0 +1,29 @@
+// "Where we found it" (The Hunt), per piece. Source = the brand's own official store.
+// Pick notes are placeholders in the owners' voice: [CLIENT TO CONFIRM] before launch.
+export const sourceSite: Record<string, string> = {
+  "Nike": "nike.com",
+  "Stüssy": "stussy.com",
+  "Carhartt WIP": "carhartt-wip.com",
+  "Fear of God": "fearofgod.com",
+  "New Era": "neweracap.com",
+  "The North Face": "thenorthface.com",
+  "Polo Ralph Lauren": "ralphlauren.com",
+  "Champion": "champion.com",
+};
+
+export const batch = "11/2026";
+
+export const pickNote: Record<string, string> = {
+  "BA-047": "Tech fleece in heather grey, tags on, in a medium. That never sits on a shelf long.",
+  "BA-045": "Heavyweight pigment dye. It already looks broken in, and it isn't.",
+  "BA-044": "A clean coach jacket for rainy season. Plain, sharp, done.",
+  "BA-042": "Black on black Yankees fitted, 7 3/8. Somebody's size is out there.",
+  "BA-046": "Washed black cargos that sit right. We knew it wouldn't last a day.",
+  "BA-043": "Oatmeal Essentials. Quiet colour, loud weight.",
+  "BA-041": "The Nuptse, in black. No explanation needed.",
+  "BA-040": "Full-zip tech fleece in dark heather. The fit everybody asks for.",
+  "BA-039": "Navy piqué polo. Sunday-lime to Monday-meeting.",
+  "BA-038": "Reverse weave in cream. Thick enough for an air-conditioned office.",
+  "BA-036": "A shell that folds into its own pocket. Built for the drive home.",
+  "BA-035": "Deep red slim polo. The colour photographs better than it sounds.",
+};

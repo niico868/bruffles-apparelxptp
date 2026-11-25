@@ -1,5 +1,7 @@
 ---
 import "../styles/global.css";
+// Preload the UI font so labels don't jump when it arrives (was the main layout shift on /bruffles).
+import uiFont from "@fontsource/archivo-narrow/files/archivo-narrow-latin-400-normal.woff2?url";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import AgeGate from "../components/AgeGate.astro";
@@ -11,6 +13,7 @@ const ogImage = image ? new URL(image, Astro.site ?? "https://bruffles-apparelxp
 <!doctype html>
 <html lang="en">
 <head>
+  <link rel="preload" href={uiFont} as="font" type="font/woff2" crossorigin />
   <meta charset="utf-8" /><script is:inline>document.documentElement.classList.add("js")</script><meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{title}</title><meta name="description" content={description} />
   <meta property="og:type" content="website" /><meta property="og:site_name" content="Bruffles Apparel × Passport to Paradise" />
@@ -32,7 +35,7 @@ const ogImage = image ? new URL(image, Astro.site ?? "https://bruffles-apparelxp
       const el = (e.target as HTMLElement & { _rv?: Element })._rv ?? e.target;
       el.classList.add("is-in"); io.unobserve(e.target);
     }), { threshold: 0.15 });
-    document.querySelectorAll(".rise, [data-flip]").forEach((el) => io.observe(el));
+    document.querySelectorAll(".rise, [data-flip], .wall-card").forEach((el) => io.observe(el));
     document.querySelectorAll(".wipe").forEach((el) => { const host = el.parentElement!; (host as any)._rv = el; io.observe(host); });
   </script>
 </body>

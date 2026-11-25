@@ -13,18 +13,29 @@ export const findImage = (base: string) => {
 };
 // Only used in .astro frontmatter (build time), never in the browser.
 export const findVideo = (path?: string) => (path && existsSync(`public/media/${path}`) ? `/media/${path}` : undefined);
+// Poster AVIF lives next to the films in public/media/.
+const findPoster = (path?: string) => (path && existsSync(`public/media/${path}`) ? `/media/${path}` : undefined);
+
+// A hero film: MP4 (H.264) for every browser plus an optional VP9 WebM, and an optional smaller
+// pair for phones. Both hero sides must have one: scripts/check-media.mjs stops the build otherwise.
+export type HeroVideo = { mp4: string; webm?: string; mobileMp4?: string; mobileWebm?: string; poster?: string };
+type RawSide = { video?: string; videoWebm?: string; videoMobile?: string; videoMobileWebm?: string; poster?: string };
+const heroVideo = (r: RawSide): HeroVideo | undefined => {
+  const mp4 = findVideo(r.video);
+  if (!mp4) return undefined;
+  return { mp4, webm: findVideo(r.videoWebm), mobileMp4: findVideo(r.videoMobile), mobileWebm: findVideo(r.videoMobileWebm), poster: findPoster(r.poster) };
+};
 
 export type Slot = { file: string; alt: string; focal?: string; image?: ImageMetadata };
 const fill = <T extends { file: string }>(s: T) => ({ focal: "50% 50%", ...s, image: findImage(s.file) });
 
 export const media = {
   hero: {
-    bf: { desktop: fill(raw.hero.bf.desktop), mobile: fill(raw.hero.bf.mobile), video: findVideo(raw.hero.bf.video) },
-    pp: { desktop: fill(raw.hero.pp.desktop), mobile: fill(raw.hero.pp.mobile), video: findVideo(raw.hero.pp.video) },
+    bf: { desktop: fill(raw.hero.bf.desktop), mobile: fill(raw.hero.bf.mobile), video: heroVideo(raw.hero.bf) },
+    pp: { desktop: fill(raw.hero.pp.desktop), mobile: fill(raw.hero.pp.mobile), video: heroVideo(raw.hero.pp as RawSide) },
   },
   film: { video: findVideo(raw.film.video), poster: fill(raw.film.poster), label: raw.film.label },
   ppTwoUp: raw.ppTwoUp.map(fill),
-  wall: raw.wall.map(fill),
 };
 
 // Bruffles product photos (Divine, 2026-11-25): one white-ground studio flat lay per piece, named by
@@ -33,8 +44,16 @@ export const media = {
 // gallery order with the label after the number: pieces/BA-047/02-back.jpg, 03-zip.jpg ...
 // A missing main photo returns no image and the page shows its labelled placeholder.
 const label = (slug: string) => slug.replace(/-/g, " ").replace(/^./, (c) => c.toUpperCase());
+// Demo-only sold pieces (BA-035 to BA-040) have no flat lay yet, so they borrow their sample fit
+// photo from the Customer Verified wall. Replace with real flat lays before launch.
+const fits = import.meta.glob<{ default: ImageMetadata }>("../assets/wall/fit-*.png", { eager: true });
+const FIT_FOR: Record<string, string> = { "BA-040": "01", "BA-039": "02", "BA-038": "03", "BA-036": "04", "BA-035": "05" };
 export function pieceImages(id: string, name: string) {
-  const main = { label: "Flat lay", image: findImage(`pieces/${id}`), alt: `${name}, studio flat lay on white` };
+  const flat = findImage(`pieces/${id}`);
+  const fit = !flat && FIT_FOR[id] ? fits[`../assets/wall/fit-${FIT_FOR[id]}.png`]?.default : undefined;
+  const main = fit
+    ? { label: "Fit", image: fit, alt: `${name}, worn by its owner (sample photo)` }
+    : { label: "Flat lay", image: flat, alt: `${name}, studio flat lay on white` };
   const prefix = `../assets/media/pieces/${id}/`;
   const details = Object.keys(files).filter((k) => k.startsWith(prefix)).sort().map((k) => {
     const slug = k.slice(prefix.length).replace(/\.\w+$/, "").replace(/^\d+-/, "");

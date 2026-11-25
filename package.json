@@ -5,10 +5,11 @@
   "private": true,
   "scripts": {
     "dev": "NAPI_RS_FORCE_WASI=1 astro dev",
-    "build": "node scripts/check-media.mjs && astro build",
+    "build": "node scripts/make-signatures.mjs && node scripts/check-media.mjs && astro build",
     "preview": "astro preview",
     "dev:fast": "astro dev",
-    "check-media": "node scripts/check-media.mjs"
+    "check-media": "node scripts/check-media.mjs",
+    "signatures": "node scripts/make-signatures.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^7.1.9",
@@ -19,12 +20,14 @@
     "astro": "^7.4.13",
     "framer-motion": "^14.14.0",
     "react": "^19.3.1",
-    "react-dom": "^19.3.1"
+    "react-dom": "^19.3.1",
+    "signature_pad": "^5.1.7"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.5",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "opentype.js": "^2.0.0",
     "tailwindcss": "^4.3.5",
     "typescript": "^7.0.2"
   },

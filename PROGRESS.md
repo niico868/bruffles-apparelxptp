@@ -115,3 +115,11 @@ Local dev on the Chromebook is not needed: preview on the .workers.dev link inst
 - Bruffles photo placeholders are dark blue (`--color-navy` #1B2A41), with light labels.
 - Passport wording is plain shop wording everywhere: "Departures" board is now a price list (Product, Pack, Price, Availability), item numbers removed (cards, list, product page, `itemNo` field), "Booked out" is "Sold out", the stamp says "Added to your bag", the hero says "Papers · Filters · Tools" and "Shop Passport", the age check says "Age check · 18+". Components renamed: DepartureBoard → PassportList, BoardItem → PassportBuy.
 - Screens: /mnt/project-files/seam-tap-passport/.
+
+## Session 14 · Customer Verified wall, demand signals, archive (branch `claude/phase-0-demo`)
+- Passport hero film: Case B (media.json pointed at files that never existed). Stand-in: CC0 Wikimedia baggage carousel, cut to 8 shots, charcoal/yellow duotone, 11.3s loop (`scripts/build-pp-hero.py`). Real clips go in `reference/ptp-instagram/` (gitignored). Build fails if either hero side lacks a still or a film.
+- Bruffles hero: featured BA-047 card removed; monogram, headline, line, "Enter Bruffles".
+- Demand: `src/data/demo-signals.ts` holds EVERY demo number (bags, saves, requests, 147 signed, drops). DemandLine (Save heart), RequestBack (missed-it waitlist add-on), /bruffles/archive, ArchiveStrip.
+- Customer Verified wall (CustomerWall, WallCard, `src/data/wall.ts`), signatures built at build time from two script fonts (`scripts/make-signatures.mjs`), /verify/[piece] demo sign page (signature_pad).
+- /bruffles order: Drop Log, available pieces, compact wall, archive strip. Product pages: "Where we found it" (`src/data/hunt.ts`). Homepage: hero, Latest, authenticity steps, Hunt teaser, Shop Passport, wall.
+- Stock photos logged in `public/media/manifest.json` and /credits. Review log: `docs/review-log.md`.

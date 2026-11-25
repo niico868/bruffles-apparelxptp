@@ -3,20 +3,24 @@
 // Gone pieces stay in the grid, greyed, as proof the pieces move.
 import { formatPrice } from "../lib/price";
 import { pad, type BrufflesPiece } from "../data/products";
+import { getSignals } from "../data/demo-signals";
+import DemandLine from "./DemandLine";
 import Img from "./Img.astro";
 import { pieceImages } from "../data/media";
 import { toPic } from "../lib/pic";
 const { p, feature = false, i = 0 } = Astro.props as { p: BrufflesPiece; feature?: boolean; i?: number };
 const pic = await toPic(pieceImages(p.id, p.name)[0], [480, 800, 1200, 1600]);
 const n = pad(p.pieceNo);
+const sig = getSignals(p.pieceNo);
 ---
 <article class:list={["group/card", feature && "md:grid md:grid-cols-12 md:gap-8 md:items-end"]}>
   <a href={`/bruffles/${p.id}`} class:list={["block", feature && "md:col-span-7"]} aria-label={`${p.name}, piece ${n}`}>
     <div class="wipe relative aspect-[4/5] overflow-hidden" style={`--i:${i}`}>
-      <div class:list={["absolute inset-0 ph-bf transition-transform duration-[900ms] ease-[var(--ease-calm)] group-hover/card:scale-[1.03]", p.sold && "grayscale opacity-60"]}>
+      <div class:list={["absolute inset-0 ph-bf transition-transform duration-[900ms] ease-[var(--ease-calm)] group-hover/card:scale-[1.03]", p.sold && "gone-img"]}>
         <Img pic={pic} sizes={feature ? "(min-width: 768px) 58vw, 100vw" : "(min-width: 768px) 45vw, 100vw"} />
       </div>
       {!p.sold && <span class="absolute left-3 bottom-3 md:left-4 md:bottom-4 label-bf text-gold-text bg-bone/90 px-2 py-1">1 of 1</span>}
+      {p.sold && <span class="gone-stamp right-4 top-4" aria-hidden="true">Gone</span>}
     </div>
   </a>
   <div class:list={["mt-4 flex flex-col gap-2 md:flex-row md:items-end md:gap-4", feature && "md:col-span-5 min-w-0 md:mt-0 md:!flex-col md:!items-start md:!gap-6 md:pb-4"]}>
@@ -29,7 +33,7 @@ const n = pad(p.pieceNo);
         <a href={`/bruffles/${p.id}`} class="hover:underline underline-offset-4 decoration-hair">{p.name}</a></h3>
       {p.sold
         ? <p class="mt-1 text-ink-soft">Gone · Found its owner</p>
-        : <p class="mt-1 tabular-nums">{formatPrice(p.priceUsd)}</p>}
+        : <><p class="mt-1 tabular-nums">{formatPrice(p.priceUsd)}</p><div class="mt-1"><DemandLine client:visible id={p.id} bags={sig.bags} saves={sig.saves} /></div></>}
       {feature && !p.sold && <a href={`/bruffles/${p.id}`} class="btn-bf mt-6 hidden md:inline-flex">View piece {n}</a>}
     </div>
   </div>
