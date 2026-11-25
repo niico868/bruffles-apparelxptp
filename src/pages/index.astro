@@ -8,7 +8,7 @@ import ProductTile from "../components/ProductTile.astro";
 import AuthSteps from "../components/AuthSteps.astro";
 import Film from "../components/Film.astro";
 import PassportTwoUp from "../components/PassportTwoUp.astro";
-import DepartureBoard from "../components/DepartureBoard";
+import PassportList from "../components/PassportList";
 import WallMosaic from "../components/WallMosaic.astro";
 import { bruffles, passport } from "../data/products";
 import { media, pieceImages } from "../data/media";
@@ -38,13 +38,13 @@ const shareImage = hero.bf.desktop ? (await toPic(media.hero.bf.desktop, [1200])
 
   <Film />
 
-  <section class="pp py-[var(--spacing-section)]" aria-labelledby="pp-board">
+  <section class="pp py-[var(--spacing-section)]" aria-labelledby="pp-shop">
     <div class="wrap flex items-end justify-between gap-4 pb-8">
-      <div><p class="label-pp text-signal">Passport to Paradise · 18+</p><h2 id="pp-board" class="h-pp text-[40px] md:text-[64px] mt-2">Departures</h2></div>
-      <a href="/passport" class="label-pp hover:text-signal">All departures →</a>
+      <div><p class="label-pp text-signal">Passport to Paradise · 18+</p><h2 id="pp-shop" class="h-pp text-[40px] md:text-[64px] mt-2">Shop Passport</h2></div>
+      <a href="/passport" class="label-pp hover:text-signal">Shop all →</a>
     </div>
     <div class="wrap"><PassportTwoUp /></div>
-    <div class="wrap mt-8"><DepartureBoard items={passport.slice(0, 4)} /></div>
+    <div class="wrap mt-8"><PassportList items={passport.slice(0, 4)} /></div>
   </section>
 
   <WallMosaic />

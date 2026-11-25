@@ -25,7 +25,7 @@ export type PanelMedia = { desktop?: Pic; mobile?: Pic; video?: string };
  *
  * Phone (< 768px): stacked, one screen tall. Tapping a panel opens it to 70% of the height (the
  * panels' flex-grow animates); tapping the open panel again plays or pauses its film. No arming on
- * phones: a tap is always deliberate.
+ * phones: a tap is always deliberate. Tapping the centre circle puts both sides back to 50/50.
  *
  * Corner logos (Divine, 2026-11-25): same height for both brands, bottom right of each half. They
  * live on the hero, not in the panels: BA's rides the seam layer, so it stays at the right edge of
@@ -83,6 +83,7 @@ export default function SplitHero({ media = {}, featured }: { media?: { bf?: Pan
 
   const onMove = (e: React.PointerEvent) => {
     if (e.pointerType !== "mouse" || !armed || !desktop || !root.current) return;
+    if ((e.target as HTMLElement).closest("[data-seam]")) return;   // resting on the centre circle changes nothing
     const r = root.current.getBoundingClientRect();
     const seam = r.left + r.width * (0.5 + shift);
     const next: Side = e.clientX < seam ? "bf" : "pp";
@@ -150,21 +151,24 @@ export default function SplitHero({ media = {}, featured }: { media?: { bf?: Pan
           initial={false} animate={{ opacity: active === "pp" ? 0.95 : 0, scale: active === "pp" ? 1 : 1.04 }}
           transition={{ ...t, delay: active === "pp" && !reduce ? 0.15 : 0 }} />}
         <div data-size={sizeOf("pp")} className={`${COPY} md:pl-[max(var(--spacing-gutter),calc(64px*var(--k)))]`}>
-          <p className="relative label-pp text-signal" style={labelStyle}><FlipPrice text="GATE 02 · NOW BOARDING" /></p>
+          <p className="relative label-pp text-signal" style={labelStyle}><FlipPrice text="Papers · Filters · Tools" /></p>
           <h2 id="hero-pp" className="relative h-koi" style={headStyle}>
             Passport<br className="hero-br" /> to Paradise</h2>
           <p className={`hero-body relative ${ppHas ? "text-paper/85" : "text-muted"}`} style={bodyStyle}>
             Papers, filters and tools, by the pack and by the box.</p>
-          <a href="/passport" className="relative btn-pp self-start label-pp" style={btnStyle}>Board Passport <span aria-hidden>→</span></a>
+          <a href="/passport" className="relative btn-pp self-start label-pp" style={btnStyle}>Shop Passport <span aria-hidden>→</span></a>
         </div>
       </motion.section>
 
       {/* ---------- Seam layer: gold hairline, centre circle and the BA corner logo, moved by transform.
           Vertical seam on a computer, horizontal on a phone. ---------- */}
-      <motion.div aria-hidden className="absolute inset-0 z-20 pointer-events-none"
+      <motion.div className="absolute inset-0 z-20 pointer-events-none"
         initial={false} animate={seamMove} transition={t} style={{ willChange: "transform" }}>
-        <div className="absolute inset-x-0 top-1/2 h-px md:inset-x-auto md:inset-y-0 md:left-1/2 md:h-auto md:w-px bg-gold/70" />
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"><SeamMark /></div>
+        <div aria-hidden className="absolute inset-x-0 top-1/2 h-px md:inset-x-auto md:inset-y-0 md:left-1/2 md:h-auto md:w-px bg-gold/70" />
+        {/* Centre circle: tapping it puts both sides back to 50/50 (Divine, 2026-11-25) */}
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-auto">
+          <SeamMark onTap={() => setActive(null)} />
+        </div>
         {/* BA logo: bottom right of the Bruffles half, just inside the seam */}
         <CornerLogo show={active !== "bf"} t={t}
           className="right-[var(--spacing-gutter)] bottom-[calc(50%+24px)] md:right-[calc(50%+var(--spacing-gutter))] md:bottom-8">
@@ -204,16 +208,19 @@ function CornerLogo({ show, t, className, children }:
   );
 }
 
-// Centre circle on the seam (72px phone, 104px computer). Holds the merged BA × PTP logo once Divine
-// supplies it: save it as public/brand/ba-x-ptp.webp and set MERGED_LOGO to "/brand/ba-x-ptp.webp".
+// Centre circle on the seam (72px phone, 104px computer), a button that resets the split to 50/50.
+// Holds the merged BA × PTP logo once Divine supplies it: save it as public/brand/ba-x-ptp.webp and
+// set MERGED_LOGO to "/brand/ba-x-ptp.webp".
 const MERGED_LOGO: string | null = null;
-function SeamMark() {
+function SeamMark({ onTap }: { onTap: () => void }) {
   return (
-    <span className="grid place-items-center rounded-full bg-ink ring-1 ring-gold/60 size-[72px] md:size-[104px]">
+    <button type="button" data-seam onClick={onTap} aria-label="Show both brands side by side"
+      className="grid place-items-center rounded-full bg-ink ring-1 ring-gold/60 size-[72px] md:size-[104px] cursor-pointer
+        transition-transform duration-300 hover:scale-105 active:scale-95 focus-visible:outline-2 focus-visible:outline-gold">
       {MERGED_LOGO
         ? <img src={MERGED_LOGO} alt="" width="75" height="75" decoding="async" className="w-[72%] h-auto" />
-        : <span className="label-pp text-gold text-[10px] tracking-[0.12em]">BA × PTP</span>}
-    </span>
+        : <span aria-hidden className="label-pp text-gold text-[10px] tracking-[0.12em]">BA × PTP</span>}
+    </button>
   );
 }
 

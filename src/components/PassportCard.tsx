@@ -18,15 +18,14 @@ export default function PassportCard({ item, pic }: { item: PassportItem; pic?: 
               width={pic.w} height={pic.h} loading="lazy" decoding="async"
               className={`absolute inset-0 w-full h-full object-cover ${out ? "grayscale opacity-60" : ""}`} style={{ objectPosition: pic.focal }} />
           : <span className="absolute left-3 top-3 label-pp text-muted">Photo</span>}
-        <span className="absolute right-3 top-3 label-pp bg-char text-signal px-2 py-1">{item.id}</span>
         <Stamp ref={stamp} />
       </a>
       <div className="p-4 flex flex-col gap-3">
-        <p className="label-pp text-muted">{out ? "Booked out" : `${item.qty} in stock`}{item.packOf > 1 ? ` · Pack of ${item.packOf}` : ""}</p>
+        <p className="label-pp text-muted">{out ? "Sold out" : `${item.qty} in stock`}{item.packOf > 1 ? ` · Pack of ${item.packOf}` : ""}</p>
         <h3 className="h-pp text-[20px] leading-tight"><a href={`/passport/${item.id}`} className="hover:text-signal transition-colors duration-150">{item.name}</a></h3>
         <FlipPrice text={formatPrice(item.priceUsd)} className="text-[16px] text-paper" />
         <button onClick={add} disabled={out} className="btn-pp w-full label-pp mt-1 !px-3 whitespace-nowrap disabled:bg-char-3 disabled:text-muted">
-          {out ? "Booked out" : "Add to bag"}
+          {out ? "Sold out" : "Add to bag"}
         </button>
       </div>
     </article>
@@ -61,7 +60,7 @@ export const Stamp = ({ ref }: { ref: React.Ref<HTMLDivElement> }) => (
   <div aria-hidden className="absolute inset-0 grid place-items-center pointer-events-none">
     <div ref={ref} style={{ opacity: 0 }} className="grid place-items-center w-36 h-36 rounded-full border-[3px] border-stamp text-stamp text-center">
       <div className="w-[86%] h-[86%] rounded-full border border-stamp grid place-items-center">
-        <span className="h-pp text-[22px] leading-none">Cleared<br /><span className="label-pp text-[12px]">for departure</span></span>
+        <span className="h-pp text-[22px] leading-none">Added<br /><span className="label-pp text-[12px]">to your bag</span></span>
       </div>
     </div>
   </div>
