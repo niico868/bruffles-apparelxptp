@@ -30,7 +30,7 @@ Tokens live in `src/styles/global.css` `@theme`. One job per colour. Ratios are 
 | signal | #FFC629 | wayfinding, labels, CTAs | 10.4:1 both ways |
 | stamp | #E0393E | stamp moment only, large bold type | 3.8:1 (large/graphic) |
 
-**Seam:** bone meets charcoal along a 1px gold rule; the centre circle (ink disc, gold ring) sits on it and will hold the merged BA × PTP logo; the BA monogram lives in Bruffles' top-left corner; a signal-yellow runway dash points into Passport.
+**Seam:** bone meets charcoal along a 1px gold rule; the centre circle (ink disc, gold ring) sits on it and will hold the merged BA × PTP logo; the BA monogram sits at the bottom right of the Bruffles half and the PTP badge at the bottom right of Passport, both the same height; a signal-yellow runway dash points into Passport.
 
 ## Type
 - Body 16px / 1.6 (Manrope). Labels uppercase: `.label-bf` (Archivo Narrow 600, 13px, 0.04em) and `.label-pp` (DM Mono 12px).
@@ -46,7 +46,7 @@ Tokens live in `src/styles/global.css` `@theme`. One job per colour. Ratios are 
 - Buttons min 48px tall: `.btn-bf` (ink, gold on hover), `.btn-bf-ghost`, `.btn-pp` (signal yellow).
 
 ## Layout
-- Split hero (`SplitHero.tsx`, state table at the top of the file): two 70%-wide panels overlap; hovering moves the Passport panel and the seam layer with transform only (50/50 to 70/30). Hover arms 10s after the first mouse movement or after 20 movements, whichever comes first, on every page load. Open side (70%): corner logo fades, film plays (first time only), Bruffles shows piece 047. Shut side (30%): copy shrinks to 38% via `--k` (legibility floor ~10px), headline and body on one line. Corner logos: BA monogram top-left, PTP badge top-right. Centre circle: placeholder until the merged BA × PTP logo arrives (`MERGED_LOGO`). Mobile: stacked panels, centre circle joins them, no hover.
+- Split hero (`SplitHero.tsx`, state table at the top of the file): two 70%-wide panels overlap; hovering moves the Passport panel and the seam layer with transform only (50/50 to 70/30). Hover arms 10s after the first mouse movement or after 20 movements, whichever comes first, on every page load. Open side (70%): corner logo fades, film plays (first time only), Bruffles shows piece 047. Shut side (30%): copy shrinks to 38% via `--k` (legibility floor ~10px), headline and body on one line. Corner logos: one height for both (56px phone, 72px computer), bottom right of each half; BA's rides the seam. Both brands share the same copy sizes (label, headline, body, button). Centre circle: placeholder until the merged BA × PTP logo arrives (`MERGED_LOGO`). Phone: one screen tall, panels stacked; tapping a panel opens it to 70% of the height (same copy scaling and film rules), tapping the open one plays or pauses its film.
 - Bruffles collection: lookbook. One feature piece (7/12 image + giant number), then a 2-column grid with the right column dropped 128px on desktop. Gone pieces stay, greyed, "Found its owner".
 - Product page: gallery grid left (swipe strip on mobile), sticky buy column right, sticky bottom buy bar on mobile, size and measurements tab, one white flat lay per piece (optional numbered detail shots), certificate-style authenticity section.
 - Passport: departures board (flip-in rows) + item cards on charcoal.
