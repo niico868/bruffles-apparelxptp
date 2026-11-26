@@ -19,6 +19,12 @@ const pics = await Promise.all(passport.map((i) => toPic(passportImage(i.id, i.n
         <p class="text-muted">Papers, filters and tools, by the pack and by the box.</p>
       </div>
     </section>
+    <section class="wrap pb-12" aria-label="Design in progress">
+      <div class="border border-dashed border-char-3 p-5 md:p-8 md:grid md:grid-cols-12 md:gap-8">
+        <p class="label-pp text-signal md:col-span-3">Design in progress</p>
+        <p class="text-muted mt-3 md:mt-0 md:col-span-9 max-w-[62ch]">We're studying the best of smoking-accessory and lifestyle brand design, from RAW's bold packaging, the torn-paper effect and smoke-hazed transitions, to brands like Zig-Zag, Elements, Juicy Jay's, Bambu and Lion Rolling. The full look for this page is coming soon.</p>
+      </div>
+    </section>
     <section class="wrap pb-16" aria-label="Price list"><PassportList items={passport} /></section>
     <section class="wrap pb-[var(--spacing-section)]" aria-label="All products">
       <div class="flex items-center gap-4 pb-6"><span class="label-pp text-signal">→</span><h2 class="label-pp">All products</h2><span class="flex-1 border-t border-dashed border-char-3"></span></div>
