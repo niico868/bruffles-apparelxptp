@@ -23,7 +23,8 @@ const promos = world === "pp"
 const home = world === "home";
 // The tester link to homepage 2 only shows once that page exists.
 const hasV2 = Object.keys(import.meta.glob(["../pages/v2.astro", "../pages/v2/index.astro"])).length > 0;
-const transparent = Astro.url.pathname === "/" || Astro.url.pathname.replace(/\/$/, "") === "/v2";
+const isHomepage = Astro.url.pathname === "/" || Astro.url.pathname.replace(/\/$/, "") === "/v2";
+const transparent = isHomepage;
 const lockupLabel = world === "bf" ? "Bruffles Apparel" : world === "pp" ? "Passport to Paradise" : "Bruffles Apparel × Passport to Paradise";
 const seg = (w: "bf" | "pp") => world === w ? "bg-current/0 underline underline-offset-[6px] decoration-1" : "opacity-70 hover:opacity-100";
 ---
@@ -51,18 +52,21 @@ const seg = (w: "bf" | "pp") => world === w ? "bg-current/0 underline underline-
         <a href="/passport" class:list={["px-3 py-2", seg("pp")]} aria-current={world === "pp" ? "page" : undefined}>Shop Passport</a>
       </div>
     </div>
-    {home ? (
-      /* Homepage and shared pages (Divine round 5): each logo opens its own brand. */
+    {isHomepage ? (
+      /* The two homepages (Divine round 5): each logo opens its own brand. */
       <div class="lockup flex items-center gap-2">
         <a href="/bruffles" aria-label="Bruffles Apparel"><img src={transparent ? "/brand/bruffles-monogram-gold.webp" : "/brand/bruffles-monogram-gold-deep.webp"} alt="" width="44" height="44" class="logo-bf w-10 h-10 md:w-11 md:h-11" /></a>
         <span aria-hidden class="h-bf text-[16px] opacity-70">×</span>
         <a href="/passport" aria-label="Passport to Paradise"><img src="/brand/passport-badge-sm.webp" alt="" width="200" height="170" class="h-10 md:h-12 w-auto" /></a>
       </div>
     ) : (
-      /* A brand's own pages: the logo goes back to the homepage with both brands. */
+      /* Every other page: the merged BA × PTP circle sits first and the whole lockup goes back to the
+         homepage (Divine 2026-11-26: "the home linked logo button on top of each page"). */
       <a href="/" class="lockup flex items-center gap-2" aria-label={`${lockupLabel}, back to the homepage`}>
-        {world !== "pp" && <img src="/brand/bruffles-monogram-gold-deep.webp" alt="" width="44" height="44" class="logo-bf w-10 h-10 md:w-11 md:h-11" />}
-        {world !== "bf" && <img src="/brand/passport-badge-sm.webp" alt="" width="200" height="170" class="h-10 md:h-12 w-auto" />}
+        <img src="/brand/ba-x-ptp-sm.webp" alt="" width="120" height="120" class="w-10 h-10 md:w-11 md:h-11 rounded-full" />
+        {world !== "home" && <span aria-hidden class="w-px h-7 bg-current opacity-30"></span>}
+        {world === "bf" && <img src="/brand/bruffles-monogram-gold-deep.webp" alt="" width="44" height="44" class="logo-bf w-10 h-10 md:w-11 md:h-11" />}
+        {world === "pp" && <img src="/brand/passport-badge-sm.webp" alt="" width="200" height="170" class="h-10 md:h-12 w-auto" />}
       </a>
     )}
     {shop ? (

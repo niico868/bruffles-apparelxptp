@@ -5,7 +5,7 @@
 //  - Hero: the same split hero, but the seam is vertical on every screen (phones too). Copy compacts
 //    and stacks word over word; tapping a side opens it to 70% sideways; films, tear and circle as before.
 //  - Below the hero the page is split 50/50, fixed (no 70/30): Bruffles on white on the left, Passport
-//    on dark purple (--color-plum) on the right, row by row so each topic sits beside its partner.
+//    on charcoal (--color-char) on the right, row by row so each topic sits beside its partner.
 //  - No product grid: a small catalogue, each photo half the old tile size, caption under each.
 //  - Plain, everyday wording (every change is listed in docs/round5-copy.md).
 //  - Only the footer runs full width.
@@ -77,14 +77,14 @@ const catSizes = "(min-width: 1440px) 330px, 23vw";
 
       <section class="v2-pp" aria-labelledby="v2-pp-shop">
         <div class="v2-in">
-          <p class="label-pp v2-eyebrow-pp text-mauve rise">Passport to Paradise · 18+</p>
+          <p class="label-pp v2-eyebrow-pp text-signal rise">Passport to Paradise · 18+</p>
           <h2 id="v2-pp-shop" class="h-pp v2-h rise" style="--i:1">Shop Passport</h2>
           <a href="/passport" class="v2-link text-signal decoration-signal/50 rise" style="--i:2">Shop all Passport</a>
           <ul class="v2-cat mt-6 md:mt-10">
             {ppPics.map(({ s, pic }, i) => (
               <li class="rise" style={`--i:${i}`}>
                 <a href={s.href} class="group/c block">
-                  <div class="v2-thumb relative aspect-[4/5] overflow-hidden bg-plum-2"><Img pic={pic} world="pp" sizes={catSizes} label={s.button} /></div>
+                  <div class="v2-thumb relative aspect-[4/5] overflow-hidden bg-char-2"><Img pic={pic} world="pp" sizes={catSizes} label={s.button} /></div>
                   <h3 class="v2-cap mt-2 group-hover/c:underline underline-offset-4">{s.button}</h3>
                 </a>
               </li>
@@ -139,7 +139,7 @@ const catSizes = "(min-width: 1440px) 330px, 23vw";
 
       <section class="v2-pp" aria-labelledby="v2-pp-what">
         <div class="v2-in v2-stick">
-          <p class="label-pp v2-eyebrow-pp text-mauve">What Passport sells</p>
+          <p class="label-pp v2-eyebrow-pp text-signal">What Passport sells</p>
           <h2 id="v2-pp-what" class="h-pp v2-h">Papers, filters <span class="text-signal">and tools</span></h2>
           <ol class="mt-8 md:mt-10 border-t border-white/15">
             <li class="py-4 border-b border-white/15"><p class="v2-cap text-white">Rolling papers</p><p class="v2-cap-sm text-white/70 mt-1">King slim, unbleached. By the box.</p></li>
@@ -186,7 +186,7 @@ const catSizes = "(min-width: 1440px) 330px, 23vw";
   /* Two fixed halves, row by row. Each half pads in from the page edge and from the centre line. */
   .v2-row { display: grid; grid-template-columns: 1fr 1fr; }
   .v2-bf { background: #fff; color: var(--color-ink); }
-  .v2-pp { background: var(--color-plum); color: #fff; border-left: 1px solid rgb(201 162 78 / .35); }
+  .v2-pp { background: var(--color-char); color: #fff; border-left: 1px solid rgb(201 162 78 / .35); }
   .v2-in { padding: clamp(40px, 8vw, 112px) clamp(12px, 4vw, 64px); max-width: 640px; }
   .v2-bf .v2-in { margin-left: auto; }
   .v2-pp .v2-in { margin-right: auto; }

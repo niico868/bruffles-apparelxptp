@@ -221,14 +221,14 @@ function CornerLogo({ show, t, className, children, href, label }:
 // Centre circle on the seam (72px phone, 104px computer), a button that resets the split to 50/50.
 // Holds the merged BA × PTP logo once Divine supplies it: save it as public/brand/ba-x-ptp.webp and
 // set MERGED_LOGO to "/brand/ba-x-ptp.webp".
-const MERGED_LOGO: string | null = null;
+const MERGED_LOGO: string | null = "/brand/ba-x-ptp.webp";   // Divine 2026-11-26
 function SeamMark({ onTap }: { onTap: () => void }) {
   return (
     <button type="button" data-seam onClick={onTap} aria-label="Show both brands side by side"
       className="grid place-items-center rounded-full bg-ink ring-1 ring-gold/60 size-[52px] md:size-[104px] cursor-pointer
         transition-transform duration-300 hover:scale-105 active:scale-95 focus-visible:outline-2 focus-visible:outline-gold">
       {MERGED_LOGO
-        ? <img src={MERGED_LOGO} alt="" width="75" height="75" decoding="async" className="w-[72%] h-auto" />
+        ? <img src={MERGED_LOGO} alt="" width="240" height="240" decoding="async" className="w-full h-full rounded-full" />
         : <span aria-hidden className="label-pp text-gold text-[8px] md:text-[10px] tracking-[0.12em]">BA × PTP</span>}
     </button>
   );

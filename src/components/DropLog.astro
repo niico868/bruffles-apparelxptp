@@ -4,8 +4,8 @@
 //   Row 1: pulsing dot · "Drop" (white) "014" (gold) · Bruffles logo.
 //   Row 2: "40 pieces" (white) · "Next drop: Friday 5 December".
 //   Perforated line, then the call to action: "Get drop alerts 1 day early", WhatsApp first, then email.
-// Behind it all: the drop photo. The top 20% is solid dark purple, then it fades to the clothes,
-// with a 35% dark purple layer over the photo so the text always reads.
+// Behind it all: the drop photo. The top 20% is solid charcoal, then it fades to the clothes, with a
+// 35% charcoal layer over the photo so the text always reads (Divine: "no plum, let's go dark").
 // Every number comes from getDemo() in demo-signals.ts. Date and "1 day early": [CLIENT TO CONFIRM].
 import Img from "./Img.astro";
 import DropAlerts from "./DropAlerts";
@@ -32,7 +32,7 @@ const pic = await toPic(asset("drop-log", "drop/drop-packing"), [480, 800, 1200,
           {[0, 1].map((k) => (
             <span class="drop-ticker-run" aria-hidden={k === 1 ? "true" : undefined}>
               {pastDrops.map((p) => (
-                <span class="drop-tick">Drop {pad(p.number)} · {p.pieces} pieces · <span class="text-mauve">{p.gone} gone</span></span>
+                <span class="drop-tick">Drop {pad(p.number)} · {p.pieces} pieces · <span class="text-gold">{p.gone} gone</span></span>
               ))}
               <span class="drop-tick font-bold text-white">Next drop: {d.nextLong}</span>
             </span>
@@ -70,21 +70,21 @@ const pic = await toPic(asset("drop-log", "drop/drop-packing"), [480, 800, 1200,
 </section>
 
 <style>
-  .drop-card { background: var(--color-plum); box-shadow: inset 0 0 0 1px rgb(201 162 78 / .35);
-    text-shadow: 0 1px 2px rgb(20 10 28 / .85), 0 0 22px rgb(20 10 28 / .6); }
-  .drop-card :global(input) { background: rgb(42 27 51 / .7); text-shadow: none; }
+  .drop-card { background: var(--color-char); box-shadow: inset 0 0 0 1px rgb(201 162 78 / .35);
+    text-shadow: 0 1px 2px rgb(10 11 12 / .85), 0 0 22px rgb(10 11 12 / .6); }
+  .drop-card :global(input) { background: rgb(30 32 35 / .7); text-shadow: none; }
   .drop-card :global(button) { text-shadow: none; }
   .drop-card :global(img) { object-position: 50% 60%; }
-  /* Solid dark purple for the top 20%, then the photo shows through, always under a 35% purple layer. */
+  /* Solid charcoal for the top 20%, then the photo shows through, always under a 35% charcoal layer. */
   .drop-shade { background:
-      linear-gradient(to bottom, var(--color-plum) 0%, var(--color-plum) 20%, rgb(42 27 51 / 0) 62%),
-      rgb(42 27 51 / .35); }
-  .drop-ticker { background: var(--color-plum); border-bottom: 1px solid rgb(199 168 218 / .3); }
+      linear-gradient(to bottom, var(--color-char) 0%, var(--color-char) 20%, rgb(30 32 35 / 0) 62%),
+      rgb(30 32 35 / .35); }
+  .drop-ticker { background: var(--color-char); border-bottom: 1px solid rgb(201 162 78 / .3); }
   .drop-ticker-track { display: flex; width: max-content; animation: drop-tick 32s linear infinite; }
   .drop-ticker-run { display: flex; flex-shrink: 0; }
   .drop-tick { font-family: var(--font-ui); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap;
     padding: 9px 22px; color: rgb(255 255 255 / .88); }
-  .drop-tick + .drop-tick { border-left: 1px solid rgb(199 168 218 / .35); }
+  .drop-tick + .drop-tick { border-left: 1px solid rgb(201 162 78 / .35); }
   @keyframes drop-tick { to { transform: translateX(-50%); } }
   .drop-dot { width: 10px; height: 10px; border-radius: 999px; background: var(--color-gold); animation: drop-pulse 2.2s infinite; }
   @keyframes drop-pulse { 0% { box-shadow: 0 0 0 0 rgb(201 162 78 / .6); } 70% { box-shadow: 0 0 0 10px rgb(201 162 78 / 0); } 100% { box-shadow: 0 0 0 0 rgb(201 162 78 / 0); } }
