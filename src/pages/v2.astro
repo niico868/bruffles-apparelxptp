@@ -20,6 +20,7 @@ import { wall } from "../data/wall";
 import { getDemo } from "../data/demo-signals";
 import { toPic } from "../lib/pic";
 import { formatPrice } from "../lib/price";
+import { igShots, igEvents, IG_URL } from "../data/ig";
 
 const hero = {
   bf: { desktop: await toPic(media.hero.bf.desktop), mobile: await toPic(media.hero.bf.mobile, [640, 1080]), video: media.hero.bf.video },
@@ -47,6 +48,7 @@ const WALL_V2 = [
 ];
 const wallCards = WALL_V2.map(({ id, photo }) => { const c = wall.find((w) => w.id === id)!; return photo ? c : { ...c, fit: undefined }; });
 const { signedFor } = getDemo();
+const igPics = await Promise.all(igShots.map(async (s) => ({ ...s, pic: await toPic({ image: s.image, alt: s.alt }, [240, 320]) })));
 const catSizes = "(min-width: 1440px) 330px, 23vw";
 ---
 <Base title="Bruffles Apparel × Passport to Paradise · Homepage 2" shop white offset={false}>
@@ -78,7 +80,7 @@ const catSizes = "(min-width: 1440px) 330px, 23vw";
       <section class="v2-pp" aria-labelledby="v2-pp-shop">
         <div class="v2-in">
           <p class="label-pp v2-eyebrow-pp text-signal rise">Passport to Paradise · 18+</p>
-          <h2 id="v2-pp-shop" class="h-pp v2-h rise" style="--i:1">Shop Passport</h2>
+          <h2 id="v2-pp-shop" class="h-pp v2-h rise" style="--i:1">Shop <span data-brush="underline">Passport</span></h2>
           <a href="/passport" class="v2-link text-signal decoration-signal/50 rise" style="--i:2">Shop all Passport</a>
           <ul class="v2-cat mt-6 md:mt-10">
             {ppPics.map(({ s, pic }, i) => (
@@ -86,6 +88,15 @@ const catSizes = "(min-width: 1440px) 330px, 23vw";
                 <a href={s.href} class="group/c block">
                   <div class="v2-thumb relative aspect-[4/5] overflow-hidden bg-char-2"><Img pic={pic} world="pp" sizes={catSizes} label={s.button} /></div>
                   <h3 class="v2-cap mt-2 group-hover/c:underline underline-offset-4">{s.button}</h3>
+                </a>
+              </li>
+            ))}
+            {igPics.map((s, i) => (
+              <li class="rise" style={`--i:${i + 2}`}>
+                <a href={s.href} class="group/c block">
+                  <div class="v2-thumb relative aspect-[4/5] overflow-hidden bg-char-2"><Img pic={s.pic} world="pp" sizes={catSizes} label={s.title} /></div>
+                  <h3 class="v2-cap mt-2 group-hover/c:underline underline-offset-4">{s.title}</h3>
+                  <p class="v2-cap-sm text-white/65 mt-0.5">{s.note}</p>
                 </a>
               </li>
             ))}
@@ -137,14 +148,15 @@ const catSizes = "(min-width: 1440px) 330px, 23vw";
         </div>
       </section>
 
-      <section class="v2-pp" aria-labelledby="v2-pp-what">
+      <section class="v2-pp torn" aria-labelledby="v2-pp-what">
         <div class="v2-in v2-stick">
           <p class="label-pp v2-eyebrow-pp text-signal">What Passport sells</p>
-          <h2 id="v2-pp-what" class="h-pp v2-h">Papers, filters <span class="text-signal">and tools</span></h2>
+          <h2 id="v2-pp-what" class="h-pp v2-h">Papers, filters <span class="text-signal">and <span data-brush="swash">tools</span></span></h2>
           <ol class="mt-8 md:mt-10 border-t border-white/15">
-            <li class="py-4 border-b border-white/15"><p class="v2-cap text-white">Rolling papers</p><p class="v2-cap-sm text-white/70 mt-1">King slim, unbleached. By the box.</p></li>
+            <li class="py-4 border-b border-white/15"><p class="v2-cap text-white">Luxury rolling papers</p><p class="v2-cap-sm text-white/70 mt-1">Ultra-thin and slow-burning. By the booklet or the box.</p></li>
             <li class="py-4 border-b border-white/15"><p class="v2-cap text-white">Filters and tips</p><p class="v2-cap-sm text-white/70 mt-1">Card filter tips and glass tips. By the pack.</p></li>
-            <li class="py-4 border-b border-white/15"><p class="v2-cap text-white">Tools</p><p class="v2-cap-sm text-white/70 mt-1">Grinders, rolling trays and stash tins.</p></li>
+            <li class="py-4 border-b border-white/15"><p class="v2-cap text-white">Trays and ashtrays</p><p class="v2-cap-sm text-white/70 mt-1">Branded wooden trays, the plane ashtray and hand-painted ones.</p></li>
+            <li class="py-4 border-b border-white/15"><p class="v2-cap text-white">Tools and merch</p><p class="v2-cap-sm text-white/70 mt-1">Grinders, stash tins and Passport caps.</p></li>
             <li class="py-4 border-b border-white/15"><p class="v2-cap text-white">18+ only</p><p class="v2-cap-sm text-white/70 mt-1">You confirm your age before you can shop Passport.</p></li>
           </ol>
           <a href="/passport" class="btn-pp label-pp mt-8 !min-h-11 !px-4 !text-[11px] md:!text-[12px]">Shop Passport <span aria-hidden="true">→</span></a>
@@ -170,12 +182,22 @@ const catSizes = "(min-width: 1440px) 330px, 23vw";
         </div>
       </section>
 
-      <section class="v2-pp" aria-label="Passport to Paradise">
-        <div class="v2-in v2-stick flex flex-col items-start">
-          <img src="/brand/passport-badge.webp" alt="Passport to Paradise logo" width="594" height="505" loading="lazy" decoding="async" class="w-[min(100%,260px)] h-auto" />
-          <p class="h-pp v2-h mt-6">Passport <br />to Paradise</p>
-          <p class="v2-cap-sm text-white/70 mt-2">Papers, filters and tools, by the pack and by the box.</p>
-          <a href="/passport" class="btn-pp label-pp mt-6 !min-h-11 !px-4 !text-[11px] md:!text-[12px]">Shop Passport <span aria-hidden="true">→</span></a>
+      <section class="v2-pp torn" aria-labelledby="v2-pp-out">
+        <div class="v2-in v2-stick">
+          <p class="label-pp v2-eyebrow-pp text-signal">Out and about</p>
+          <h2 id="v2-pp-out" class="h-pp v2-h">Passport, <span data-brush="underline">stamped</span></h2>
+          <p class="v2-cap-sm text-white/70 mt-3">A Trinidad &amp; Tobago brand, seen abroad.</p>
+          <ol class="mt-6 md:mt-8 border-t border-white/15">
+            {igEvents.map((e) => (
+              <li class="py-4 border-b border-white/15">
+                <p class="v2-cap-sm text-signal">{e.place}</p>
+                <h3 class="v2-cap text-white mt-1">{e.name}</h3>
+                <p class="v2-cap-sm text-white/65 mt-1 normal-case tracking-normal">{e.note}</p>
+              </li>
+            ))}
+          </ol>
+          <a href="/passport" class="btn-pp label-pp mt-8 !min-h-11 !px-4 !text-[11px] md:!text-[12px]">Shop Passport <span aria-hidden="true">→</span></a>
+          <p class="v2-cap-sm text-white/50 mt-4"><a href={IG_URL} class="underline underline-offset-4" target="_blank" rel="noopener">@pass_porttoparadise</a></p>
         </div>
       </section>
     </div>
@@ -186,13 +208,29 @@ const catSizes = "(min-width: 1440px) 330px, 23vw";
   /* Two fixed halves, row by row. Each half pads in from the page edge and from the centre line. */
   .v2-row { display: grid; grid-template-columns: 1fr 1fr; }
   .v2-bf { background: #fff; color: var(--color-ink); }
-  .v2-pp { background: var(--color-char); color: #fff; border-left: 1px solid rgb(201 162 78 / .35); }
+  .v2-pp { background: var(--color-char); color: #fff; position: relative; }
+  /* Passport column runs through tone bands (Divine final pass): charcoal, ash, deep plum, each torn
+     at the top over the band above. */
+  .v2-row:nth-child(2) .v2-pp { background: var(--color-ash); }
+  .v2-row:nth-child(3) .v2-pp { background: var(--color-plum-deep); }
+  .v2-row + .v2-row .v2-pp { border-top: 0; }
+  .v2-row:nth-child(2) .v2-pp { --tx: -120px; }
+  .v2-row:nth-child(3) .v2-pp { --tx: -300px; }
+  /* Centre line: perforated paper, like a ticket stub (Divine final pass). Small white punch-holes
+     bite into the Passport side and a faint dashed score runs beside them. It never moves. */
+  .v2-row { position: relative; }
+  .v2-row::after { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 14px; transform: translateX(-7px); z-index: 3; pointer-events: none;
+    background:
+      radial-gradient(circle at 7px 7px, #fff 0 3.2px, transparent 3.8px) 0 0 / 14px 14px repeat-y,
+      linear-gradient(to bottom, rgb(255 255 255 / .28) 0 5px, transparent 5px 14px) 11px 0 / 1px 14px repeat-y; }
+  @media (max-width: 767px) { .v2-row::after { width: 10px; transform: translateX(-5px);
+    background: radial-gradient(circle at 5px 5px, #fff 0 2.3px, transparent 2.8px) 0 0 / 10px 10px repeat-y,
+      linear-gradient(to bottom, rgb(255 255 255 / .28) 0 4px, transparent 4px 10px) 8px 0 / 1px 10px repeat-y; } }
   .v2-in { padding: clamp(40px, 8vw, 112px) clamp(12px, 4vw, 64px); max-width: 640px; }
   .v2-bf .v2-in { margin-left: auto; }
   .v2-pp .v2-in { margin-right: auto; }
   .v2-row + .v2-row .v2-in { padding-top: clamp(32px, 5vw, 80px); }
   .v2-row + .v2-row { border-top: 1px solid var(--color-hair); }
-  .v2-row + .v2-row .v2-pp { border-top: 1px solid rgb(255 255 255 / .12); }
   /* Passport side follows you down while the longer Bruffles side scrolls (computer and phone). */
   .v2-stick { position: sticky; top: 168px; }
 

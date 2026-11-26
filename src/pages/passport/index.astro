@@ -1,35 +1,102 @@
 ---
+// Passport to Paradise shop (Divine final pass, 2026-11-26). The page runs in tone bands: charcoal,
+// ash grey, a near-black plum and smoke grey, each joined to the one above by a torn paper edge.
+// Yellow paintbrush strokes draw under a few key words as they scroll in. A smoke haze at the bottom
+// fades into the white footer (Footer.astro). Context from the brand's Instagram lives in data/ig.ts.
 import Base from "../../layouts/Base.astro";
 import PassportCard from "../../components/PassportCard";
 import PassportList from "../../components/PassportList";
+import Img from "../../components/Img.astro";
 import { passport } from "../../data/products";
 import { passportImage } from "../../data/media";
+import { igShots, igEvents, IG_URL } from "../../data/ig";
 import { toPic } from "../../lib/pic";
 const pics = await Promise.all(passport.map((i) => toPic(passportImage(i.id, i.name), [480, 800, 1200])));
+const shots = await Promise.all(igShots.map(async (s) => ({ ...s, pic: await toPic({ image: s.image, alt: s.alt }, [240, 320]) })));
 ---
-<Base title="Passport to Paradise · Shop" description="Papers, filters and tools from Passport to Paradise, by the pack and by the box." world="pp" shop>
+<Base title="Passport to Paradise · Shop" description="Papers, filters and tools from Passport to Paradise, a Trinidad and Tobago brand. By the pack and by the box." world="pp" shop>
   <div class="pp">
-    <section class="wrap pt-32 md:pt-40 pb-16 md:grid md:grid-cols-12 md:gap-8 md:items-end">
-      <div class="md:col-span-7">
-        <p class="label-pp text-signal">Smoking accessories · 18+</p>
-        <h1 class="h-pp text-[56px] md:text-[96px] mt-4">Passport<br />to Paradise</h1>
-      </div>
-      <div class="md:col-span-4 md:col-start-9 mt-6 md:mt-0">
-        <img src="/brand/passport-badge.webp" alt="Passport to Paradise logo" width="594" height="505" class="w-40 md:w-56 mb-6" />
-        <p class="text-muted">Papers, filters and tools, by the pack and by the box.</p>
-      </div>
-    </section>
-    <section class="wrap pb-12" aria-label="Design in progress">
-      <div class="border border-dashed border-char-3 p-5 md:p-8 md:grid md:grid-cols-12 md:gap-8">
-        <p class="label-pp text-signal md:col-span-3">Design in progress</p>
-        <p class="text-muted mt-3 md:mt-0 md:col-span-9 max-w-[62ch]">We're studying the best of smoking-accessory and lifestyle brand design, from RAW's bold packaging, the torn-paper effect and smoke-hazed transitions, to brands like Zig-Zag, Elements, Juicy Jay's, Bambu and Lion Rolling. The full look for this page is coming soon.</p>
+    <!-- Band 1 · charcoal: name and promise -->
+    <section class="bg-char">
+      <div class="wrap pt-32 md:pt-40 pb-16 md:pb-20 md:grid md:grid-cols-12 md:gap-8 md:items-end">
+        <div class="md:col-span-7">
+          <p class="label-pp text-signal">Smoking accessories · 18+ · T&amp;T</p>
+          <h1 class="h-pp text-[clamp(44px,12vw,96px)] mt-4">Passport<br />to <span data-brush="underline">Paradise</span></h1>
+        </div>
+        <div class="md:col-span-4 md:col-start-9 mt-8 md:mt-0">
+          <img src="/brand/passport-badge.webp" alt="Passport to Paradise logo" width="594" height="505" class="w-36 md:w-52 mb-6" />
+          <p class="text-paper/85 max-w-[40ch]">Luxury rolling papers, filters and tools for the <span data-brush="swash" data-brush-delay=".2">slow</span> session. By the pack and by the box.</p>
+          <a href="#shop" class="btn-pp label-pp mt-6">Shop now <span aria-hidden="true">→</span></a>
+        </div>
       </div>
     </section>
-    <section class="wrap pb-16" aria-label="Price list"><PassportList items={passport} /></section>
-    <section class="wrap pb-[var(--spacing-section)]" aria-label="All products">
-      <div class="flex items-center gap-4 pb-6"><span class="label-pp text-signal">→</span><h2 class="label-pp">All products</h2><span class="flex-1 border-t border-dashed border-char-3"></span></div>
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-        {passport.map((item, n) => <PassportCard client:visible item={item} pic={pics[n]} />)}
+
+    <!-- Band 2 · ash grey: what's in the bag (from the brand's own posts) -->
+    <section class="bg-ash torn" style="--tx:-90px" aria-labelledby="pp-bag">
+      <div class="wrap py-16 md:py-24">
+        <div class="md:flex md:items-end md:justify-between gap-8">
+          <div>
+            <p class="label-pp text-signal">What's in the bag</p>
+            <h2 id="pp-bag" class="h-pp text-[clamp(30px,6vw,56px)] mt-3">More than <span data-brush="circle">papers</span></h2>
+          </div>
+          <p class="text-paper/80 mt-4 md:mt-0 max-w-[44ch]">Booklets, trays, hand-painted ashtrays and caps, made for people who like the ritual as much as the roll.</p>
+        </div>
+        <ul class="mt-10 md:mt-14 grid grid-cols-1 min-[480px]:grid-cols-3 gap-8 md:gap-10">
+          {shots.map((s, i) => (
+            <li>
+              <a href={s.href} class="group/s block">
+                <div class="relative aspect-[4/5] w-[min(100%,320px)] overflow-hidden bg-char-3 rotate-[var(--rt)] shadow-[0_10px_30px_-12px_rgb(0_0_0/.7)] ring-[6px] ring-paper/90" style={`--rt:${["-1.5deg", "1deg", "-.6deg"][i]}`}>
+                  <Img pic={s.pic} world="pp" sizes="(min-width: 480px) 30vw, 90vw" label={s.title} />
+                </div>
+                <h3 class="ui text-[14px] md:text-[15px] mt-5 group-hover/s:underline underline-offset-4">{s.title}</h3>
+                <p class="text-[13px] md:text-[14px] text-paper/70 mt-1">{s.note}</p>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <p class="label-pp text-paper/55 mt-8">Photos: <a href={IG_URL} class="underline underline-offset-4 hover:text-signal" rel="noopener" target="_blank">@pass_porttoparadise</a></p>
+      </div>
+    </section>
+
+    <!-- Band 3 · deep plum: the price list -->
+    <section class="bg-plum-deep torn" style="--tx:-260px" aria-labelledby="pp-prices">
+      <div class="wrap py-16 md:py-24">
+        <p class="label-pp text-signal">Price list</p>
+        <h2 id="pp-prices" class="h-pp text-[clamp(30px,6vw,56px)] mt-3 mb-8">By the <span data-brush="underline">pack</span>, by the box</h2>
+        <PassportList items={passport} />
+      </div>
+    </section>
+
+    <!-- Band 4 · smoke grey: every product -->
+    <section id="shop" class="bg-smoke torn scroll-mt-40" style="--tx:-170px" aria-labelledby="pp-all">
+      <div class="wrap py-16 md:py-24">
+        <div class="flex items-center gap-4 pb-8"><span class="label-pp text-signal">→</span><h2 id="pp-all" class="label-pp">All products</h2><span class="flex-1 border-t border-dashed border-char-3"></span></div>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+          {passport.map((item, n) => <PassportCard client:visible item={item} pic={pics[n]} />)}
+        </div>
+      </div>
+    </section>
+
+    <!-- Band 5 · charcoal: where Passport has been, then the smoke into the white footer -->
+    <section class="bg-char torn" style="--tx:-330px" aria-labelledby="pp-out">
+      <div class="wrap py-16 md:py-24 md:grid md:grid-cols-12 md:gap-8">
+        <div class="md:col-span-4">
+          <p class="label-pp text-signal">Out and about</p>
+          <h2 id="pp-out" class="h-pp text-[clamp(30px,6vw,56px)] mt-3">Passport, <span data-brush="underline">stamped</span></h2>
+          <p class="text-paper/75 mt-4 max-w-[36ch]">From Trinidad to trade fairs abroad. Follow along on <a href={IG_URL} class="underline underline-offset-4 hover:text-signal" rel="noopener" target="_blank">Instagram</a>.</p>
+        </div>
+        <ol class="md:col-span-7 md:col-start-6 mt-10 md:mt-0 border-t border-white/15">
+          {igEvents.map((e, i) => (
+            <li class="py-5 border-b border-white/15 grid grid-cols-[auto_1fr] gap-x-4 md:gap-x-6">
+              <span class="label-pp text-signal pt-1">0{i + 1}</span>
+              <div class="min-w-0">
+                <p class="label-pp text-paper/60">{e.place}</p>
+                <h3 class="ui text-[16px] md:text-[18px] mt-1">{e.name}</h3>
+                <p class="text-[13px] md:text-[14px] text-paper/70 mt-1">{e.note}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   </div>

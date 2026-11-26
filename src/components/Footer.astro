@@ -1,12 +1,14 @@
 ---
 // KOI-style footer: a solid dark band with link columns and the drop-alert sign-up.
-// Ink on Bruffles and home pages, charcoal on Passport pages.
+// Ink on Bruffles and home pages. Passport pages (Divine final pass, 2026-11-26): a solid white footer
+// with dark type, under a smoke haze that drifts left to right and fades the dark page into the white.
 import DropAlerts from "./DropAlerts";
 const { world = "home" } = Astro.props as { world?: "home" | "bf" | "pp" };
 const pp = world === "pp";
-const link = pp ? "hover:text-signal" : "hover:text-gold";
+const link = pp ? "hover:underline underline-offset-4" : "hover:text-gold";
 ---
-<footer class:list={[pp ? "bg-char text-paper border-t border-char-3" : "bg-ink text-bone"]}>
+{pp && <div class="smoke" aria-hidden="true"><i></i><i></i></div>}
+<footer class:list={[pp ? "bg-white text-char" : "bg-ink text-bone"]}>
   <div class="wrap py-16 md:py-24 grid gap-12 md:grid-cols-12">
     <div class="grid grid-cols-2 gap-8 md:col-span-6 md:grid-cols-3">
       <div>
@@ -36,17 +38,16 @@ const link = pp ? "hover:text-signal" : "hover:text-gold";
       </div>
     </div>
     <div id="drop-alerts" class="md:col-span-5 md:col-start-8 scroll-mt-24">
-      <p class:list={["label-bf", pp ? "text-signal" : "text-gold"]}>Drop alerts</p>
+      <p class:list={["label-bf", pp ? "text-char" : "text-gold"]}>Drop alerts</p>
       <p class:list={["text-[28px] md:text-[32px] mt-2", pp ? "h-pp" : "h-bf"]}>Get the next drop first.</p>
       <p class="mt-2 opacity-75 max-w-[44ch]">Hear about each drop by email or WhatsApp before it goes up.</p>
-      <div class="mt-6"><DropAlerts client:idle compact dark /></div>
+      <div class="mt-6"><DropAlerts client:idle compact dark={!pp} /></div>
     </div>
   </div>
-  <div class:list={["wrap py-8 border-t flex flex-col md:flex-row gap-4 md:items-center md:justify-between", pp ? "border-char-3" : "border-bone/15"]}>
-    <div class="flex items-center gap-4">
-      <img src="/brand/bruffles-monogram-gold.webp" alt="Bruffles Apparel monogram" width="32" height="32" />
-      <img src="/brand/passport-badge-sm.webp" alt="Passport to Paradise logo" width="38" height="32" class="h-8 w-auto" />
-    </div>
+  <div class:list={["wrap py-8 border-t flex flex-col md:flex-row gap-4 md:items-center md:justify-between", pp ? "border-char/15" : "border-bone/15"]}>
+    <a href="/" class="flex items-center gap-4" aria-label="Bruffles Apparel × Passport to Paradise, homepage">
+      <img src="/brand/ba-x-ptp-sm.webp" alt="" width="120" height="120" class="w-10 h-10 rounded-full" />
+    </a>
     <div class="md:text-right">
       <p class="ui text-[12px] opacity-60">Bruffles Apparel × Passport to Paradise · Trinidad & Tobago</p>
       <p class="text-[12px] opacity-60 mt-1">Demo site: sample pieces, photos and numbers. Nothing is for sale yet.</p>

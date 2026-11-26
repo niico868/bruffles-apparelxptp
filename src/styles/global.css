@@ -32,6 +32,10 @@
   --color-muted: #A3A8AE;      /* secondary text on charcoal (6.8:1) */
   --color-signal: #FFC629;     /* wayfinding, labels, CTAs (10.4:1 both ways) */
   --color-stamp: #E0393E;      /* the stamp moment only, large bold type (3.8:1) */
+  /* Passport tone bands (Divine final pass): each band a different dark shade, joined by a torn edge */
+  --color-ash: #33363C;        /* ash grey */
+  --color-plum-deep: #281D2D;  /* darker plum, near black */
+  --color-smoke: #2A2C30;      /* warm smoke grey */
 
   --font-sans: "Manrope Variable", system-ui, sans-serif;
   --font-serif: "Fraunces Variable", Georgia, serif;
@@ -88,9 +92,15 @@
   .btn-bf-ghost { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 24px;
     border: 1px solid var(--color-ink); color: var(--color-ink); transition: background-color .4s var(--ease-calm), color .4s var(--ease-calm); }
   .btn-bf-ghost:hover { background: var(--color-ink); color: var(--color-bone); }
+  /* Passport button (Divine final pass): same yellow, with a rustic finish: faint speckle, hairline
+     scratches, a worn inner edge and a soft drop shadow. Small, never camo. */
   .btn-pp { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 20px;
-    background: var(--color-signal); color: var(--color-char); transition: transform .15s var(--ease-zip), background-color .15s; }
-  .btn-pp:hover { background: #FFD45C; }
+    background-color: var(--color-signal); background-image: linear-gradient(rgb(255 198 41 / .35), rgb(255 198 41 / .35)), url("/brand/rustic.svg"); background-size: auto, 200px 80px; background-position: var(--rx, 0) var(--ry, 0);
+    color: var(--color-char); border-radius: 2px;
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / .35), inset 0 -2px 0 rgb(90 60 0 / .22), inset 0 0 0 1px rgb(90 60 0 / .18), 0 2px 0 rgb(0 0 0 / .25), 0 6px 14px -6px rgb(0 0 0 / .55);
+    text-shadow: 0 1px 0 rgb(255 255 255 / .25);
+    transition: transform .15s var(--ease-zip), background-color .15s, box-shadow .15s; }
+  .btn-pp:hover { background-color: #FFD45C; }
   .btn-pp:active { transform: scale(.97); }
 
   /* Image placeholders until the shoot */
@@ -215,3 +225,40 @@ body.shop, body.shop .bf, body.page-white, body.page-white .bf { background: #ff
 @media (min-width: 768px) and (max-width: 1023px) {
   .hero-copy a.label-bf, .hero-copy a.label-pp { white-space: nowrap; padding-inline: calc(14px * var(--k)) !important; letter-spacing: .04em; }
 }
+
+/* ---------- Passport final pass (Divine 2026-11-26) ---------- */
+/* Torn paper band edge: the band's own colour tears up over the band above, with a pale paper fibre
+   line just above the tear. Put .torn on any band with a solid background. --tx shifts the pattern so
+   neighbouring tears never match. */
+.torn { position: relative; }
+.torn::before, .torn::after { content: ""; position: absolute; left: 0; right: 0; height: 24px; pointer-events: none;
+  -webkit-mask: url("/brand/torn-edge.svg") var(--tx, 0) 0 / 560px 24px repeat-x; mask: url("/brand/torn-edge.svg") var(--tx, 0) 0 / 560px 24px repeat-x; }
+.torn::after { top: -23px; background: inherit; z-index: 2; }
+/* paper fibre: a pale ragged rim peeking out just above the tear */
+.torn::before { top: -26px; background: rgb(242 241 236 / .5); z-index: 1; -webkit-mask-position: calc(var(--tx, 0px) + 3px) 0; mask-position: calc(var(--tx, 0px) + 3px) 0; }
+
+/* Paintbrush strokes (Passport only): src/components/Brush.astro draws them when the word scrolls in. */
+[data-brush] { position: relative; z-index: 0; isolation: isolate; white-space: nowrap; }
+.brush-svg { position: absolute; z-index: -1; pointer-events: none; overflow: visible; }
+.brush-svg path { fill: none; stroke: var(--brush, var(--color-signal)); stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 1; stroke-dashoffset: 1; }
+.brush-on .brush-svg path { animation: brush-draw var(--bd, .75s) cubic-bezier(.55,.1,.25,1) var(--bdelay, 0s) forwards; }
+@keyframes brush-draw { to { stroke-dashoffset: 0; } }
+@media (prefers-reduced-motion: reduce) { .brush-svg path { stroke-dashoffset: 0; animation: none !important; } }
+
+/* Smoke haze into the white Passport footer */
+.smoke { position: relative; height: clamp(150px, 22vw, 260px); overflow: hidden;
+  background: linear-gradient(to bottom, var(--smoke-from, var(--color-char)) 0%, color-mix(in srgb, var(--smoke-from, var(--color-char)) 70%, #fff) 45%, #fff 100%); }
+.smoke i { position: absolute; inset: 0; background-repeat: repeat-x; background-size: 1200px 100%; will-change: background-position;
+  -webkit-mask: linear-gradient(to bottom, transparent, #000 25%, #000 70%, transparent); mask: linear-gradient(to bottom, transparent, #000 25%, #000 70%, transparent); }
+.smoke i:nth-child(1) { background-image: url("/brand/smoke.svg"); opacity: .75; animation: smoke-drift 48s linear infinite; }
+.smoke i:nth-child(2) { background-image: url("/brand/smoke-2.svg"); opacity: .55; animation: smoke-drift 30s linear infinite; top: 18%; }
+@keyframes smoke-drift { from { background-position-x: 0; } to { background-position-x: 1200px; } }
+@media (prefers-reduced-motion: reduce) { .smoke i { animation: none; } }
+
+/* No sideways scroll at any width */
+html, body { overflow-x: clip; }
+.btn-pp:disabled { background-image: none; box-shadow: none; text-shadow: none; }
+
+/* Very narrow phones (under 360px): homepage 2's hero buttons drop the arrow so they fit their half. */
+@media (max-width: 359px) { .hero-v .hero-copy a span[aria-hidden="true"] { display: none; } .hero-v .hero-copy a.label-bf, .hero-v .hero-copy a.label-pp { padding-inline: 8px !important; } }

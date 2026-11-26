@@ -165,3 +165,10 @@ Local dev on the Chromebook is not needed: preview on the .workers.dev link inst
 - Divine's merged circular logo now in the hero circle, WhatsApp share image (og-ba-x-ptp-v2.jpg) and a home button at the top of every page except the two homepages.
 - Plum dropped: Drop Log and the /v2 Passport side are charcoal.
 - Looked at a Passport Instagram post for context (forest green, cream, gold, script headings, eco claims). Not copied; question open on charcoal vs forest green.
+
+### Final pass before handoff (2026-11-26)
+- Homepage 2: perforated paper centre line (fixed), merged BA × PTP circle is the only header logo everywhere except the original homepage; footer shows the merged circle.
+- Passport side: rustic yellow buttons, hand-painted brush strokes that draw under key words on scroll (src/components/Brush.astro), tone bands (charcoal, ash, deep plum, smoke) joined by torn paper edges, smoke haze into a white footer.
+- Instagram context (src/data/ig.ts): product types, three event mentions, three small photo captures used as stand-ins. Eco claims left out until the client confirms.
+- Textures: node scripts/make-textures.mjs (run by hand).
+- Checked 10 pages at 320/375/768/1024/1280/1920: no sideways scroll, no text at the edge.

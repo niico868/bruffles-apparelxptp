@@ -1,0 +1,77 @@
+---
+// Paintbrush strokes for the Passport side (Divine final pass, 2026-11-26). Mark a word with
+// data-brush="underline" | "circle" | "swash" | "arrow" and a hand-painted stroke draws itself under,
+// around or beside it the first time it scrolls into view. Every stroke is drawn with a little
+// randomness, so no two are the same and none are symmetrical. Colour: --brush (default yellow).
+// Included once from Base.astro; does nothing on pages without data-brush.
+---
+<svg width="0" height="0" class="absolute" aria-hidden="true" focusable="false">
+  <filter id="brush-rough" x="-10%" y="-40%" width="120%" height="180%">
+    <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3" result="n" />
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="2.6" />
+  </filter>
+</svg>
+<script>
+  const els = [...document.querySelectorAll<HTMLElement>("[data-brush]")];
+  if (els.length) {
+    const NS = "http://www.w3.org/2000/svg";
+    const r = (a: number, b: number) => a + Math.random() * (b - a);
+    const f = (n: number) => n.toFixed(1);
+    // Each shape is drawn in a 100 x 20 (or 100 x 40) box stretched over the word.
+    const shapes: Record<string, () => { box: string; css: Partial<CSSStyleDeclaration>; paths: [string, number, number][] }> = {
+      // A loaded brush: thick sweep that lifts at the end, plus a thinner dry-brush pass.
+      underline: () => {
+        const y0 = r(9, 12), y1 = r(7, 11), y2 = r(4, 9);
+        return { box: "0 0 100 20", css: { left: "-4%", width: "108%", bottom: "-0.32em", height: "0.62em" },
+          paths: [[`M${f(r(0, 3))} ${f(y0)} C ${f(r(25, 35))} ${f(y0 + r(-3, 2))}, ${f(r(60, 70))} ${f(y1 + r(-2, 3))}, ${f(r(96, 100))} ${f(y2)}`, r(6, 8), 1],
+                  [`M${f(r(6, 12))} ${f(y0 + r(2, 4))} C ${f(r(35, 45))} ${f(y0 + r(0, 3))}, ${f(r(65, 75))} ${f(y1 + r(1, 3))}, ${f(r(82, 92))} ${f(y2 + r(2, 4))}`, r(2, 3), .55]] };
+      },
+      // A quick loose loop that overshoots where it started.
+      circle: () => {
+        const a = r(-6, 4);
+        return { box: "0 0 100 40", css: { left: "-12%", width: "124%", top: "-0.38em", height: "calc(100% + 0.76em)" },
+          paths: [[`M${f(r(70, 80))} ${f(r(2, 6))} C ${f(r(30, 40))} ${f(a)}, ${f(r(-4, 2))} ${f(r(8, 14))}, ${f(r(2, 6))} ${f(r(22, 26))} C ${f(r(6, 12))} ${f(r(38, 42))}, ${f(r(70, 80))} ${f(r(40, 44))}, ${f(r(96, 102))} ${f(r(24, 30))} C ${f(r(104, 108))} ${f(r(12, 16))}, ${f(r(80, 90))} ${f(r(0, 4))}, ${f(r(50, 60))} ${f(r(2, 5))}`, r(2.6, 3.4), 1]] };
+      },
+      // Two offset strokes, like a fast double underline.
+      swash: () => ({ box: "0 0 100 20", css: { left: "-2%", width: "104%", bottom: "-0.42em", height: "0.7em" },
+        paths: [[`M${f(r(0, 4))} ${f(r(8, 11))} Q ${f(r(40, 55))} ${f(r(3, 7))} ${f(r(97, 100))} ${f(r(6, 9))}`, r(3, 4), 1],
+                [`M${f(r(10, 18))} ${f(r(15, 18))} Q ${f(r(45, 60))} ${f(r(11, 14))} ${f(r(78, 88))} ${f(r(14, 17))}`, r(2, 2.6), .8]] }),
+      // A curved arrow coming in from the left, pointing at the word.
+      arrow: () => {
+        const ex = r(92, 96), ey = r(18, 22);
+        return { box: "0 0 100 40", css: { right: "100%", width: "1.9em", top: "-0.2em", height: "1.2em", marginRight: "0.15em" },
+          paths: [[`M${f(r(2, 8))} ${f(r(2, 8))} C ${f(r(10, 25))} ${f(r(30, 38))}, ${f(r(50, 65))} ${f(r(28, 34))}, ${f(ex)} ${f(ey)}`, r(3.4, 4.2), 1],
+                  [`M${f(ex - r(20, 26))} ${f(ey - r(10, 14))} L ${f(ex)} ${f(ey)} L ${f(ex - r(22, 28))} ${f(ey + r(8, 12))}`, r(3.4, 4.2), 1]] };
+      },
+    };
+    els.forEach((el, i) => {
+      const kind = shapes[el.dataset.brush || "underline"] ? el.dataset.brush || "underline" : "underline";
+      const s = shapes[kind]();
+      const svg = document.createElementNS(NS, "svg");
+      svg.setAttribute("aria-hidden", "true");
+      svg.classList.add("brush-svg"); Object.assign(svg.style, s.css);
+      el.appendChild(svg);
+      // Draw in real pixels so the brush keeps its shape (no stretched strokes): map the 100-wide
+      // sketch box onto the measured size, and scale the brush width with the type size.
+      const box = svg.getBoundingClientRect(); const [, , bw, bh] = s.box.split(" ").map(Number);
+      const W = Math.max(box.width, 10), H = Math.max(box.height, 6);
+      svg.setAttribute("viewBox", `0 0 ${W.toFixed(1)} ${H.toFixed(1)}`);
+      const fs = parseFloat(getComputedStyle(el).fontSize) || 16; const k0 = Math.min(Math.max(fs / 18, 0.8), 3.2);
+      s.paths.forEach(([d, w, o], k) => {
+        let n = 0;
+        const dd = d.replace(/-?\d+(\.\d+)?/g, (m) => (n++ % 2 === 0 ? (+m * W) / bw : (+m * H) / bh).toFixed(1));
+        const p = document.createElementNS(NS, "path");
+        p.setAttribute("d", dd); p.setAttribute("pathLength", "1"); p.setAttribute("filter", "url(#brush-rough)");
+        p.style.strokeWidth = String(w * k0 * (kind === "circle" || kind === "arrow" ? 0.8 : 1)); p.style.opacity = String(o * 0.92);
+        p.style.setProperty("--bdelay", `${(Number(el.dataset.brushDelay || 0) + k * 0.22).toFixed(2)}s`);
+        p.style.vectorEffect = "none";
+        svg.appendChild(p);
+      });
+      el.style.setProperty("--brush-i", String(i));
+    });
+    const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+      if (e.isIntersecting) { e.target.classList.add("brush-on"); io.unobserve(e.target); }
+    }), { threshold: 0.9, rootMargin: "0px 0px -12% 0px" });
+    els.forEach((el) => io.observe(el));
+  }
+</script>
