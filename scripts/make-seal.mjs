@@ -1,3 +1,4 @@
+// Run by hand (not in the build: it fails on Cloudflare Workers Builds; the SVGs are committed).
 // Builds the "Authenticated" seal (Divine round 5, 2026-11-26: option B, a Victorian copperplate
 // stamp with a thin ring). Output: public/brand/seal-authenticated.svg and -light.svg (for dark grounds).
 // Text is turned into outlines with opentype.js, so no font is downloaded by visitors.

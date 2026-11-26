@@ -8,8 +8,8 @@ import { pad, type BrufflesPiece } from "../data/products";
 import { getSignals } from "../data/demo-signals";
 import DemandLine from "./DemandLine";
 const { p, sizes = "(min-width: 768px) 45vw, 50vw", i = 0, loop = false } = Astro.props as { p: BrufflesPiece; sizes?: string; i?: number; loop?: boolean };
-const pic = await toPic(pieceImages(p.id, p.name)[0], [480, 800, 1200]);
-const hover = await toPic(hoverImage(p.id, p.name), [480, 800, 1200]);
+const pic = await toPic(pieceImages(p.id, p.name)[0], [360, 560, 800, 1200]);
+const hover = await toPic(hoverImage(p.id, p.name), [360, 560, 800, 1200]);
 const n = pad(p.pieceNo);
 const sig = getSignals(p.pieceNo);
 ---

@@ -39,7 +39,7 @@ const demo = {
   // Customer Verified wall header: "147 pieces signed for".
   signedFor: 147,
   // Drop Log on /bruffles.
-  currentDrop: { number: 14, pieces: 40, next: "Fri 5 Dec, 7pm" },   // date and time: [CLIENT TO CONFIRM]
+  currentDrop: { number: 14, pieces: 40, next: "Fri 5 Dec, 7pm", nextLong: "Friday 5 December" },   // date and time: [CLIENT TO CONFIRM]
   pastDrops: [
     { number: 13, pieces: 40, gone: 36 },
     { number: 12, pieces: 38, gone: 38 },

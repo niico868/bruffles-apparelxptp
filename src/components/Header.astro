@@ -21,7 +21,9 @@ const promos = world === "pp"
 // Logos replace the text lockups (Divine 2026-11-26): Bruffles monogram on Bruffles pages, the
 // Passport badge on Passport pages, both on the homepage and shared pages.
 const home = world === "home";
-const transparent = Astro.url.pathname === "/";
+// The tester link to homepage 2 only shows once that page exists.
+const hasV2 = Object.keys(import.meta.glob(["../pages/v2.astro", "../pages/v2/index.astro"])).length > 0;
+const transparent = Astro.url.pathname === "/" || Astro.url.pathname.replace(/\/$/, "") === "/v2";
 const lockupLabel = world === "bf" ? "Bruffles Apparel" : world === "pp" ? "Passport to Paradise" : "Bruffles Apparel × Passport to Paradise";
 const seg = (w: "bf" | "pp") => world === w ? "bg-current/0 underline underline-offset-[6px] decoration-1" : "opacity-70 hover:opacity-100";
 ---
@@ -43,17 +45,26 @@ const seg = (w: "bf" | "pp") => world === w ? "bg-current/0 underline underline-
         <span aria-hidden class="grid gap-[5px]"><span class="block w-5 h-px bg-current"></span><span class="block w-5 h-px bg-current"></span></span>
         <span class="hidden sm:inline">Menu</span>
       </button>
-      <div class="hidden md:flex items-center gap-1 ui" role="group" aria-label="Choose a brand">
+      <div class="hidden lg:flex items-center gap-1 ui" role="group" aria-label="Choose a brand">
         <a href="/bruffles" class:list={["px-3 py-2", seg("bf")]} aria-current={world === "bf" ? "page" : undefined}>Shop Bruffles</a>
         <span aria-hidden class="opacity-40">/</span>
         <a href="/passport" class:list={["px-3 py-2", seg("pp")]} aria-current={world === "pp" ? "page" : undefined}>Shop Passport</a>
       </div>
     </div>
-    <a href="/" class="lockup flex items-center gap-2" aria-label={`${lockupLabel}, home`}>
-      {world !== "pp" && <img src={transparent ? "/brand/bruffles-monogram-gold.webp" : "/brand/bruffles-monogram-gold-deep.webp"} alt="" width="44" height="44" class="logo-bf w-10 h-10 md:w-11 md:h-11" />}
-      {home && <span aria-hidden class="h-bf text-[16px] opacity-70">×</span>}
-      {world !== "bf" && <img src="/brand/passport-badge-sm.webp" alt="" width="200" height="170" class="h-10 md:h-12 w-auto" />}
-    </a>
+    {home ? (
+      /* Homepage and shared pages (Divine round 5): each logo opens its own brand. */
+      <div class="lockup flex items-center gap-2">
+        <a href="/bruffles" aria-label="Bruffles Apparel"><img src={transparent ? "/brand/bruffles-monogram-gold.webp" : "/brand/bruffles-monogram-gold-deep.webp"} alt="" width="44" height="44" class="logo-bf w-10 h-10 md:w-11 md:h-11" /></a>
+        <span aria-hidden class="h-bf text-[16px] opacity-70">×</span>
+        <a href="/passport" aria-label="Passport to Paradise"><img src="/brand/passport-badge-sm.webp" alt="" width="200" height="170" class="h-10 md:h-12 w-auto" /></a>
+      </div>
+    ) : (
+      /* A brand's own pages: the logo goes back to the homepage with both brands. */
+      <a href="/" class="lockup flex items-center gap-2" aria-label={`${lockupLabel}, back to the homepage`}>
+        {world !== "pp" && <img src="/brand/bruffles-monogram-gold-deep.webp" alt="" width="44" height="44" class="logo-bf w-10 h-10 md:w-11 md:h-11" />}
+        {world !== "bf" && <img src="/brand/passport-badge-sm.webp" alt="" width="200" height="170" class="h-10 md:h-12 w-auto" />}
+      </a>
+    )}
     {shop ? (
       <div class="flex justify-end items-center gap-0.5 md:gap-2 ui text-[13px]">
         <ShopSearch client:idle items={searchItems} />
@@ -107,6 +118,12 @@ const seg = (w: "bf" | "pp") => world === w ? "bg-current/0 underline underline-
         </ul>
       </details>
       </>)}
+      {/* Tester link between the two homepage designs (Divine round 5): right end of the menu row,
+          where it never covers any text. */}
+      {hasV2 && (Astro.url.pathname === "/" || Astro.url.pathname.startsWith("/v2")) && (
+        <a href={Astro.url.pathname === "/" ? "/v2" : "/"} class="view-switch ml-auto">
+          {Astro.url.pathname === "/" ? "Second homepage view" : "First homepage view"} <span aria-hidden>→</span></a>
+      )}
     </div>
   )}
 </header>
@@ -143,6 +160,11 @@ const seg = (w: "bf" | "pp") => world === w ? "bg-current/0 underline underline-
   .site-header[data-shop], :global(body.page-white) .site-header[data-world="bf"] { background: #fff; }
   .site-header[data-shop][data-world="pp"] { background: var(--color-char); color: var(--color-paper); }
   .menu-row { border-color: var(--color-hair); }
+  .view-switch { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 12px; border: 1px solid var(--color-gold-deep);
+    color: var(--color-gold-text); background: rgb(201 162 78 / .1); font-weight: 600; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }
+  .view-switch:hover { background: var(--color-gold); color: var(--color-ink); }
+  .site-header[data-transparent="true"]:not(.is-solid) .view-switch { color: #fff; border-color: rgb(255 255 255 / .6); background: rgb(0 0 0 / .2); }
+  @media (max-width: 767px) { .site-header[data-transparent="true"]:not(.is-solid) .view-switch { color: var(--color-gold-text); border-color: var(--color-gold-deep); background: rgb(201 162 78 / .1); } }
   .site-header[data-world="pp"] .menu-row { border-color: var(--color-char-3); }
   /* Homepage: the full shop header sits over the hero with no fill and white type, then turns white on scroll. */
   .site-header[data-shop][data-transparent="true"]:not(.is-solid) { background: transparent; color: #fff; mix-blend-mode: normal; border-color: transparent; }

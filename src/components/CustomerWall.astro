@@ -1,5 +1,5 @@
 ---
-// Customer Verified wall (replaces the old five-photo "Real recognize real" grid, 2026-11-25).
+// Customer Verified wall (round 5: "Seal of authenticity" / "We recognize real").
 // Full version on the homepage (#wall); compact version (4 cards) on /bruffles.
 import WallCard from "./WallCard.astro";
 import { wall } from "../data/wall";
@@ -11,8 +11,8 @@ const { signedFor } = getDemo();
 <section id={compact ? "wall-compact" : "wall"} class="bf py-[var(--spacing-section)] scroll-mt-16" aria-labelledby={compact ? "wall-h-c" : "wall-h"}>
   <div class="wrap md:flex md:items-end md:justify-between gap-6">
     <div>
-      <h2 id={compact ? "wall-h-c" : "wall-h"} class="h-bf text-[36px] md:text-[56px] rise">Sign of <span class="text-gold-text italic">authenticity</span></h2>
-      <p class="h-bf text-[20px] md:text-[24px] text-ink-soft mt-2 rise" style="--i:1">Real recognize real.</p>
+      <h2 id={compact ? "wall-h-c" : "wall-h"} class="h-bf text-[36px] md:text-[56px] rise">Seal of <span class="text-gold-text italic">authenticity</span></h2>
+      <p class="h-bf text-[20px] md:text-[24px] text-ink-soft mt-2 rise" style="--i:1">We recognize real.</p>
     </div>
     <p class="ui text-[13px] text-ink-soft mt-4 md:mt-0 flex flex-wrap items-center gap-x-2 gap-y-1 md:justify-end rise" style="--i:2">
       <span class="inline-flex items-center gap-2"><img src="/brand/bruffles-monogram-gold-deep.webp" alt="" aria-hidden="true" width="18" height="18" />Customer Verified</span>
