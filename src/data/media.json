@@ -12,7 +12,8 @@
         "alt": "Polo shirts and sweatshirts in navy, cream and red hanging on wooden hangers along a store rack.",
         "focal": "50% 50%"
       },
-      "video": "home/hero-bf.mp4"
+      "video": "home/hero-bf.mp4",
+      "videoMobile": "home/hero-bf-mobile.mp4"
     },
     "pp": {
       "_rule": "Homepage Passport media = lifestyle or brand only (beach, travel, packaging, logo). Product close-ups stay behind the 18+ gate on /passport.",

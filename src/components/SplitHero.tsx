@@ -104,17 +104,17 @@ export default function SplitHero({ media = {} }: { media?: { bf?: PanelMedia; p
   };
 
   return (
-    <div ref={root} className="relative flex flex-col mt-[144px] h-[calc(100svh-144px)] min-h-[520px] overflow-hidden md:mt-0 md:block md:h-[100svh] md:min-h-[640px]"
+    <div ref={root} className="relative flex flex-col mt-[144px] h-[calc(100svh-144px)] min-h-[440px] overflow-hidden md:mt-0 md:block md:h-[100svh] md:min-h-[640px]"
       onPointerMove={onMove} onPointerLeave={(e) => { if (e.pointerType === "mouse") setActive(null); }} onClick={onClick}>
 
       {/* ---------- Bruffles panel ---------- */}
       <motion.section data-side="bf" aria-labelledby="hero-bf"
-        className="bf relative basis-0 min-h-0 md:absolute md:inset-y-0 md:left-0 md:w-[70%] overflow-hidden"
+        className="hero-panel bf relative basis-0 min-h-0 md:absolute md:inset-y-0 md:left-0 md:w-[70%] overflow-hidden"
         initial={false} animate={{ flexGrow: grow("bf") }} transition={t}>
         <HeroMedia m={bf} eager scrim="from-ink/75" playOk={playOk} open={active === "bf"} videoRef={videos.bf} desktop={desktop} />
 
         <div data-size={sizeOf("bf")} className={`${COPY} ${bfHas ? "on-media" : ""} md:pr-[max(var(--spacing-gutter),calc(64px*var(--k)))]`}>
-          <Monogram tone={bfHas ? "bright" : "deep"} className="relative rise w-auto self-start" style={markStyle} />
+          <a href="/bruffles" aria-label="Bruffles Apparel" className="relative rise self-start"><Monogram tone={bfHas ? "bright" : "deep"} className="block w-auto" style={markStyle} /></a>
           <h2 id="hero-bf" className={`relative rise h-bf ${bfHas ? "text-bone" : ""}`} style={{ ["--i" as string]: 1, ...headStyle }}>
             Bruffles<br className="hero-br" /> Apparel</h2>
           <p className={`hero-body relative rise ${bfHas ? "text-bone/85" : "text-ink-soft"}`} style={{ ["--i" as string]: 2, ...bodyStyle }}>
@@ -126,7 +126,7 @@ export default function SplitHero({ media = {} }: { media?: { bf?: PanelMedia; p
 
       {/* ---------- Passport panel ---------- */}
       <motion.section data-side="pp" aria-labelledby="hero-pp"
-        className="pp relative basis-0 min-h-0 md:absolute md:inset-y-0 md:left-1/2 md:w-[70%] overflow-hidden z-10"
+        className="hero-panel hero-panel-pp pp relative basis-0 min-h-0 md:absolute md:inset-y-0 md:left-1/2 md:w-[70%] overflow-hidden z-10"
         initial={false} animate={{ x: desktop ? `${(shift / PANEL) * 100}%` : 0, flexGrow: grow("pp") }} transition={t}
         style={{ willChange: "transform" }}>
         <HeroMedia m={pp} scrim="from-char/85" tint="bg-char/40" playOk={playOk} open={active === "pp"} videoRef={videos.pp} desktop={desktop} />
@@ -161,13 +161,13 @@ export default function SplitHero({ media = {} }: { media?: { bf?: PanelMedia; p
           <SeamMark onTap={() => setActive(null)} />
         </div>
         {/* BA logo: bottom right of the Bruffles half, just inside the seam */}
-        <CornerLogo show={active !== "bf"} t={t}
+        <CornerLogo show={active !== "bf"} t={t} href="/bruffles" label="Bruffles Apparel"
           className="right-[var(--spacing-gutter)] bottom-[calc(50%+24px)] md:right-[calc(50%+var(--spacing-gutter))] md:bottom-8">
           <Monogram tone={bfHas ? "bright" : "deep"} className={LOGO} />
         </CornerLogo>
       </motion.div>
       {/* PTP logo: bottom right of the Passport half (the hero's bottom right corner) */}
-      <CornerLogo show={active !== "pp"} t={t} className="z-30 right-[var(--spacing-gutter)] bottom-6 md:bottom-8">
+      <CornerLogo show={active !== "pp"} t={t} href="/passport" label="Passport to Paradise" className="z-30 right-[var(--spacing-gutter)] bottom-6 md:bottom-8">
         <img src="/brand/passport-badge-sm.webp" alt="" width="200" height="170" decoding="async" className={LOGO} />
       </CornerLogo>
     </div>
@@ -176,28 +176,33 @@ export default function SplitHero({ media = {} }: { media?: { bf?: PanelMedia; p
 
 // ---------- Shared copy sizing: both brands use exactly the same sizes ----------
 // Copy block: phone = bottom of its panel; computer = bottom left, 30% of the hero wide (42.857% of a 70% panel).
-const COPY = "hero-copy relative h-full md:h-auto md:absolute md:left-0 md:bottom-0 md:w-[42.857%] flex flex-col justify-end px-[var(--spacing-gutter)] pt-4 pb-8 md:pt-24 md:pb-16";
-const labelStyle = { fontSize: scaled("13px", "10px") };
+const COPY = "hero-copy relative h-full md:h-auto md:absolute md:left-0 md:bottom-0 md:w-[42.857%] flex flex-col justify-end px-[var(--spacing-gutter)] md:pt-24 md:pb-16";
+// Full sizes come from CSS variables on .hero-copy (global.css). On a computer they are the fixed
+// sizes below; on a phone they also shrink with the panel's height (container query units), so the
+// logo, name, line and button always fit their half and never slide under the header or the tear
+// (Divine 2026-11-26: Featured/Brand covered the Bruffles logo, the tear and circle covered Passport).
+const labelStyle = { fontSize: scaled("var(--hc-label)", "10px") };
 // Bruffles monogram above the headline: same height as the label line it replaced, grown a little.
-const markStyle = { height: scaled("40px", "18px") };
-const headStyle = { fontSize: scaled("clamp(44px, 5.6vw, 108px)"), marginTop: scaled("12px") };
-const bodyStyle = { fontSize: scaled("16px", "11px"), marginTop: scaled("16px"), maxWidth: "30ch" };
-// Button: 48px tall at full size, never under 32px when shut.
+const markStyle = { height: scaled("var(--hc-mark)", "18px") };
+const headStyle = { fontSize: scaled("var(--hc-head)"), marginTop: scaled("var(--hc-gap)") };
+const bodyStyle = { fontSize: scaled("var(--hc-body)", "11px"), marginTop: scaled("var(--hc-gap)"), maxWidth: "30ch" };
+// Button: 48px tall at full size (44px on a phone), never under 32px when shut.
 const btnStyle = {
-  marginTop: scaled("32px"),
+  marginTop: scaled("var(--hc-btn-gap)"),
   fontSize: scaled("13px", "10px"),
-  minHeight: scaled("48px", "32px"),
+  minHeight: scaled("var(--hc-btn)", "32px"),
   paddingInline: scaled("24px", "12px"),
 };
 
 // Corner logos: one height for both brands (56px phone, 72px computer); width follows each logo's shape.
 const LOGO = "h-14 md:h-[72px] w-auto";
 // Shown while its side is 50% or 30%; fades out when its side opens to 70%, so the film has the stage.
-function CornerLogo({ show, t, className, children }:
-  { show: boolean; t: object; className: string; children: React.ReactNode }) {
+// Each logo opens its own brand's page (Divine round 5); it can't be tapped while faded out.
+function CornerLogo({ show, t, className, children, href, label }:
+  { show: boolean; t: object; className: string; children: React.ReactNode; href: string; label: string }) {
   return (
-    <motion.div aria-hidden className={`absolute pointer-events-none ${className}`}
-      initial={false} animate={{ opacity: show ? 1 : 0 }} transition={t}>{children}</motion.div>
+    <motion.a href={href} aria-label={label} tabIndex={show ? 0 : -1} className={`absolute ${show ? "pointer-events-auto" : "pointer-events-none"} ${className}`}
+      initial={false} animate={{ opacity: show ? 1 : 0 }} transition={t}>{children}</motion.a>
   );
 }
 
@@ -208,11 +213,11 @@ const MERGED_LOGO: string | null = null;
 function SeamMark({ onTap }: { onTap: () => void }) {
   return (
     <button type="button" data-seam onClick={onTap} aria-label="Show both brands side by side"
-      className="grid place-items-center rounded-full bg-ink ring-1 ring-gold/60 size-[72px] md:size-[104px] cursor-pointer
+      className="grid place-items-center rounded-full bg-ink ring-1 ring-gold/60 size-[52px] md:size-[104px] cursor-pointer
         transition-transform duration-300 hover:scale-105 active:scale-95 focus-visible:outline-2 focus-visible:outline-gold">
       {MERGED_LOGO
         ? <img src={MERGED_LOGO} alt="" width="75" height="75" decoding="async" className="w-[72%] h-auto" />
-        : <span aria-hidden className="label-pp text-gold text-[10px] tracking-[0.12em]">BA × PTP</span>}
+        : <span aria-hidden className="label-pp text-gold text-[8px] md:text-[10px] tracking-[0.12em]">BA × PTP</span>}
     </button>
   );
 }
@@ -229,7 +234,9 @@ function HeroMedia({ m, eager = false, scrim, tint, playOk, open, videoRef, desk
   return (
     <div className="absolute inset-0" aria-hidden={!d.alt}>
       <picture>
+        {mob.avif && <source media="(max-width: 767px)" type="image/avif" srcSet={mob.avif} sizes="100vw" />}
         <source media="(max-width: 767px)" srcSet={mob.srcset} sizes="100vw" />
+        {d.avif && <source type="image/avif" srcSet={d.avif} sizes="70vw" />}
         <img src={d.src} srcSet={d.srcset} sizes="70vw" alt={d.alt} width={d.w} height={d.h}
           loading={eager ? "eager" : "lazy"} fetchPriority={eager ? "high" : undefined} decoding="async"
           className="absolute inset-0 w-full h-full object-cover" style={{ objectPosition: d.focal }} />

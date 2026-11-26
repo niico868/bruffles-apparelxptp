@@ -24,6 +24,9 @@
   --color-gold-deep: #A7832F;  /* monogram + 1-of-1 marks on bone, graphics only (3.1:1) */
   --color-gold-text: #7A5E22;  /* gold text on bone (5.3:1) */
   --color-navy: #1B2A41;       /* Bruffles photo placeholders (Divine, 2026-11-25) */
+  --color-plum: #2A1B33;       /* Drop Log + homepage 2 Passport half: dark purple (Divine 2026-11-26) */
+  --color-plum-2: #3A2747;     /* raised panels and lines on plum */
+  --color-mauve: #C7A8DA;      /* small accents on plum (9.0:1 on plum) */
   /* Passport: airport wayfinding */
   --color-char: #1E2023;       /* page base */
   --color-char-2: #2A2D31;     /* cards, departure-board tiles */
@@ -131,6 +134,21 @@
 @property --k { syntax: "<number>"; inherits: true; initial-value: 1; }
 .hero-copy { --k: 1; transition: --k .8s var(--ease-calm); }
 .hero-copy[data-size="shut"] { --k: .38; }
+/* Full (unscaled) copy sizes. Computer: fixed. Phone: each panel is a size container, so the sizes
+   also follow the panel's height (cqh) and the copy always fits its half (Divine 2026-11-26). */
+.hero-copy { --hc-label: 13px; --hc-mark: 40px; --hc-head: clamp(44px, 5.6vw, 108px); --hc-body: 16px; --hc-gap: 12px; --hc-btn: 48px; --hc-btn-gap: 32px; }
+@media (max-width: 767px) {
+  .hero-panel { container-type: size; }
+  .hero-copy { --hc-label: 12px; --hc-mark: min(36px, 10cqh); --hc-head: min(44px, 11.6vw, 13cqh); --hc-body: min(15px, 4.6cqh);
+    --hc-gap: min(10px, 3cqh); --hc-btn: min(44px, 13cqh); --hc-btn-gap: min(20px, 5cqh);
+    padding-top: 12px; padding-bottom: max(20px, 7cqh); }
+  /* Bruffles sits above the tear and the centre circle: its button stops clear of both. */
+  .hero-panel:not(.hero-panel-pp) .hero-copy { padding-bottom: 40px; }
+  /* Passport sits under the tear and circle: its copy starts clear of both. */
+  .hero-panel-pp .hero-copy { padding-top: 34px; }
+  /* A short half drops the one-line description first, so the name and button keep their size. */
+  @container (max-height: 300px) { .hero-copy:not([data-size="shut"]) .hero-body { display: none; } }
+}
 /* Brand names over a playing film (Divine 2026-11-25): a soft dark pool behind the words and a
    layered shadow on the letters, so the name reads on any frame without a box. */
 .hero-copy.on-media::before { content: ""; position: absolute; inset: -20% -22% -6% -14%; pointer-events: none;
