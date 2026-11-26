@@ -148,6 +148,17 @@
   .hero-panel-pp .hero-copy { padding-top: 34px; }
   /* A short half drops the one-line description first, so the name and button keep their size. */
   @container (max-height: 300px) { .hero-copy:not([data-size="shut"]) .hero-body { display: none; } }
+  /* Homepage 2: halves side by side on a phone. Narrow copy, word over word, compact button. The
+     copy sits at the bottom of a tall half, so only the sides need room (the tear runs down the middle). */
+  .hero-v .hero-copy { --hc-label: 9px; --hc-mark: 28px; --hc-head: clamp(26px, 8.2vw, 40px); --hc-body: 12px; --hc-gap: 8px;
+    --hc-btn: 38px; --hc-btn-gap: 14px; padding-top: 12px; padding-bottom: 24px; }
+  .hero-v .hero-panel .hero-copy, .hero-v .hero-panel-pp .hero-copy { padding-top: 12px; padding-bottom: 24px; }
+  .hero-v .hero-panel:not(.hero-panel-pp) .hero-copy { padding-right: 22px; }
+  .hero-v .hero-panel-pp .hero-copy { padding-left: 22px; }
+  .hero-v .hero-copy .hero-body { max-width: 16ch !important; }
+  .hero-v .hero-copy p.label-pp { letter-spacing: .03em; }
+  .hero-v .hero-copy a.label-bf, .hero-v .hero-copy a.label-pp { padding-inline: calc(12px * var(--k)) !important; letter-spacing: .04em; white-space: nowrap; }
+  .hero-v .hero-copy[data-size="shut"] .hero-body { display: none; }
 }
 /* Brand names over a playing film (Divine 2026-11-25): a soft dark pool behind the words and a
    layered shadow on the letters, so the name reads on any frame without a box. */
@@ -201,3 +212,9 @@ body.shop, body.shop .bf, body.page-white, body.page-white .bf { background: #ff
 .hover-swap { opacity: 0; transition: opacity .6s var(--ease-calm, ease); }
 .group\/card:hover .hover-swap, .group\/card:focus-within .hover-swap { opacity: 1; }
 @media (hover: none) { .hover-swap { display: none; } }
+
+/* Round 5 layout pass: on small tablets (768-1023px) the hero copy column is only ~230px wide, so the
+   buttons keep to one line with tighter side padding. */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .hero-copy a.label-bf, .hero-copy a.label-pp { white-space: nowrap; padding-inline: calc(14px * var(--k)) !important; letter-spacing: .04em; }
+}
