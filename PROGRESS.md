@@ -147,16 +147,4 @@ Local dev on the Chromebook is not needed: preview on the .workers.dev link inst
 - Hero seam: SVG paper tear (PaperTear in SplitHero.tsx) replaces the gold hairline.
 - BA-044 is now Carhartt WIP Michigan Coat (hover cross-fades to pieces/BA-044/02-on-model via `hoverImage`); BA-042 is New Era Holiday Hook White Sox 59FIFTY (7 1/4). Drop Log photo = Divine's streetwear flat lay, Bruffles grade. All logged in public/media/manifest.json (credits). Third-party logos in these photos: swap before launch.
 
-## Round 5 · Block A (2026-11-26, Divine)
-- Share image: every page without its own photo now shares /brand/og-ba-x-ptp.jpg (1200×630, both logos side by side in a gold circle). Stand-in: Divine's merged circular logo was not in the project folder; swap the file when it arrives. Product pages still share the piece photo.
-- Phone hero: each half is a size container; logo, name, line and button scale with the half's height (cqh) so nothing slides under the header, the tear or the centre circle. Short halves drop the one-line description first. Centre circle 52px on phones.
-- Mobile data: AVIF first (WebP fallback) in Img.astro and the hero, smaller tile widths, lighter logos, a 640px Bruffles phone film (363 KB) and a 480px Passport phone film (396 KB). Homepage on slow 4G: first screen 586 → ~467 KB, full scroll 1021 → ~742 KB.
-- Drop Log: compact card (about a third of the poster): ticker of past drops ending on "Next drop: Friday 5 December", Drop (white) 014 (gold) between the pulsing dot and the logo, "40 pieces · Next drop", perforation, "Get drop alerts 1 day early", WhatsApp first then email, field and button on one row. Photo behind: top 20% solid plum (--color-plum), then the clothes under a 35% plum layer.
-- Wall: "Seal of authenticity" / "We recognize real." Stamp = circular Victorian copperplate seal (scripts/make-seal.mjs → public/brand/seal-authenticated.svg; Pinyon Script + Cormorant Garamond, OFL).
-- Links: on the homepage each logo opens its brand (header and hero); on brand pages the logo goes home. "Second homepage view" tester link sits at the right end of the menu row (homepage only, once /v2 exists).
-
-## Round 5 · Block B + C (2026-11-26, Divine)
-- Homepage 2 at /v2 (src/pages/v2.astro). Hero = SplitHero `vertical`: the seam is vertical on every screen; on phones the halves sit side by side, copy compacts (`.hero-v` sizes in global.css), copy width follows the side's share, tap opens 70/30 sideways, logos move to the top of each half.
-- Below the hero: fixed 50/50 rows, Bruffles on white (left) and Passport on --color-plum (right): Latest pieces | Shop Passport (small catalogue: photos at half the homepage-1 tile width, caption under each, price list as text); Authenticity matters + 4 steps + tag/receipt/check stacked | What Passport sells (sticky); Seal of authenticity wall (2 photo + 2 text cards) | Passport badge (sticky). Footer full width. Wording changes: docs/round5-copy.md.
-- Tester links: "Second homepage view" on /, "First homepage view" on /v2 (menu row, right end).
-- Layout pass: 375/768/1280/1920 both homepages, scripted edge/overlap check (only line-height and truncation false positives left). Fixes: header brand links hidden below 1024px (they wrapped at 768), hero buttons one line at 768-1023px.
+<!-- deploy probe 11:35 -->

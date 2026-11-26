@@ -11,10 +11,9 @@ const { card, i = 0 } = Astro.props as { card: WallCard; i?: number };
 const p = bruffles.find((x) => x.id === card.id)!;
 const sig = signatureFor(card.signer)!;
 const { rot, drop } = pin(p.pieceNo);
-// "Authenticated" seal by each signature (Divine round 5: a circular Victorian copperplate stamp with
-// a thin ring, public/brand/seal-authenticated.svg from scripts/make-seal.mjs). It overlaps the
-// signature a little, and its tilt changes per card (seeded, so each card always looks the same).
-const st = { r: [-12, 8, -6, 14, -10, 4, -16, 10][(p.pieceNo * 3) % 8] };
+// "Authenticated!" stamp under each signature (Divine 2026-11-25): it just touches the signature,
+// and its spot and tilt change per card (seeded, so each card always looks the same).
+const st = { x: [4, 38, 18, 52, 10, 44, 26, 34][p.pieceNo % 8], r: [-7, 4, -3, 6, -5, 2, -8, 5][(p.pieceNo * 3) % 8] };
 // On narrow two-column phones the brand drops out so the piece number and area always show.
 const metaHtml = `${p.id}<span class="max-sm:hidden"> · ${p.maker}</span> · ${card.area}`;
 ---
@@ -29,11 +28,10 @@ const metaHtml = `${p.id}<span class="max-sm:hidden"> · ${p.maker}</span> · ${
         <img src="/brand/bruffles-monogram-gold.webp" alt="" aria-hidden="true" width="28" height="28"
           class="absolute -right-2 -top-2 w-7 h-7 -rotate-[8deg] drop-shadow-[0_1px_0_rgb(28_26_23/.25)]" />
       </div>
-      <div class="relative aspect-[100/42] flex flex-col justify-center px-1 min-w-0">
-        <svg class="sig block h-[44%] w-auto max-w-[66%] self-start" viewBox={`0 0 ${sig.w} ${sig.h}`} aria-hidden="true"><path d={sig.d} /></svg>
-        <p class="wall-meta mt-1 truncate pr-[40%]" set:html={metaHtml} />
-        <img src="/brand/seal-authenticated.svg" alt="" aria-hidden="true" width="120" height="120" loading="lazy" decoding="async"
-          class="seal absolute right-0 -top-7 w-[44%] max-w-[96px] h-auto" style={`--sr:${st.r}deg`} />
+      <div class="aspect-[100/42] flex flex-col justify-center px-1 min-w-0 overflow-hidden">
+        <svg class="sig block h-[44%] w-auto max-w-full self-start" viewBox={`0 0 ${sig.w} ${sig.h}`} aria-hidden="true"><path d={sig.d} /></svg>
+        <span aria-hidden="true" class="auth-stamp" style={`--sx:${st.x}%;--sr:${st.r}deg`}>Authenticated!</span>
+        <p class="wall-meta mt-0.5 truncate" set:html={metaHtml} />
       </div>
     </>
   ) : (
@@ -42,14 +40,17 @@ const metaHtml = `${p.id}<span class="max-sm:hidden"> · ${p.maker}</span> · ${
       <img src="/brand/bruffles-monogram-gold-deep.webp" alt="" aria-hidden="true" width="28" height="28" class="mt-3 w-7 h-7 -rotate-[8deg]" />
       <p class="label-bf text-gold-text !text-[10px] mt-1">Customer Verified</p>
       <svg class="sig block h-10 md:h-12 w-auto max-w-full mt-3" viewBox={`0 0 ${sig.w} ${sig.h}`} aria-hidden="true"><path d={sig.d} /></svg>
-      <img src="/brand/seal-authenticated.svg" alt="" aria-hidden="true" width="120" height="120" loading="lazy" decoding="async"
-        class="seal -mt-4 self-end w-[50%] max-w-[96px] h-auto" style={`--sr:${st.r}deg`} />
+      <span class="self-stretch text-left"><span aria-hidden="true" class="auth-stamp" style={`--sx:${st.x}%;--sr:${st.r}deg`}>Authenticated!</span></span>
       <p class="wall-meta mt-2 w-full truncate border-t border-hair pt-2" set:html={metaHtml} />
     </div>
   )}
 </a>
 <style>
-  /* Pressed-ink look: slight tilt, a touch of transparency so the signature shows through. */
-  .seal { rotate: var(--sr); opacity: .9; mix-blend-mode: multiply; }
+  /* Rubber-stamp look: double gold rule, slightly uneven ink. Pulled up 4px so it touches the signature. */
+  .auth-stamp { display: inline-block; margin: -4px 0 2px var(--sx); rotate: var(--sr); align-self: flex-start;
+    font-family: var(--font-ui); font-weight: 700; font-size: 9px; letter-spacing: .12em; text-transform: uppercase; line-height: 1;
+    color: var(--color-gold-text); padding: 3px 5px; border: 1.5px solid var(--color-gold-deep); box-shadow: inset 0 0 0 1.5px #fff, inset 0 0 0 2.5px rgb(167 131 47 / .55);
+    opacity: .92; white-space: nowrap; }
+  @media (min-width: 768px) { .auth-stamp { font-size: 10px; } }
   .wall-meta { font-family: var(--font-ui); font-size: 11px; text-transform: uppercase; letter-spacing: .12em; line-height: 1.3; color: var(--color-ink-soft); }
 </style>

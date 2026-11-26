@@ -18,8 +18,9 @@ const hero = {
   bf: { desktop: await toPic(media.hero.bf.desktop), mobile: await toPic(media.hero.bf.mobile, [640, 1080]), video: media.hero.bf.video },
   pp: { desktop: await toPic(media.hero.pp.desktop), mobile: await toPic(media.hero.pp.mobile, [640, 1080]), video: media.hero.pp.video },
 };
+const shareImage = hero.bf.desktop ? (await toPic(media.hero.bf.desktop, [1200]))?.src : undefined;
 ---
-<Base shop offset={false}>
+<Base image={shareImage} shop offset={false}>
   <SplitHero client:load media={hero} />
 
   <section class="bf pt-[var(--spacing-section)] pb-16 md:pb-24" aria-labelledby="latest">

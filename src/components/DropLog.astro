@@ -1,12 +1,9 @@
 ---
-// Drop Log (top of /bruffles). Round 5 (Divine 2026-11-26): about a third of the old poster.
-//   Ticker band: past drops scroll by on a dark purple bar and end on a bold "Next drop".
-//   Row 1: pulsing dot · "Drop" (white) "014" (gold) · Bruffles logo.
-//   Row 2: "40 pieces" (white) · "Next drop: Friday 5 December".
-//   Perforated line, then the call to action: "Get drop alerts 1 day early", WhatsApp first, then email.
-// Behind it all: the drop photo. The top 20% is solid dark purple, then it fades to the clothes,
-// with a 35% dark purple layer over the photo so the text always reads.
-// Every number comes from getDemo() in demo-signals.ts. Date and "1 day early": [CLIENT TO CONFIRM].
+// Drop Log (top of /bruffles), restyled 2026-11-25 (Divine: "looks like an error message", make it a
+// stylised hero in the Bruffles identity, keep the wording). An ink "event poster" set into the
+// white page: gold-framed, the drop number huge in Fraunces, a perforated ticket edge, sold-through
+// bars for past drops and a slow marquee. Every number comes from getDemo() in demo-signals.ts.
+// Next-drop date/time and the "1 day early" promise: [CLIENT TO CONFIRM].
 import Img from "./Img.astro";
 import DropAlerts from "./DropAlerts";
 import Monogram from "./Monogram";
@@ -15,54 +12,59 @@ import { asset } from "../data/assets";
 import { getDemo } from "../data/demo-signals";
 import { pad } from "../data/products";
 const { currentDrop: d, pastDrops } = getDemo();
-const pic = await toPic(asset("drop-log", "drop/drop-packing"), [480, 800, 1200, 1600]);
+const pic = await toPic(asset("drop-log", "drop/drop-packing"), [640, 1080, 1600]);
+const run = `Drop ${pad(d.number)} · ${d.pieces} pieces · next drop ${d.next}`;
 ---
 <section class="bf" aria-labelledby="drop-log">
-  <!-- the shop header is 144px; Base adds 80px, so 88px more leaves a 24px gap above the card -->
-  <div class="wrap pt-[88px] pb-8 md:pb-12">
-    <div class="drop-card relative overflow-hidden text-white">
-      <div class="absolute inset-0" aria-hidden="true">
-        <Img pic={pic} sizes="(min-width: 1440px) 1344px, (min-width: 768px) 92vw, 60vw" label="" />
-        <div class="absolute inset-0 drop-shade"></div>
-      </div>
-
-      <!-- Ticker: past drops roll across, ending on the next drop in bold -->
-      <div class="drop-ticker relative z-10 overflow-hidden" role="marquee" aria-label={`Past drops, then next drop ${d.nextLong}`}>
-        <div class="drop-ticker-track">
-          {[0, 1].map((k) => (
-            <span class="drop-ticker-run" aria-hidden={k === 1 ? "true" : undefined}>
-              {pastDrops.map((p) => (
-                <span class="drop-tick">Drop {pad(p.number)} · {p.pieces} pieces · <span class="text-mauve">{p.gone} gone</span></span>
-              ))}
-              <span class="drop-tick font-bold text-white">Next drop: {d.nextLong}</span>
-            </span>
-          ))}
-        </div>
-      </div>
-
-      <div class="relative z-10 px-5 md:px-8 pt-5 md:pt-6 pb-6 md:pb-7 grid md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] md:gap-x-10 md:items-end">
-        <div>
-          <div class="flex items-center gap-3">
-            <span class="drop-dot shrink-0" aria-hidden="true"></span>
-            <h1 id="drop-log" class="flex items-baseline gap-2 leading-none">
-              <span class="h-bf text-[32px] md:text-[40px] text-white">Drop</span>
-              <span class="num-bf text-[32px] md:text-[40px] text-gold tabular-nums">{pad(d.number)}</span>
-            </h1>
-            <Monogram tone="bright" size={88} className="ml-auto md:ml-4 w-9 md:w-10 h-auto shrink-0" />
+  <div class="wrap pt-24 md:pt-32 pb-12 md:pb-20">
+    <div class="drop-poster relative overflow-hidden bg-ink text-bone">
+      <!-- copy on the left, the packing photo on the right (under the copy on a phone) -->
+      <div class="grid md:grid-cols-12">
+        <div class="relative z-10 md:col-span-7 px-6 pt-10 pb-8 md:px-12 md:pt-14 md:pb-12">
+          <div class="flex items-center justify-between gap-3 rise">
+            <div class="flex items-center gap-3"><span class="drop-dot" aria-hidden="true"></span><p class="label-bf text-gold">Drop Log</p></div>
+            <Monogram tone="bright" size={88} className="w-10 md:w-12 h-auto" />
           </div>
-          <p class="ui text-[13px] md:text-[14px] mt-3 flex flex-wrap gap-x-3 gap-y-1">
-            <span class="text-white"><span class="tabular-nums">{d.pieces}</span> pieces</span>
-            <span aria-hidden="true" class="text-gold">·</span>
-            <span class="text-white/85">Next drop: <time class="text-white">{d.nextLong}</time></span>
+          <h1 id="drop-log" class="mt-4 rise" style="--i:1">
+            <span class="h-bf italic block text-[44px] md:text-[clamp(56px,6vw,88px)] leading-none">Drop</span>
+            <span class="num-bf drop-num block text-[132px] md:text-[clamp(160px,17vw,248px)]">{pad(d.number)}</span>
+          </h1>
+          <p class="ui text-[14px] md:text-[15px] mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 rise" style="--i:2">
+            <span class="drop-chip"><span class="tabular-nums">{d.pieces}</span> pieces</span>
+            <span aria-hidden="true" class="text-gold hidden sm:inline">·</span>
+            <span class="drop-chip drop-chip-gold">next drop <time>{d.next}</time></span>
           </p>
-          <p class="sr-only">Bruffles Apparel: authentic menswear bought from official brand stores. Every piece is one of one.</p>
+          <p class="sr-only">Bruffles Apparel: authentic menswear purchased from official brand stores. Every piece is one of one.</p>
+
+          <div class="drop-perf my-8 md:my-10" aria-hidden="true"></div>
+
+          <div class="max-w-md rise" style="--i:3">
+            <p class="h-bf text-[22px] md:text-[26px] leading-tight">Alert list gets in <em class="text-gold not-italic">1 day early</em>.</p>
+            <div class="mt-4"><DropAlerts client:visible dark /></div>
+          </div>
         </div>
 
-        <div class="drop-perf my-5 md:hidden" aria-hidden="true"></div>
+        <div class="relative md:col-span-5 min-h-[300px] md:min-h-0">
+          <div class="absolute inset-0 md:inset-y-6 md:right-6 md:left-0 drop-photo">
+            <Img pic={pic} sizes="(min-width: 768px) 40vw, 100vw" label="Photo · packing a drop" eager />
+          </div>
+        </div>
+      </div>
 
-        <div class="md:border-l md:border-dashed md:border-white/40 md:pl-10">
-          <p class="h-bf text-[20px] md:text-[22px] leading-tight">Get drop alerts <em class="text-gold not-italic">1 day early</em></p>
-          <div class="mt-3"><DropAlerts client:visible dark slim /></div>
+      <!-- past drops as ticket stubs, with how much of each sold through -->
+      <ul class="relative z-10 grid grid-cols-1 sm:grid-cols-3 border-t border-gold/30" aria-label="Past drops">
+        {pastDrops.map((p) => (
+          <li class="px-6 md:px-12 py-5 sm:border-l first:border-l-0 border-gold/30 border-t sm:border-t-0 first:border-t-0">
+            <p class="demand !text-bone/80 tabular-nums">Drop {pad(p.number)} · {p.pieces} pieces · {p.gone} gone</p>
+            <div class="mt-2 h-[3px] bg-bone/15" aria-hidden="true"><div class="drop-bar h-full bg-gold" style={`--w:${Math.round((p.gone / p.pieces) * 100)}%`}></div></div>
+          </li>
+        ))}
+      </ul>
+
+      <!-- slow marquee along the bottom edge -->
+      <div class="drop-run relative z-10 border-t border-gold/30 py-3 overflow-hidden" aria-hidden="true">
+        <div class="drop-run-track label-bf text-gold whitespace-nowrap">
+          {Array.from({ length: 8 }, () => <span class="px-6">{run}</span>)}
         </div>
       </div>
     </div>
@@ -70,25 +72,26 @@ const pic = await toPic(asset("drop-log", "drop/drop-packing"), [480, 800, 1200,
 </section>
 
 <style>
-  .drop-card { background: var(--color-plum); box-shadow: inset 0 0 0 1px rgb(201 162 78 / .35);
-    text-shadow: 0 1px 2px rgb(20 10 28 / .85), 0 0 22px rgb(20 10 28 / .6); }
-  .drop-card :global(input) { background: rgb(42 27 51 / .7); text-shadow: none; }
-  .drop-card :global(button) { text-shadow: none; }
-  .drop-card :global(img) { object-position: 50% 60%; }
-  /* Solid dark purple for the top 20%, then the photo shows through, always under a 35% purple layer. */
-  .drop-shade { background:
-      linear-gradient(to bottom, var(--color-plum) 0%, var(--color-plum) 20%, rgb(42 27 51 / 0) 62%),
-      rgb(42 27 51 / .35); }
-  .drop-ticker { background: var(--color-plum); border-bottom: 1px solid rgb(199 168 218 / .3); }
-  .drop-ticker-track { display: flex; width: max-content; animation: drop-tick 32s linear infinite; }
-  .drop-ticker-run { display: flex; flex-shrink: 0; }
-  .drop-tick { font-family: var(--font-ui); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap;
-    padding: 9px 22px; color: rgb(255 255 255 / .88); }
-  .drop-tick + .drop-tick { border-left: 1px solid rgb(199 168 218 / .35); }
-  @keyframes drop-tick { to { transform: translateX(-50%); } }
-  .drop-dot { width: 10px; height: 10px; border-radius: 999px; background: var(--color-gold); animation: drop-pulse 2.2s infinite; }
-  @keyframes drop-pulse { 0% { box-shadow: 0 0 0 0 rgb(201 162 78 / .6); } 70% { box-shadow: 0 0 0 10px rgb(201 162 78 / 0); } 100% { box-shadow: 0 0 0 0 rgb(201 162 78 / 0); } }
-  /* Ticket perforation */
-  .drop-perf { height: 1px; background-image: linear-gradient(90deg, rgb(255 255 255 / .5) 50%, transparent 50%); background-size: 10px 1px; }
-  @media (prefers-reduced-motion: reduce) { .drop-ticker-track, .drop-dot { animation: none; } }
+  .drop-poster { box-shadow: inset 0 0 0 1px rgb(201 162 78 / .45); }
+  .drop-num {
+    background: linear-gradient(100deg, #8a6a2a 0%, #e9cd8a 30%, #c9a24e 48%, #fff1c9 56%, #c9a24e 66%, #8a6a2a 100%);
+    background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: drop-shine 6s var(--ease-calm, ease) infinite; padding-bottom: .04em;
+  }
+  @keyframes drop-shine { 0%, 20% { background-position: 100% 0; } 70%, 100% { background-position: 0 0; } }
+  .drop-dot { width: 10px; height: 10px; border-radius: 999px; background: var(--color-gold); box-shadow: 0 0 0 0 rgb(201 162 78 / .7); animation: drop-pulse 2.2s infinite; }
+  @keyframes drop-pulse { 0% { box-shadow: 0 0 0 0 rgb(201 162 78 / .6); } 70% { box-shadow: 0 0 0 12px rgb(201 162 78 / 0); } 100% { box-shadow: 0 0 0 0 rgb(201 162 78 / 0); } }
+  .drop-chip { display: inline-flex; align-items: center; gap: .4em; border: 1px solid rgb(244 239 230 / .35); border-radius: 999px; padding: .45em 1em; }
+  .drop-chip-gold { border-color: var(--color-gold); color: var(--color-gold); }
+  /* ticket perforation: a dashed gold line with half-circle notches cut at both ends */
+  .drop-perf { position: relative; height: 1px; background-image: linear-gradient(90deg, rgb(201 162 78 / .7) 50%, transparent 50%); background-size: 12px 1px; }
+  .drop-photo :global(img) { filter: saturate(.9) contrast(1.05); }
+  @media (max-width: 767px) { .drop-photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, var(--color-ink), transparent 35%); } }
+  .drop-bar { width: var(--w); transform-origin: left; animation: drop-grow 1.4s var(--ease-calm, ease) both .4s; }
+  @keyframes drop-grow { from { transform: scaleX(0); } }
+  .drop-run-track { display: inline-block; animation: drop-run 40s linear infinite; }
+  @keyframes drop-run { to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) {
+    .drop-num, .drop-dot, .drop-bar, .drop-run-track { animation: none; }
+  }
 </style>
