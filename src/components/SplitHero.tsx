@@ -104,7 +104,7 @@ export default function SplitHero({ media = {} }: { media?: { bf?: PanelMedia; p
   };
 
   return (
-    <div ref={root} className="relative flex flex-col h-[100svh] min-h-[560px] overflow-hidden md:block md:min-h-[640px]"
+    <div ref={root} className="relative flex flex-col mt-[144px] h-[calc(100svh-144px)] min-h-[520px] overflow-hidden md:mt-0 md:block md:h-[100svh] md:min-h-[640px]"
       onPointerMove={onMove} onPointerLeave={(e) => { if (e.pointerType === "mouse") setActive(null); }} onClick={onClick}>
 
       {/* ---------- Bruffles panel ---------- */}
@@ -141,7 +141,7 @@ export default function SplitHero({ media = {} }: { media?: { bf?: PanelMedia; p
           transition={{ ...t, delay: active === "pp" && !reduce ? 0.15 : 0 }} />}
         <div data-size={sizeOf("pp")} className={`${COPY} ${ppHas ? "on-media" : ""} md:pl-[max(var(--spacing-gutter),calc(64px*var(--k)))]`}>
           <p className="relative label-pp text-signal" style={labelStyle}><FlipPrice text="Papers · Filters · Tools" /></p>
-          <h2 id="hero-pp" className="relative h-koi normal-case" style={headStyle}>
+          <h2 id="hero-pp" className="relative h-pp normal-case" style={headStyle}>
             Passport<br className="hero-br" /> to Paradise</h2>
           <p className={`hero-body relative ${ppHas ? "text-paper/85" : "text-muted"}`} style={bodyStyle}>
             Papers, filters and tools, by the pack and by the box.</p>
@@ -153,7 +153,9 @@ export default function SplitHero({ media = {} }: { media?: { bf?: PanelMedia; p
           Vertical seam on a computer, horizontal on a phone. ---------- */}
       <motion.div className="absolute inset-0 z-20 pointer-events-none"
         initial={false} animate={seamMove} transition={t} style={{ willChange: "transform" }}>
-        <div aria-hidden className="absolute inset-x-0 top-1/2 h-px md:inset-x-auto md:inset-y-0 md:left-1/2 md:h-auto md:w-px bg-gold/70" />
+        {/* Paper tear between the two halves (Divine 2026-11-26): jagged torn edges with the rough,
+            fibrous paper core showing between the two panels. Vertical on a computer, across on a phone. */}
+        <PaperTear />
         {/* Centre circle: tapping it puts both sides back to 50/50 (Divine, 2026-11-25) */}
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-auto">
           <SeamMark onTap={() => setActive(null)} />
@@ -174,7 +176,7 @@ export default function SplitHero({ media = {} }: { media?: { bf?: PanelMedia; p
 
 // ---------- Shared copy sizing: both brands use exactly the same sizes ----------
 // Copy block: phone = bottom of its panel; computer = bottom left, 30% of the hero wide (42.857% of a 70% panel).
-const COPY = "hero-copy relative h-full md:h-auto md:absolute md:left-0 md:bottom-0 md:w-[42.857%] flex flex-col justify-end px-[var(--spacing-gutter)] pt-20 pb-8 md:pt-24 md:pb-16";
+const COPY = "hero-copy relative h-full md:h-auto md:absolute md:left-0 md:bottom-0 md:w-[42.857%] flex flex-col justify-end px-[var(--spacing-gutter)] pt-4 pb-8 md:pt-24 md:pb-16";
 const labelStyle = { fontSize: scaled("13px", "10px") };
 // Bruffles monogram above the headline: same height as the label line it replaced, grown a little.
 const markStyle = { height: scaled("40px", "18px") };
@@ -319,4 +321,56 @@ function useHeroVideos(videos: Record<Side, RefObject<HTMLVideoElement | null>>,
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [active]);
+}
+
+// ---------- Paper tear seam ----------
+// A strip of torn paper drawn once in SVG: a soft shadow, a fuzzy fibre fringe (displaced by noise so
+// the edge frays) and the paper core with a grain texture. The edge shape comes from a fixed seed, so
+// the server and the browser draw the same tear.
+function tearPath(len: number, depth: number, seed: number, vertical: boolean) {
+  let a = seed >>> 0;
+  const rnd = () => { a = (a + 0x6D2B79F5) >>> 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t ^= t + Math.imul(t ^ (t >>> 7), 61 | t); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  const mid = depth / 2, step = 5, left: [number, number][] = [], right: [number, number][] = [];
+  const p1 = rnd() * 6, p2 = rnd() * 6, p3 = rnd() * 6;
+  for (let u = -step; u <= len + step; u += step) {
+    const wander = Math.sin(u / 97 + p1) * 3.2 + Math.sin(u / 41 + p2) * 1.6;          // the tear drifts
+    const width = 6 + Math.sin(u / 63 + p3) * 2.6 + Math.sin(u / 23 + p1) * 1.2;       // more paper shows in places
+    const j = () => (rnd() - 0.5) * 3.4 + (rnd() < 0.08 ? (rnd() - 0.5) * 6 : 0);       // small jags, the odd big one
+    left.push([u, mid + wander - width + j()]);
+    right.push([u, mid + wander + width + j()]);
+  }
+  const pts = [...left, ...right.reverse()];
+  return pts.map(([u, v], i) => `${i ? "L" : "M"}${(vertical ? v : u).toFixed(1)} ${(vertical ? u : v).toFixed(1)}`).join(" ") + "Z";
+}
+const TEAR_V = tearPath(1000, 44, 2611, true);
+const TEAR_H = tearPath(600, 36, 1126, false);
+function TearSvg({ id, d, w, h, className }: { id: string; d: string; w: number; h: number; className: string }) {
+  return (
+    <svg aria-hidden className={className} viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none">
+      <defs>
+        <filter id={`${id}-fray`} x="-50%" y="-5%" width="200%" height="110%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves="2" seed="3" result="n" />
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="5" />
+        </filter>
+        <filter id={`${id}-grain`} x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9 0.35" numOctaves="3" seed="8" result="n" />
+          <feColorMatrix in="n" type="matrix" values="0 0 0 0 0.45  0 0 0 0 0.4  0 0 0 0 0.32  0 0 0 0.9 -0.18" result="g" />
+          <feComposite in="g" in2="SourceGraphic" operator="in" result="gi" />
+          <feMerge><feMergeNode in="SourceGraphic" /><feMergeNode in="gi" /></feMerge>
+        </filter>
+        <filter id={`${id}-shadow`} x="-50%" y="-5%" width="200%" height="110%"><feGaussianBlur stdDeviation="2.6" /></filter>
+      </defs>
+      <path d={d} fill="rgb(10 10 10 / .55)" filter={`url(#${id}-shadow)`} />
+      <path d={d} fill="#f6f1e6" filter={`url(#${id}-fray)`} />
+      <path d={d} fill="#ebe3d2" filter={`url(#${id}-grain)`} />
+    </svg>
+  );
+}
+function PaperTear() {
+  return (
+    <>
+      <TearSvg id="tv" d={TEAR_V} w={44} h={1000} className="hidden md:block absolute inset-y-0 left-1/2 -translate-x-1/2 w-[44px] h-full" />
+      <TearSvg id="th" d={TEAR_H} w={600} h={36} className="md:hidden absolute inset-x-0 top-1/2 -translate-y-1/2 h-[36px] w-full" />
+    </>
+  );
 }

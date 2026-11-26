@@ -22,11 +22,38 @@
     {
       "slot": "drop-log",
       "file": "src/assets/media/drop/drop-packing.webp",
-      "sourceUrl": "https://unsplash.com/photos/brown-cardboard-box-on-white-table-7KKy7-TeeVs",
-      "author": "Mildlee",
-      "licence": "Unsplash License",
-      "alt": "A folded linen garment resting in an open kraft box, its lid beside it, in warm light.",
-      "note": "Small embossed maker's mark on the lid retouched out. Bruffles grade applied."
+      "sourceUrl": "Supplied by Divine (AI-generated, ChatGPT)",
+      "author": "AI-generated",
+      "licence": "AI-generated sample, demo only",
+      "alt": "Streetwear folded on a round sticker-covered table: a black hoodie, cream beanie, green crewneck, black fitted cap, white socks, an oatmeal hoodie and black cargo pants.",
+      "note": "Supplied by Divine 2026-11-26. Bruffles grade applied (warmer, slightly muted, a little more contrast). Shows real third-party logos (Nike, Carhartt, Polo Ralph Lauren, New Era, White Sox, Fear of God Essentials, Arc'teryx, Stone Island, BAPE, Supreme): crop or swap before launch."
+    },
+    {
+      "slot": "piece-BA-044",
+      "file": "src/assets/media/pieces/BA-044.webp",
+      "sourceUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fs3.store.hypebeast.com%2Fmedia%2Fimage%2F0a%2F50%2Fmichigan-coat-hamilton-brown-tobacco-product-1-0a505763.jpg",
+      "author": "Hypebeast Store (HBX), Carhartt WIP product photo",
+      "licence": "Not cleared: demo only",
+      "alt": "Carhartt WIP Michigan Coat in Hamilton brown with a dark brown corduroy collar, laid flat on white.",
+      "note": "Supplied by Divine 2026-11-26. Set on a white 4:5 ground to match the other pieces. Replace with the store's own flat lay before launch."
+    },
+    {
+      "slot": "piece-BA-044-on-model",
+      "file": "src/assets/media/pieces/BA-044/02-on-model.webp",
+      "sourceUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fs3.store.hypebeast.com%2Fmedia%2Fimage%2F28%2Fe4%2Fmichigan-coat-hamilton-brown-tobacco-model-5-28e4d5f5.jpg",
+      "author": "Hypebeast Store (HBX), Carhartt WIP model photo",
+      "licence": "Not cleared: demo only",
+      "alt": "A model wearing the Carhartt WIP Michigan Coat with light grey cargo jeans.",
+      "note": "Supplied by Divine 2026-11-26. Shown when you hover the card. The source labels it an AI-generated reference image; that caption was cropped off."
+    },
+    {
+      "slot": "piece-BA-042",
+      "file": "src/assets/media/pieces/BA-042.webp",
+      "sourceUrl": "https://www.neweracap.eu/cdn/shop/files/61038415_3QL.jpg",
+      "author": "New Era Cap (neweracap.eu) product photo",
+      "licence": "Not cleared: demo only",
+      "alt": "New Era MLB Holiday Hook Chicago White Sox 59FIFTY fitted cap in dark green corduroy, three-quarter view on white.",
+      "note": "Supplied by Divine 2026-11-26. Set on a white 4:5 ground. Replace with the store's own flat lay before launch."
     },
     {
       "slot": "hunt-label",

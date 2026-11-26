@@ -59,7 +59,7 @@ const jsonLd = {
     availability: p.sold ? "https://schema.org/SoldOut" : "https://schema.org/InStock", itemCondition: "https://schema.org/NewCondition" },
 };
 ---
-<Base title={`${p.maker} ${p.name} · Bruffles Apparel`} description={p.description} world="bf" image={share} shop>
+<Base title={`${p.maker} ${p.name} · Bruffles Apparel`} description={p.description} world="bf" image={share} shop offset={false}>
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   {!p.sold && !swatches && <MiniBuyBar client:idle id={p.id} name={p.name} num={n} priceUsd={p.priceUsd} thumb={thumb} />}
   <div class="bf pb-24 md:pb-0">

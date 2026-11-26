@@ -136,3 +136,13 @@ Local dev on the Chromebook is not needed: preview on the .workers.dev link inst
 - /bruffles: white page (`white` prop on Base, header white too). Drop Log is now an ink "event poster": gold-shine drop number, pulsing dot, pill chips, perforated ticket line, sold-through bars for past drops, slow marquee. Wording kept; "1 hour early" is now "1 day early".
 - Latest pieces: `.reveal-loop` cards rise and fade in every time they come into view and sink and fade out when they drop back below the screen. Photos start loading 300px early and are decoded before the card rises. Reduced motion: shown at once.
 - Lighthouse mobile (Brotli, local): home 0.99 / a11y 1 / LCP 1.6s / CLS 0; /bruffles 1 / 1 / 1.2s / 0.
+
+## Round 4 (2026-11-26, Divine)
+- Header: BA / PTP text replaced by logos (Bruffles monogram, Passport badge; both on the homepage). Full shop header (promo bar, search, account, ENG, currency, bag, Featured/Brand) now on the homepage, /bruffles, archive, Bruffles and Passport product pages, Passport shop and bag. Info pages (authenticity, policies, verify, credits) keep the plain bar. Base `offset` prop adds 80px top room for pages built for the plain bar.
+- Homepage "Bruffles Apparel · 1 of 1", "Latest pieces", "Shop Bruffles" set in Fraunces (h-bf).
+- Passport headings (.h-pp + hero headline) use --font-ptp. Default A Alfa Slab One; html[data-ptp-font="b"] Ultra, "c" Staatliches. Divine to pick; drop the unused @fontsource imports after.
+- How authenticity works: one step per row on the homepage strip and on /authenticity.
+- BA-048 photo re-set on a white 4:5 ground with margins like the other pieces.
+- Archive heading: "Gone, not forgotten" / "~ The archive".
+- Hero seam: SVG paper tear (PaperTear in SplitHero.tsx) replaces the gold hairline.
+- BA-044 is now Carhartt WIP Michigan Coat (hover cross-fades to pieces/BA-044/02-on-model via `hoverImage`); BA-042 is New Era Holiday Hook White Sox 59FIFTY (7 1/4). Drop Log photo = Divine's streetwear flat lay, Bruffles grade. All logged in public/media/manifest.json (credits). Third-party logos in these photos: swap before launch.

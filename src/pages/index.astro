@@ -20,14 +20,15 @@ const hero = {
 };
 const shareImage = hero.bf.desktop ? (await toPic(media.hero.bf.desktop, [1200]))?.src : undefined;
 ---
-<Base image={shareImage}>
+<Base image={shareImage} shop offset={false}>
   <SplitHero client:load media={hero} />
 
   <section class="bf pt-[var(--spacing-section)] pb-16 md:pb-24" aria-labelledby="latest">
     <div class="wrap text-center">
-      <p class="label-bf text-gold-text rise">Bruffles Apparel · 1 of 1</p>
-      <h2 id="latest" class="h-koi text-[32px] md:text-[48px] mt-2 rise" style="--i:1">Latest pieces</h2>
-      <a href="/bruffles" class="ui inline-block mt-3 text-gold-text underline underline-offset-4 decoration-gold-deep/50 hover:decoration-gold-deep rise" style="--i:2">Shop Bruffles</a>
+      <!-- All three lines in Fraunces, the hero's "Bruffles Apparel" font (Divine 2026-11-26) -->
+      <p class="h-bf text-[18px] md:text-[20px] text-gold-text rise">Bruffles Apparel · 1 of 1</p>
+      <h2 id="latest" class="h-bf text-[40px] md:text-[64px] mt-2 rise" style="--i:1">Latest pieces</h2>
+      <a href="/bruffles" class="h-bf text-[18px] md:text-[20px] inline-block mt-3 text-gold-text underline underline-offset-4 decoration-gold-deep/50 hover:decoration-gold-deep rise" style="--i:2">Shop Bruffles</a>
     </div>
     <div class="wrap grid grid-cols-2 gap-2 md:gap-6 mt-10 md:mt-12">
       {latest.map((p, i) => <ProductTile p={p} i={i % 2} loop />)}

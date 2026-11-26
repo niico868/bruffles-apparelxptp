@@ -2,13 +2,14 @@
 // KOI-style product tile: one flat-lay photo, then maker · size, name, price in the uppercase UI voice.
 import Img from "./Img.astro";
 import { toPic } from "../lib/pic";
-import { pieceImages } from "../data/media";
+import { pieceImages, hoverImage } from "../data/media";
 import { formatPrice } from "../lib/price";
 import { pad, type BrufflesPiece } from "../data/products";
 import { getSignals } from "../data/demo-signals";
 import DemandLine from "./DemandLine";
 const { p, sizes = "(min-width: 768px) 45vw, 50vw", i = 0, loop = false } = Astro.props as { p: BrufflesPiece; sizes?: string; i?: number; loop?: boolean };
 const pic = await toPic(pieceImages(p.id, p.name)[0], [480, 800, 1200]);
+const hover = await toPic(hoverImage(p.id, p.name), [480, 800, 1200]);
 const n = pad(p.pieceNo);
 const sig = getSignals(p.pieceNo);
 ---
@@ -17,6 +18,7 @@ const sig = getSignals(p.pieceNo);
     <div class="relative">
       <div class:list={["relative aspect-[4/5] overflow-hidden", p.sold && "gone-img"]}>
         <Img pic={pic} sizes={sizes} label={`Photo · ${n}`} />
+        {hover && <Img pic={{ ...hover, alt: "" }} sizes={sizes} class="hover-swap" />}
       </div>
       {!p.sold && <span class="absolute left-3 bottom-3 label-bf text-gold-text bg-bone/90 px-2 py-1 pointer-events-none">1 of 1</span>}
       {p.sold && <span class="gone-stamp right-3 top-3" aria-hidden="true">Gone</span>}

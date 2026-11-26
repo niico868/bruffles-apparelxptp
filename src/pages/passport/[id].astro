@@ -12,7 +12,7 @@ export function getStaticPaths() { return passport.map((item) => ({ params: { id
 const { item } = Astro.props;
 const pic = await toPic(passportImage(item.id, item.name), [640, 1080, 1600]);
 ---
-<Base title={`${item.name} · Passport to Paradise`} description={item.description} world="pp">
+<Base title={`${item.name} · Passport to Paradise`} description={item.description} world="pp" shop>
   <div class="pp">
     <article class="wrap pt-20 md:pt-28 pb-[var(--spacing-section)] md:grid md:grid-cols-12 md:gap-12">
       <div class="md:col-span-7 relative aspect-[4/5] ph-pp overflow-hidden">
@@ -20,7 +20,7 @@ const pic = await toPic(passportImage(item.id, item.name), [640, 1080, 1600]);
         <StampTarget client:idle />
       </div>
       <div class="md:col-span-5 mt-8 md:mt-0">
-        <div class="md:sticky md:top-24">
+        <div class="md:sticky md:top-[168px]">
           <nav class="label-pp text-muted" aria-label="Breadcrumb"><a href="/passport" class="hover:text-signal">Passport to Paradise</a> / {item.name}</nav>
           <p class="label-pp text-signal mt-6">{item.qty === 0 ? "Sold out" : `${item.qty} in stock`}{item.packOf > 1 ? ` · Pack of ${item.packOf}` : ""}</p>
           <h1 class="h-pp text-[40px] md:text-[56px] mt-3">{item.name}</h1>

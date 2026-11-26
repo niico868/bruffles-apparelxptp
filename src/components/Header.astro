@@ -15,16 +15,18 @@ const searchItems: SearchItem[] = [
   ...passport.map((p) => ({ name: p.name, maker: "Passport", href: `/passport/${p.id}`, tag: "Passport · 18+" })),
 ];
 const { currentDrop } = getDemo();
-const promos = [
-  `Next drop: ${currentDrop.next}`,
-  "Every piece bought from the brand's official store",
-  "One of one. When it's gone, it's gone",
-];
-const lockup = world === "bf" ? "BA" : world === "pp" ? "PTP" : "BA × PTP";
+const promos = world === "pp"
+  ? ["Papers, filters and tools, by the pack and by the box", "Passport to Paradise · 18+ only", "Shop Bruffles: one-of-one menswear"]
+  : [`Next drop: ${currentDrop.next}`, "Every piece bought from the brand's official store", "One of one. When it's gone, it's gone"];
+// Logos replace the text lockups (Divine 2026-11-26): Bruffles monogram on Bruffles pages, the
+// Passport badge on Passport pages, both on the homepage and shared pages.
+const home = world === "home";
+const transparent = Astro.url.pathname === "/";
+const lockupLabel = world === "bf" ? "Bruffles Apparel" : world === "pp" ? "Passport to Paradise" : "Bruffles Apparel × Passport to Paradise";
 const seg = (w: "bf" | "pp") => world === w ? "bg-current/0 underline underline-offset-[6px] decoration-1" : "opacity-70 hover:opacity-100";
 ---
 {shop && (
-  <div id="promo" class="fixed top-0 inset-x-0 z-50 h-9 bg-navy text-gold" role="region" aria-label="Announcements">
+  <div id="promo" class:list={["fixed top-0 inset-x-0 z-50 h-9", world === "pp" ? "bg-char-2 text-signal" : "bg-navy text-gold"]} role="region" aria-label="Announcements">
     <div class="wrap h-full flex items-center justify-between gap-4">
       <button type="button" class="promo-prev w-8 h-8 grid place-items-center" aria-label="Previous announcement">‹</button>
       <p class="promo-text ui text-[12px] md:text-[13px] tracking-[0.08em] uppercase text-center truncate" aria-live="polite">{promos[0]}</p>
@@ -33,7 +35,7 @@ const seg = (w: "bf" | "pp") => world === w ? "bg-current/0 underline underline-
     <script type="application/json" id="promo-data" set:html={JSON.stringify(promos)} />
   </div>
 )}
-<header id="site-header" data-world={world} data-transparent={world === "home" && !shop ? "true" : "false"} data-shop={shop ? "true" : undefined}
+<header id="site-header" data-world={world} data-transparent={transparent ? "true" : "false"} data-shop={shop ? "true" : undefined}
   class:list={["site-header fixed inset-x-0 z-40 transition-[background-color,border-color,height] duration-500", shop ? "top-9" : "top-0 h-16"]}>
   <nav class:list={["wrap grid grid-cols-[1fr_auto_1fr] items-center", shop ? "h-16" : "h-full"]} aria-label="Main">
     <div class="flex items-center gap-6">
@@ -47,9 +49,11 @@ const seg = (w: "bf" | "pp") => world === w ? "bg-current/0 underline underline-
         <a href="/passport" class:list={["px-3 py-2", seg("pp")]} aria-current={world === "pp" ? "page" : undefined}>Shop Passport</a>
       </div>
     </div>
-    {shop
-      ? <a href="/" aria-label="Bruffles Apparel, home"><img src="/brand/bruffles-monogram-gold-deep.webp" alt="" width="44" height="44" class="w-11 h-11" /></a>
-      : <a href="/" class:list={["text-[20px] whitespace-nowrap", world === "pp" ? "h-pp" : "h-bf"]} aria-label={`${lockup}, home`}>{lockup}</a>}
+    <a href="/" class="lockup flex items-center gap-2" aria-label={`${lockupLabel}, home`}>
+      {world !== "pp" && <img src={transparent ? "/brand/bruffles-monogram-gold.webp" : "/brand/bruffles-monogram-gold-deep.webp"} alt="" width="44" height="44" class="logo-bf w-10 h-10 md:w-11 md:h-11" />}
+      {home && <span aria-hidden class="h-bf text-[16px] opacity-70">×</span>}
+      {world !== "bf" && <img src="/brand/passport-badge-sm.webp" alt="" width="200" height="170" class="h-10 md:h-12 w-auto" />}
+    </a>
     {shop ? (
       <div class="flex justify-end items-center gap-0.5 md:gap-2 ui text-[13px]">
         <ShopSearch client:idle items={searchItems} />
@@ -75,7 +79,17 @@ const seg = (w: "bf" | "pp") => world === w ? "bg-current/0 underline underline-
     ) : <div class="flex justify-end ui"><CartCount client:load /></div>}
   </nav>
   {shop && (
-    <div class="wrap h-11 flex items-center gap-6 ui text-[13px] border-t border-hair">
+    <div class="menu-row wrap h-11 flex items-center gap-6 ui text-[13px] border-t">
+      {world === "pp" ? (
+      <details class="dd relative">
+        <summary class="cursor-pointer list-none flex items-center gap-1 font-semibold">Featured <span aria-hidden>▾</span></summary>
+        <ul class="dd-panel left-0 w-56 space-y-2">
+          <li><a href="/passport" class="hover:text-gold-text">Shop Passport</a></li>
+          <li><a href="/bruffles" class="hover:text-gold-text">Shop Bruffles</a></li>
+          <li><a href="/bag" class="hover:text-gold-text">Your bag</a></li>
+        </ul>
+      </details>
+      ) : (<>
       <details class="dd relative">
         <summary class="cursor-pointer list-none flex items-center gap-1 font-semibold">Featured <span aria-hidden>▾</span></summary>
         <ul class="dd-panel left-0 w-56 space-y-2">
@@ -92,6 +106,7 @@ const seg = (w: "bf" | "pp") => world === w ? "bg-current/0 underline underline-
           <li class="pt-2 border-t border-hair"><a href="/bruffles" class="hover:text-gold-text">All brands</a></li>
         </ul>
       </details>
+      </>)}
     </div>
   )}
 </header>
@@ -126,6 +141,16 @@ const seg = (w: "bf" | "pp") => world === w ? "bg-current/0 underline underline-
   /* KOI-style: once you scroll, the bar gets slightly shorter (one change, not per frame) */
   .site-header.is-compact:not([data-shop]) { height: 56px; }
   .site-header[data-shop], :global(body.page-white) .site-header[data-world="bf"] { background: #fff; }
+  .site-header[data-shop][data-world="pp"] { background: var(--color-char); color: var(--color-paper); }
+  .menu-row { border-color: var(--color-hair); }
+  .site-header[data-world="pp"] .menu-row { border-color: var(--color-char-3); }
+  /* Homepage: the full shop header sits over the hero with no fill and white type, then turns white on scroll. */
+  .site-header[data-shop][data-transparent="true"]:not(.is-solid) { background: transparent; color: #fff; mix-blend-mode: normal; border-color: transparent; }
+  .site-header[data-shop][data-transparent="true"]:not(.is-solid) .menu-row { border-color: rgb(255 255 255 / .25); }
+  @media (max-width: 767px) {
+    .site-header[data-shop][data-transparent="true"]:not(.is-solid) { background: #fff; color: var(--color-ink); border-color: var(--color-hair); }
+    .site-header[data-shop][data-transparent="true"]:not(.is-solid) .menu-row { border-color: var(--color-hair); }
+  }
   .dd > summary::-webkit-details-marker { display: none; }
   .dd-panel { position: absolute; top: calc(100% + 6px); z-index: 60; background: #fff; color: var(--color-ink); border: 1px solid var(--color-hair);
     box-shadow: 0 8px 24px rgb(28 26 23 / .08); padding: 14px 16px; text-transform: uppercase; letter-spacing: .04em; font-size: 12px; }
@@ -137,8 +162,14 @@ const seg = (w: "bf" | "pp") => world === w ? "bg-current/0 underline underline-
   const compact = () => h.classList.toggle("is-compact", window.scrollY > 40);
   compact(); addEventListener("scroll", compact, { passive: true });
   if (h.dataset.transparent === "true") {
-    const set = () => h.classList.toggle("is-solid", window.scrollY > window.innerHeight * 0.85);
-    set(); addEventListener("scroll", set, { passive: true });
+    const logo = h.querySelector<HTMLImageElement>(".logo-bf");
+    const set = () => {
+      // Shop header: turns white as soon as you scroll, or always on a phone (the hero sits below it there).
+      const solid = h.dataset.shop ? (window.scrollY > 40 || !matchMedia("(min-width: 768px)").matches) : window.scrollY > window.innerHeight * 0.85;
+      h.classList.toggle("is-solid", solid);
+      if (logo) logo.src = solid ? "/brand/bruffles-monogram-gold-deep.webp" : "/brand/bruffles-monogram-gold.webp";
+    };
+    set(); addEventListener("scroll", set, { passive: true }); addEventListener("resize", set);
   }
   // Product-page extras: rotating promo bar, one dropdown open at a time, currency switch.
   const promoData = document.getElementById("promo-data");

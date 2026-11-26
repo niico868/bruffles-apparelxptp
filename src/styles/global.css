@@ -6,6 +6,10 @@
 @import "@fontsource/archivo-narrow/600.css";
 @import "@fontsource/archivo-narrow/700.css";
 @import "@fontsource/dm-mono/400.css";
+/* Passport heading candidates (Divine picks one, round 4): A Alfa Slab One, B Ultra, C Staatliches */
+@import "@fontsource/alfa-slab-one/400.css";
+@import "@fontsource/ultra/400.css";
+@import "@fontsource/staatliches/400.css";
 @import "@fontsource/dm-mono/500.css";
 
 /* Tokens: see DESIGN.md. Pages use names, never raw values. */
@@ -32,7 +36,8 @@
   --font-sans: "Manrope Variable", system-ui, sans-serif;
   --font-serif: "Fraunces Variable", Georgia, serif;
   --font-ui: "Archivo Narrow", "Manrope Variable", sans-serif;   /* labels, nav, buttons, grid names + prices (KOI merge) */
-  --font-air: var(--font-ui);                                      /* Passport headings */
+  --font-air: var(--font-ui);                                      /* Passport small UI */
+  --font-ptp: "Alfa Slab One", Georgia, serif;                     /* Passport headings: option A, the logo's slab (round 4) */
   --font-mono: "DM Mono", ui-monospace, monospace;
 
   /* Spacing: Tailwind's 4px scale, using only 1 2 3 4 6 8 12 16 24 32 (4px to 128px),
@@ -58,7 +63,11 @@
 
   /* Type scale (px): 12 label · 14 small · 16 body · 20 · 24 · 32 · 48 · 72 · 96 */
   .h-bf { font-family: var(--font-serif); font-weight: 400; font-variation-settings: "opsz" 144, "SOFT" 30; letter-spacing: -0.02em; line-height: 1.05; }
-  .h-pp { font-family: var(--font-air); font-weight: 700; text-transform: uppercase; letter-spacing: 0.01em; line-height: 0.95; }
+  /* Passport headings in a brand font (round 4). Options for Divine: html[data-ptp-font="b"|"c"] swaps it. */
+  .h-pp { font-family: var(--font-ptp); font-weight: 400; text-transform: uppercase; letter-spacing: 0.01em; line-height: 0.98; }
+  :root[data-ptp-font="b"] { --font-ptp: "Ultra", Georgia, serif; }
+  :root[data-ptp-font="c"] { --font-ptp: "Staatliches", "Archivo Narrow", sans-serif; }
+  :root[data-ptp-font="c"] .h-pp { letter-spacing: 0.03em; line-height: 0.92; }
   /* Collab lockup headlines only ("BRUFFLES APPAREL", "LATEST PIECES") */
   .h-koi { font-family: var(--font-ui); font-weight: 700; text-transform: uppercase; letter-spacing: -0.01em; line-height: 0.9; }
   /* UI voice: nav links, grid product names and prices, button labels */
@@ -169,3 +178,8 @@ body.shop, body.shop .bf, body.page-white, body.page-white .bf { background: #ff
 .anim-fade { animation: anim-fade .6s var(--ease-calm) both; }
 @keyframes anim-fade { from { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .anim-fade { animation: none; } }
+
+/* Card hover photo (Divine 2026-11-26): the second photo cross-fades over the flat lay on hover or keyboard focus. */
+.hover-swap { opacity: 0; transition: opacity .6s var(--ease-calm, ease); }
+.group\/card:hover .hover-swap, .group\/card:focus-within .hover-swap { opacity: 1; }
+@media (hover: none) { .hover-swap { display: none; } }

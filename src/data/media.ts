@@ -76,3 +76,7 @@ export function variantImages(id: string, name: string, key: string, first: bool
 // Passport product photos: one per item, named by item ID: src/assets/media/passport/PTP-12.jpg.
 // Styled on warm wood; flat items shot from above, standing items from the front.
 export const passportImage = (id: string, name: string) => ({ image: findImage(`passport/${id}`), alt: `${name}, product photo on wood` });
+
+// Hover photo for a shop card (Divine 2026-11-26): a detail named "on-model" (pieces/<ID>/02-on-model.webp)
+// cross-fades in when you hover the card. Pieces without one keep a still card.
+export const hoverImage = (id: string, name: string) => pieceImages(id, name).find((x) => x.label === "On model");

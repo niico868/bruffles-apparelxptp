@@ -20,7 +20,7 @@ export const pickNote: Record<string, string> = {
   "BA-047": "Mesh BAPE jersey in two colourways, one of each. Cropped and loud, made for a hot day out.",
   "BA-045": "Navy and cream, split down the middle. A Polo tee that doesn't look like every other Polo tee.",
   "BA-044": "A clean coach jacket for rainy season. Plain, sharp, done.",
-  "BA-042": "Black on black Yankees fitted, 7 3/8. Somebody's size is out there.",
+  "BA-042": "Dark green cord White Sox fitted, 7 1/4. Somebody's size is out there.",
   "BA-046": "Washed black cargos that sit right. We knew it wouldn't last a day.",
   "BA-043": "Oatmeal Essentials. Quiet colour, loud weight.",
   "BA-041": "The Nuptse, in black. No explanation needed.",

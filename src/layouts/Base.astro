@@ -6,8 +6,10 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import AgeGate from "../components/AgeGate.astro";
 type World = "home" | "bf" | "pp";
-const { title = "Bruffles Apparel × Passport to Paradise", description = "Authentic one-of-one menswear from Bruffles Apparel, and accessories from Passport to Paradise.", world = "home", image, shop = false, white = false } =
-  Astro.props as { title?: string; description?: string; world?: World; image?: string; shop?: boolean; white?: boolean };
+const { title = "Bruffles Apparel × Passport to Paradise", description = "Authentic one-of-one menswear from Bruffles Apparel, and accessories from Passport to Paradise.", world = "home", image, shop = false, white = false, offset = true } =
+  Astro.props as { title?: string; description?: string; world?: World; image?: string; shop?: boolean; white?: boolean; offset?: boolean };
+// The shop header (promo bar + logo bar + menu row) is 80px taller than the plain bar. Pages written
+// for the plain bar get that much extra room on top; pages that already allow for it pass offset={false}.
 const ogImage = image ? new URL(image, Astro.site ?? "https://bruffles-apparelxptp.neikoliaugustine.workers.dev").href : undefined;
 ---
 <!doctype html>
@@ -25,7 +27,7 @@ const ogImage = image ? new URL(image, Astro.site ?? "https://bruffles-apparelxp
 </head>
 <body class:list={["min-h-svh", world === "pp" ? "pp" : "bf", shop && "shop", white && "page-white"]}>
   <Header world={world} shop={shop} />
-  <main><slot /></main>
+  <main class:list={[shop && offset && "pt-20"]}><slot /></main>
   <Footer world={world} />
   {world === "pp" && <AgeGate />}
   <script>

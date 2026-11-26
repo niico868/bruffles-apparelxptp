@@ -5,12 +5,15 @@ import ArchiveList from "../../components/ArchiveList";
 import { archiveItems } from "../../lib/archive";
 const items = await archiveItems();
 ---
-<Base title="The archive · Bruffles Apparel" description="Every Bruffles piece that has found its owner. Missed one? Request it back and we'll hunt for another." world="bf">
+<Base title="The archive · Bruffles Apparel" description="Every Bruffles piece that has found its owner. Missed one? Request it back and we'll hunt for another." world="bf" shop>
   <section class="bf">
     <div class="wrap pt-32 md:pt-40 pb-12 md:grid md:grid-cols-12 md:gap-8 md:items-end">
       <div class="md:col-span-7">
         <nav class="ui text-[12px] text-ink-soft rise" aria-label="Breadcrumb"><a href="/bruffles" class="hover:text-ink">Bruffles</a> <span aria-hidden>/</span> <span aria-current="page">Archive</span></nav>
-        <h1 class="h-bf text-[48px] md:text-[96px] mt-4 rise" style="--i:1">The archive</h1>
+        <h1 class="mt-4 rise" style="--i:1">
+          <span class="h-bf block text-[48px] md:text-[96px]">Gone, not forgotten</span>
+          <span class="label-bf text-gold-text flex items-center gap-3 mt-4 md:mt-6"><span aria-hidden class="h-bf text-[24px] leading-none normal-case">~</span>The archive</span>
+        </h1>
       </div>
       <p class="md:col-span-4 md:col-start-9 mt-6 md:mt-0 text-ink-soft rise" style="--i:2">Every piece here has found its owner. Missed one? Ask for it back. We'll hunt for another and message you first.</p>
     </div>
