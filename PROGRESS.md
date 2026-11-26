@@ -160,3 +160,8 @@ Local dev on the Chromebook is not needed: preview on the .workers.dev link inst
 - Below the hero: fixed 50/50 rows, Bruffles on white (left) and Passport on --color-plum (right): Latest pieces | Shop Passport (small catalogue: photos at half the homepage-1 tile width, caption under each, price list as text); Authenticity matters + 4 steps + tag/receipt/check stacked | What Passport sells (sticky); Seal of authenticity wall (2 photo + 2 text cards) | Passport badge (sticky). Footer full width. Wording changes: docs/round5-copy.md.
 - Tester links: "Second homepage view" on /, "First homepage view" on /v2 (menu row, right end).
 - Layout pass: 375/768/1280/1920 both homepages, scripted edge/overlap check (only line-height and truncation false positives left). Fixes: header brand links hidden below 1024px (they wrapped at 768), hero buttons one line at 768-1023px.
+
+### Round 5 follow-up (2026-11-26)
+- Divine's merged circular logo now in the hero circle, WhatsApp share image (og-ba-x-ptp-v2.jpg) and a home button at the top of every page except the two homepages.
+- Plum dropped: Drop Log and the /v2 Passport side are charcoal.
+- Looked at a Passport Instagram post for context (forest green, cream, gold, script headings, eco claims). Not copied; question open on charcoal vs forest green.
